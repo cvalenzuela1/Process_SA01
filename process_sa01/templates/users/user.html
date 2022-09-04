@@ -8,7 +8,7 @@
     <h1>Bienvenido a User!</h1>
     
     <ul>
-    {% for user in usuarios %}
+    {% for user in object_list %}
         <li>ID: {{user.id_usuario}}</li>
         <li>Nombre: {{user.nombre_usuario}}</li>
         <li>Contraseña: {{user.contraseña}}</li>
