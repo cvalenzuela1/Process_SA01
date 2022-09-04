@@ -6,5 +6,15 @@
 
 {% block content %}
     <h1>Bienvenido a User!</h1>
+    
+    <ul>
+    {% for element in usuarios %}
+        <li>ID: {{element.id_usuario}}</li>
+        <li>Nombre: {{element.nombre_usuario}}</li>
+        <li>Contraseña: {{element.contraseña}}</li>
+        <br><br>
+    {% endfor %}
+    </ul>
+    
 {% endblock content %}
     
