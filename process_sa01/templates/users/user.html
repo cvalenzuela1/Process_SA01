@@ -6,8 +6,12 @@
 
 {% block content %}
     <h1>Bienvenido a User!</h1>
-    
     <ul>
+    
+    {% if object_list %}
+        <h1>Existe</h1>
+    {% endif %}
+        
     {% for user in object_list %}
         <li>ID: {{user.id_usuario}}</li>
         <li>Nombre: {{user.nombre_usuario}}</li>
@@ -15,6 +19,5 @@
         <br><br>
     {% endfor %}
     </ul>
-    
 {% endblock content %}
     

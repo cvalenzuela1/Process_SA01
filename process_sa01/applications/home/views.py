@@ -16,4 +16,3 @@ class HomeView(TemplateView):
 class HomeListView(ListView):
     model = Usuario
     template_name = "users/user.html"
-
