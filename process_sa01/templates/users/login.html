@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/users/login.css' %}">
+    {% include 'includes/header.html' %}
+    <div class="container-sm" id="logincontainer">
+        <div class="title">
+            <h1 class="fs-2">Iniciar sesión</h1>
+        </div>
+        
+    </div>
+{% endblock content %}
+    

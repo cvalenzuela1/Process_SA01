@@ -2,6 +2,7 @@
 <!-- Bootstrap -->
 <link rel="stylesheet" href="{% static 'css/includes/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/bootstrap5.2/bootstrap.min.css' %}">
+
 <script src="{% static 'js/bootstrap5.2/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/bootstrap5.2/bootstrap.min.js' %}"></script>
 <!--	Navbar  Coding   -->
@@ -10,7 +11,7 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="{% url 'app_home:home' %}" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"><br>
-                    <img id="homeItem" src="{% static 'images/logo/processSA.png' %}" alt="">
+                    <img id="homeItem" src="{% static 'assets/images/logo/processSA.png' %}" alt="">
                 </a>
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
@@ -37,7 +38,7 @@
                             Usuario
                         </a>
                         <ul id="menudropdown" class="dropdown-menu">
-                            <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_home:home' %}">Log in</a></li>
+                            <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:login' %}">Log in</a></li>
                         </ul>
                     </div> 
                     </li>
