@@ -1,0 +1,17 @@
+.bi {
+    vertical-align: -.125em;
+    fill: rgb(0, 0, 0);
+}
+
+#homeItem{
+    width: 270px;
+    background-color: #fff159;
+}
+
+.navcosas{
+    background-color: #1a1969;
+}
+
+#letrasImagenes{
+    font-style: italic;
+}
