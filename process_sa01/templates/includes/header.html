@@ -36,10 +36,8 @@
                         <a id="letrasImagenes" class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" role="button"><svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
                             Usuario
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <ul id="menudropdown" class="dropdown-menu">
+                            <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_home:home' %}">Log in</a></li>
                         </ul>
                     </div> 
                     </li>

@@ -1,3 +1,11 @@
+body{
+    background-image: url("../../images/fondo/background4.jpg");
+    background-size: 73%;
+    background-position-x: center;
+    background-attachment: fixed;
+    height: 1000px;
+}
+
 .bi {
     vertical-align: -.125em;
     fill: rgb(0, 0, 0);
@@ -5,13 +13,24 @@
 
 #homeItem{
     width: 270px;
-    background-color: #fff159;
+    background-color: transparent;
 }
 
-.navcosas{
-    background-color: #1a1969;
+#navbackground{
+    background-color: transparent;
+    height: 72px;
 }
 
 #letrasImagenes{
     font-style: italic;
+}
+
+#dropdownLogin{
+    text-align: center;
+    background-color: transparent;
+    color: black;
+}
+
+#menudropdown{
+    border: transparent;
 }
