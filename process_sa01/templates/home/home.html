@@ -5,6 +5,9 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Bienvenido a Home!</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+    {% include 'includes/header.html' %}
+    
 {% endblock content %}
     

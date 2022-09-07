@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +10,12 @@
             
         {% endblock title %}    
     </title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap5.2/bootstrap.min.css' %}">
 </head>
 <body>
     {% block content %}
-        
+
     {% endblock content %}
+    <script src="{% static 'js/bootstrap5.2/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
