@@ -211,8 +211,9 @@ class TareaPersona(models.Model):
 
 class Usuario(models.Model):
     id_usuario = models.BigAutoField(primary_key=True)
-    nombre_usuario = models.CharField(max_length=50)
+    nombre_usuario = models.CharField(unique=True, max_length=50)
     password_usuario = models.CharField(max_length=50)
+    is_active = models.BooleanField()
     rol_id_rol = models.ForeignKey(Rol, models.DO_NOTHING, db_column='rol_id_rol')
     persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
 

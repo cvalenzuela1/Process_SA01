@@ -65,10 +65,12 @@ class Rol(models.Model):
 
 class Usuario(models.Model):
     id_usuario = models.BigAutoField(primary_key=True)
-    nombre_usuario = models.CharField(max_length=50, unique=True)
+    nombre_usuario = models.CharField(max_length=50)
     password_usuario = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
     rol_id_rol = models.ForeignKey(Rol, on_delete=models.CASCADE, db_column='rol_id_rol')
     persona_id_persona = models.ForeignKey(Persona, on_delete=models.CASCADE, db_column='persona_id_persona')
+    is_authenticated = True
 
     class Meta:
         managed = False
