@@ -8,11 +8,40 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/users/login.css' %}">
     {% include 'includes/header.html' %}
-    <div class="container-sm" id="logincontainer">
-        <div class="title">
-            <h1 class="fs-2">Iniciar sesión</h1>
+    <!-- TODO LOGIN -->
+    <div class="container-sm">
+        <div class="container" id="logincontainer">
+            <div class="title">
+                <h1 id="title" class="fs-2">Iniciar sesión</h1>
+            </div>
+            <div class="login">
+                <form method="POST"> {% csrf_token %}
+                    <div class="mb-3 row">
+                        <label id="labelLogin" for="staticUsuario" class="col-sm-2 col-form-label">Usuario:</label>
+                        <div class="col-sm-10">
+                            {{form.nombre_usuario}}
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label id="labelLogin" for="inputPassword" class="col-sm-2 col-form-label">Contraseña:</label>
+                        <div class="col-sm-10">
+                            {{form.password_usuario}}
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <button class="btn btn-success col-sm-5" id="btnSubmitLogin" type="submit">Iniciar sesión</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        
     </div>
+    <!-- END TODO LOGIN -->
+    <script>
+        setTimeout(function(){
+            if ($('#msg').length > 0) {
+                $('#msg').remove();
+            }
+        }, 2000)
+    </script>
 {% endblock content %}
     
