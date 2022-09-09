@@ -30,7 +30,6 @@ class LoginUserView(FormView):
         encrypted_password = md5DigestHex(password)
         
         rol_id = Usuario.objects.get_usuario_rol_id(username, encrypted_password)[0][4]
-        self.request.session["rol_id"] = rol_id
 
         is_rol = Rol.objects.is_rol_nombre(rol_id)
 

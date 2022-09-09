@@ -9,7 +9,7 @@
     <div class="container-sm">
         <h1>Bienvenido "{{user.nombre_usuario}}"!</h1>
         <ul>
-        {{request.session.rol_id}}<br>
+        <br>
         {% for user in object_list %}
             <li>ID: {{user.id_usuario}}</li>
             <li>Nombre: {{user.nombre_usuario}}</li>
