@@ -15,6 +15,7 @@ from .functions import md5DigestHex
 class TareaListView(LoginRequiredMixin ,ListView):
     template_name = "users/tareas.html"
     model = Tarea
+    context_object_name = "lista_tareas"
 
 
 class LoginUserView(FormView):
