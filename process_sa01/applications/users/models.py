@@ -1,4 +1,5 @@
 from django.db import models
+from .managers import RolManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -58,6 +59,8 @@ class Rol(models.Model):
     id_rol = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
 
+    objects = RolManager()
+
     class Meta:
         managed = False
         db_table = 'rol'
@@ -68,10 +71,12 @@ class Usuario(models.Model):
     nombre_usuario = models.CharField(max_length=50)
     password_usuario = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
-    rol_id_rol = models.ForeignKey(Rol, on_delete=models.CASCADE, db_column='rol_id_rol')
-    persona_id_persona = models.ForeignKey(Persona, on_delete=models.CASCADE, db_column='persona_id_persona')
+    rol_id_rol = models.ForeignKey(Rol, on_delete=models.CASCADE, related_name="rol_usuario", db_column='rol_id_rol')
+    persona_id_persona = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name="persona_usuario", db_column='persona_id_persona')
     is_authenticated = True
 
+    objects = UsuarioManager()
+    
     class Meta:
         managed = False
         db_table = 'usuario'

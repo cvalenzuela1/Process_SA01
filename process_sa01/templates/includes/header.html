@@ -38,7 +38,12 @@
                             Usuario
                         </a>
                         <ul id="menudropdown" class="dropdown-menu">
-                            <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:login' %}">Log in</a></li>
+                            <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:login' %}">Iniciar sesión</a></li>
+                            {% if user.is_authenticated %}
+                                <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:user' %}">Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:logout' %}">Finalizar sesión</a></li> 
+                            {% endif %}
                         </ul>
                     </div> 
                     </li>

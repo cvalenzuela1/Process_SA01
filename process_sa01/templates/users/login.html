@@ -6,11 +6,11 @@
 
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/users/login.css' %}">
     {% include 'includes/header.html' %}
+    <link rel="stylesheet" href="{% static 'css/users/login.css' %}">
     <!-- TODO LOGIN -->
     <div class="container-sm">
-        <div class="container" id="logincontainer">
+        <div id="logincontainer" class="container">
             <div class="title">
                 <h1 id="title" class="fs-2">Iniciar sesión</h1>
             </div>
@@ -36,12 +36,5 @@
         </div>
     </div>
     <!-- END TODO LOGIN -->
-    <script>
-        setTimeout(function(){
-            if ($('#msg').length > 0) {
-                $('#msg').remove();
-            }
-        }, 2000)
-    </script>
 {% endblock content %}
     

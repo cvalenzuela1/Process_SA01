@@ -28,30 +28,20 @@ class LoginUserView(FormView):
         password=form.cleaned_data['password_usuario']
         
         encrypted_password = md5DigestHex(password)
-
         
-        # usuario_rol = Usuario.objects.get(nombre_usuario=username)
-        # rol_id = usuario_rol.rol_id_rol
-        # rol = Rol.objects.get(id_rol=rol_id)
-        # rol_name = str(rol.nombre).lower()
+        rol_id = Usuario.objects.get_usuario_rol_id(username, encrypted_password)[0][4]
+        self.request.session["rol_id"] = rol_id
 
-        usuario = Usuario.objects.filter(nombre_usuario=username, password_usuario=encrypted_password)
-        verification = usuario.exists()
+        is_rol = Rol.objects.is_rol_nombre(rol_id)
 
-        self.request.session['usuario'] = username
-        self.request.session['password'] = encrypted_password
-        self.request.session['valid'] = verification
-
-        if verification:
+        usuario = Usuario.objects.usuario_exists(username, encrypted_password)
+        if usuario and is_rol:
             user = authenticate(username=username, password=encrypted_password)
             if user is not None:
                 login(self.request, user)
-                self.request.session['user'] = user.is_active
                 return super(LoginUserView, self).form_valid(form)
             else:
-                self.request.session['user'] = user
-                return super(LoginUserView, self).form_valid(form)
-            
+                return super(LoginUserView, self).form_valid(form)    
         else:
             return super(LoginUserView, self).form_valid(form)
 
