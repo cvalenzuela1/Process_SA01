@@ -24,3 +24,21 @@ class RolManager(models.Manager):
         ).filter(
             id_rol=rol_id
         ).exists()
+
+
+class TareaManager(models.Manager):
+
+    def create_tarea(self, titulo, descripcion, fecha_inicio, fecha_termino, etiqueta, **extra_fields):
+        tarea = self.model(
+            titulo_tarea=titulo,
+            desc_tarea=descripcion,
+            fecha_inicio=fecha_inicio,
+            fecha_termino=fecha_termino,
+            etiqueta=etiqueta,
+            **extra_fields
+        )
+        tarea.save(using=self.db)
+        return tarea
+
+    def count_tareas(self):
+        return self.all().count()

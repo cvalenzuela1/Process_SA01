@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import RolManager, UsuarioManager
+from .managers import RolManager, TareaManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -51,6 +51,8 @@ class Tarea(models.Model):
     etiqueta = models.CharField(max_length=50)
     porc_cumplimiento = models.BigIntegerField()
     estado_tarea = models.CharField(max_length=50)
+
+    objects = TareaManager()
 
     class Meta:
         managed = False

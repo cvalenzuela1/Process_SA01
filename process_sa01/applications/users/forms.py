@@ -1,9 +1,11 @@
-from pyexpat import model
 from django import forms
-from django.contrib.auth import authenticate
-from .models import Usuario
+from .models import Tarea, Usuario
 
 # TODO forms home
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class LoginForm(forms.ModelForm):
 
     class Meta:
@@ -20,5 +22,38 @@ class LoginForm(forms.ModelForm):
             'password_usuario': forms.PasswordInput(attrs={
                 'placeholder': ' Contraseña',
                 'class': 'form-control',
+            })
+        }
+
+class GestionarTareaForm(forms.ModelForm):
+
+    class Meta:
+        model = Tarea
+        fields = [
+            'titulo_tarea',
+            'desc_tarea',
+            'fecha_inicio',
+            'fecha_termino',
+            'etiqueta',
+        ]
+        widgets = {
+            'titulo_tarea': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': ' Título de tarea',
+            }),
+            'desc_tarea': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': ' Descripción tarea',
+                'rows':3
+            }),
+            'fecha_inicio': DateInput(attrs={
+                'class': 'form-control'
+            }),
+            'fecha_termino': DateInput(attrs={
+                'class': 'form-control'
+            }),
+            'etiqueta': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': ' Etiqueta',
             })
         }
