@@ -13,7 +13,9 @@
         {% else %}
             <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
-        {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
+        
+        {% if element.id_tarea != 'Finalizada' %}
+            {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
             {% if page_obj.number == i %}
                 <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
                 </li>
@@ -21,10 +23,12 @@
                 {% if i == page_obj.paginator.ELLIPSIS %}
                     <li class="page-item"><span class="page-link">{{ i }}</span></li>
                 {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'app_users:tareas-list-page' i %}">{{ i }}</a></li>
                 {% endif %}
             {% endif %}
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
+
         {% if page_obj.has_next %}
             <li class="page-item"><a class="page-link" href="{% url 'app_users:tareas-list-page' page_obj.next_page_number %}">&raquo;</a></li>
         {% else %}

@@ -40,5 +40,13 @@ class TareaManager(models.Manager):
         tarea.save(using=self.db)
         return tarea
 
-    def count_tareas(self):
-        return self.all().count()
+    def update_tarea(self, tarea_id):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            estado_tarea="Finalizada",
+            porc_cumplimiento=100
+        )
+
+    def all_tareas(self):
+        return self.all()

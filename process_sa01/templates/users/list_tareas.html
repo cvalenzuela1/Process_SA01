@@ -15,11 +15,26 @@
             <div id="cardContenido" class="col">
                 <div class="card" style="width: 14rem;">
                     <span><img id="imgTarea" src="{% static 'assets/images/tarea/2.png' %}" class="card-img-top" alt="..."><img id="imgTarea1" src="{% static 'assets/images/tarea/1.png' %}" class="card-img-top" alt="..."></span>
-                    
                     <div class="card-body">
-                        <h5 class="card-title">{{element.titulo_tarea}}</h5>    
-                        <p class="card-text">{{element.desc_tarea}}</p>
-                        <a href="#" class="btn btn-primary">Terminar tarea</a>
+                        <form method="POST" action="{% url 'app_users:tareas-terminar' %}"> {% csrf_token %}
+                            <input name="tarea_id" type="hidden" value="{{element.id_tarea}}">
+                            <h5 class="card-title">{{element.titulo_tarea}}</h5>    
+                            <p class="card-text">{{element.desc_tarea}}</p>
+                            <small class="text-muted">Estado: {{element.estado_tarea}}</small>
+                            {% if element.estado_tarea == 'Finalizada' %}
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-label="Danger example" style="width: {{element.porc_cumplimiento}}%" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <hr>
+                            <button type="submit" class="btn btn-danger" disabled>Terminar tarea</button>
+                            {% else %}
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{element.porc_cumplimiento}}%"></div>
+                            </div>
+                            <hr>
+                            <button type="submit" class="btn btn-success">Terminar tarea</button>
+                            {% endif %}
+                        </form>
                     </div>
                 </div>
             </div>
@@ -27,6 +42,7 @@
             </div>
         </div>
     </div>
-    {% include 'includes/paginator.html' %}
+    <p align="center">{% include 'includes/paginator.html' %}</p>
+    
 {% endblock content %}
     

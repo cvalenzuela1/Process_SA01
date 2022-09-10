@@ -1,3 +1,5 @@
+from dataclasses import fields
+from pyexpat import model
 from django import forms
 from .models import Tarea, Usuario
 
@@ -7,7 +9,6 @@ class DateInput(forms.DateInput):
 
 
 class LoginForm(forms.ModelForm):
-
     class Meta:
         model = Usuario
         fields = [
@@ -26,7 +27,6 @@ class LoginForm(forms.ModelForm):
         }
 
 class GestionarTareaForm(forms.ModelForm):
-
     class Meta:
         model = Tarea
         fields = [
@@ -57,3 +57,14 @@ class GestionarTareaForm(forms.ModelForm):
                 'placeholder': ' Etiqueta',
             })
         }
+
+class TerminarTareaForm(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = [
+            "id_tarea"
+        ]
+        widgets = {
+            "id_tarea": forms.HiddenInput()
+        }
+    

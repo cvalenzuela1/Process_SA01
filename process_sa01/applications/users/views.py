@@ -2,14 +2,13 @@ import random
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, FormMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
 
 from .models import Usuario, Rol, Tarea
-from .forms import GestionarTareaForm, LoginForm
+from .forms import GestionarTareaForm, LoginForm, TerminarTareaForm
 from .functions import md5DigestHex
 
 
@@ -27,17 +26,29 @@ class GestionarTareaView(FormView):
             form.cleaned_data['fecha_termino'],
             form.cleaned_data['etiqueta'],
             porc_cumplimiento=0,
-            estado_tarea="En ejecución"
+            estado_tarea="Activa"
         )
         self.request.session["tarea"] = tarea.titulo_tarea
         return super(GestionarTareaView, self).form_valid(form)
 
 
-class TareaListView(LoginRequiredMixin ,ListView):
+class TareaListView(LoginRequiredMixin, ListView):
     template_name = "users/list_tareas.html"
-    paginate_by = 4
+    paginate_by = 3
     model = Tarea
     context_object_name = "lista_tareas"
+    ordering = ["estado_tarea","-id_tarea"]
+    filterset_class = None
+
+
+def tareaTerminar(request):
+    if request.method == "POST":
+        id_tarea = request.POST.get("tarea_id")
+        if id_tarea != None:
+            Tarea.objects.update_tarea(id_tarea)
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        else:
+            return HttpResponseRedirect(reverse("app_home:home"))
 
 
 class LoginUserView(FormView):
