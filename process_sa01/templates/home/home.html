@@ -8,6 +8,10 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
     {% include 'includes/header.html' %}
-    
+    {% if user.is_authenticated %}
+    <div class="container-sm">
+        <h1 id="bienvenido" class="display-6">Bienvenid@ "{{user.nombre_usuario}}"!</h1>
+    </div>
+    {% endif %}  
 {% endblock content %}
     

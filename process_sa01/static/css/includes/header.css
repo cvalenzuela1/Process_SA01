@@ -3,12 +3,6 @@ body{
     background-size: 73%;
     background-position-x: center;
     background-attachment: fixed;
-    height: 500px;
-}
-
-.bi {
-    vertical-align: -.125em;
-    fill: rgb(0, 0, 0);
 }
 
 #homeItem{
@@ -23,14 +17,28 @@ body{
 
 #letrasImagenes{
     font-style: italic;
+    margin-right: 30px;
 }
 
-#dropdownLogin{
-    text-align: center;
-    background-color: transparent;
-    color: black;
+#dropdownLogin, #dropDownGestionar{
+    text-align: left;
 }
 
 #menudropdown{
     border: transparent;
+}
+
+#tuercalogo{
+    margin-left: 10px;
+    width: 50px;
+}
+
+#userlogo{
+    margin-left: 3px;
+    margin-bottom: 2px;
+    width: 48px;
+}
+
+#navbarms{
+    margin-top: 0px;
 }

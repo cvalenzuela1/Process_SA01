@@ -5,20 +5,6 @@
 {% endblock title %}
 
 {% block content %}
-        <h1>Bienvenido a User!</h1>
-        <ul>
-        {{request.session.usuario}}<br>
-        {{request.session.password}}<br>
-        VALIDO: {{request.session.valid}}<br>
-        USER: {{request.session.user}}<br>
-        {% for user in object_list %}
-            <li>ID: {{user.id_usuario}}</li>
-            <li>Nombre: {{user.nombre_usuario}}</li>
-            <li>Contraseña: {{user.password_usuario}}</li>
-            <br><br>
-        {% endfor %}
-        <p>{{user.password_usuario}}</p>
-        <a href="{% url 'app_users:logout' %}">Logout</a>
-        </ul>
+
 {% endblock content %}
     
