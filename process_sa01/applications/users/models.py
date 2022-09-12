@@ -80,8 +80,6 @@ class TareaPersona(models.Model):
     class Meta:
         managed = False
         db_table = 'tarea_persona'
-
-
         
 
 class Rol(models.Model):

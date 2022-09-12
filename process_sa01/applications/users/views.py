@@ -1,4 +1,4 @@
-import random
+import datetime
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
@@ -19,26 +19,41 @@ class GestionarTareaView(FormView):
     success_url = reverse_lazy("app_users:tareas-list")
 
     def form_valid(self, form):
-        tarea = Tarea.objects.create_tarea(
-            form.cleaned_data['titulo_tarea'],
-            form.cleaned_data['desc_tarea'],
-            form.cleaned_data['fecha_inicio'],
-            form.cleaned_data['fecha_termino'],
-            form.cleaned_data['etiqueta'],
-            porc_cumplimiento=0,
-            estado_tarea="Activa"
-        )
-        self.request.session["tarea"] = tarea.titulo_tarea
-        return super(GestionarTareaView, self).form_valid(form)
+        f_inicio = form.cleaned_data['fecha_inicio']
+        f_termino = form.cleaned_data['fecha_termino']
+
+        
+        f_inicio = datetime.datetime.strptime(str(f_inicio), '%Y-%m-%d').strftime('%d/%m/%Y')
+        f_termino = datetime.datetime.strptime(str(f_termino), '%Y-%m-%d').strftime('%d/%m/%Y')
+
+        f_inicio = datetime.datetime.strptime(f_inicio, '%d/%m/%Y')
+        f_termino = datetime.datetime.strptime(f_termino, '%d/%m/%Y')
+
+        diff = f_termino.date() - f_inicio.date()
+        current = datetime.date.today() 
+
+        diff_current = f_inicio.date() - current
+
+        if diff.days > 0 and diff_current.days >= 0:
+            Tarea.objects.create_tarea(
+                form.cleaned_data['titulo_tarea'],
+                form.cleaned_data['desc_tarea'],
+                form.cleaned_data['fecha_inicio'],
+                form.cleaned_data['fecha_termino'],
+                form.cleaned_data['etiqueta'],
+                porc_cumplimiento=0,
+                estado_tarea="Activa")
+            return super(GestionarTareaView, self).form_valid(form)
+        else:
+            return HttpResponseRedirect(reverse("app_users:tareas"))
 
 
 class TareaListView(LoginRequiredMixin, ListView):
     template_name = "users/list_tareas.html"
-    paginate_by = 3
+    paginate_by = 4
     model = Tarea
     context_object_name = "lista_tareas"
     ordering = ["estado_tarea","-id_tarea"]
-    filterset_class = None
 
 
 def tareaTerminar(request):
@@ -49,6 +64,44 @@ def tareaTerminar(request):
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
             return HttpResponseRedirect(reverse("app_home:home"))
+
+
+def actualizarProgreso(request):
+    if request.method == "POST":
+        tarea  = Tarea.objects.get_fechas()
+
+        if tarea:
+            for item in tarea:
+                f_inicio = item.fecha_inicio
+                f_termino = item.fecha_termino
+                tarea_id = item.id_tarea
+
+                f_inicio = datetime.datetime.strptime(str(f_inicio), '%Y-%m-%d').strftime("%d/%m/%Y")
+                f_termino = datetime.datetime.strptime(str(f_termino), '%Y-%m-%d').strftime("%d/%m/%Y")
+
+                f_inicio = datetime.datetime.strptime(f_inicio, '%d/%m/%Y')
+                f_termino = datetime.datetime.strptime(f_termino, '%d/%m/%Y')
+
+                diff = f_termino.date() - f_inicio.date()
+                currentdate=datetime.date.today()
+                diff_actual = f_termino.date() - currentdate
+
+                new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                if diff_actual.days <= 0:
+                    Tarea.objects.update_porc_cumplimiento(100, tarea_id)
+                    continue
+                elif diff_actual.days == diff.days:
+                    new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                if new_porc_cumplimiento < 0:
+                    Tarea.objects.update_porc_cumplimiento(0, tarea_id)
+                elif new_porc_cumplimiento > 0:
+                    Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
+                
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        else:
+            return HttpResponseRedirect(reverse("app_home:tareas-list"))
+    else:
+        return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
 class LoginUserView(FormView):
@@ -72,9 +125,9 @@ class LoginUserView(FormView):
                 login(self.request, user)
                 return super(LoginUserView, self).form_valid(form)
             else:
-                return super(LoginUserView, self).form_valid(form)    
+                return HttpResponseRedirect(reverse("app_users:login"))   
         else:
-            return super(LoginUserView, self).form_valid(form)
+            return HttpResponseRedirect(reverse("app_users:login"))   
 
 
 class LogoutView(View):

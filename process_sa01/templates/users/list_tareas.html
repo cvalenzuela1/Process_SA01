@@ -19,30 +19,72 @@
                         <form method="POST" action="{% url 'app_users:tareas-terminar' %}"> {% csrf_token %}
                             <input name="tarea_id" type="hidden" value="{{element.id_tarea}}">
                             <h5 class="card-title">{{element.titulo_tarea}}</h5>    
-                            <p class="card-text">{{element.desc_tarea}}</p>
+                            <textarea class="card-text form-control" disabled>{{element.desc_tarea}}</textarea>
                             <small class="text-muted">Estado: {{element.estado_tarea}}</small>
                             {% if element.estado_tarea == 'Finalizada' %}
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-label="Danger example" style="width: {{element.porc_cumplimiento}}%" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <hr>
-                            <button type="submit" class="btn btn-danger" disabled>Terminar tarea</button>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-danger" disabled>Finalizar</button>&nbsp;
+                                <button type="button" class="btn btn-primary" disabled>Actualizar</button>
+                            </div>
                             {% else %}
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{element.porc_cumplimiento}}%"></div>
                             </div>
                             <hr>
-                            <button type="submit" class="btn btn-success">Terminar tarea</button>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="submit" class="btn btn-success">Finalizar</button>&nbsp;
+                                {% csrf_token %}
+                                <button class="btn btn-primary" type="button" onclick="showoffcanvas();" aria-controls="offcanvasExample">
+                                    Actualizar
+                                </button> 
+                            </div>
                             {% endif %}
                         </form>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+            {% endfor %}              
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title text-white" id="offcanvasExampleLabel">Menú actualización</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="hideoffcanvas();" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="text-white">
+                    Actualización de progresos de tareas con estado "En ejecución".
+                    </div>
+                    <form method="POST" action="{% url 'app_users:tareas-actualizar' %}">{% csrf_token %}
+                        <div class="dropdown mt-3">
+                            <button class="btn btn-primary" type="submit">Actualizar progresos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             </div>
         </div>
     </div>
     <p align="center">{% include 'includes/paginator.html' %}</p>
-    
+    <!-- JAVASCRIPT CODE -->
+    <script>
+        function showoffcanvas(){
+            var myCollapse = document.getElementById('offcanvasExample')
+            var bsCollapse = new bootstrap.Collapse(myCollapse, {
+                show: true
+            })
+        }
+
+        function hideoffcanvas(){
+            var myCollapse = document.getElementById('offcanvasExample')
+            var bsCollapse = new bootstrap.Collapse(myCollapse, {
+                show: false
+            })
+        }
+        
+    </script>
+    <!-- END JAVASCRIPT CODE -->
 {% endblock content %}
     
