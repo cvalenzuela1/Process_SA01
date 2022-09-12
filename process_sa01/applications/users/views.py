@@ -87,6 +87,8 @@ def actualizarProgreso(request):
                 diff_actual = f_termino.date() - currentdate
 
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                if item.porc_cumplimiento == 100:
+                    continue
                 if diff_actual.days <= 0:
                     Tarea.objects.update_porc_cumplimiento(100, tarea_id)
                     continue
