@@ -48,5 +48,26 @@ class TareaManager(models.Manager):
             porc_cumplimiento=100
         )
 
+    def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
+        
+        if porc_actualizado >= 100:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                estado_tarea="Finalizada",
+                porc_cumplimiento=100
+            )
+        else:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                porc_cumplimiento=porc_actualizado
+            )
+        
+
+    def get_fechas(self):
+        items = self.all()
+        return items
+
     def all_tareas(self):
         return self.all()
