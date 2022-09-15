@@ -40,11 +40,13 @@ class GestionarTareaForm(forms.ModelForm):
             'titulo_tarea': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': ' Título de tarea',
+                'maxlength': '20'
             }),
             'desc_tarea': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': ' Descripción tarea',
-                'rows':3
+                'rows':3,
+                'maxlength': '500'
             }),
             'fecha_inicio': DateInput(attrs={
                 'class': 'form-control'
@@ -57,14 +59,3 @@ class GestionarTareaForm(forms.ModelForm):
                 'placeholder': ' Etiqueta',
             })
         }
-
-class TerminarTareaForm(forms.ModelForm):
-    class Meta:
-        model = Tarea
-        fields = [
-            "id_tarea"
-        ]
-        widgets = {
-            "id_tarea": forms.HiddenInput()
-        }
-    

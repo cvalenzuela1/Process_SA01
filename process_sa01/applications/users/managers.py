@@ -25,6 +25,11 @@ class RolManager(models.Manager):
             id_rol=rol_id
         ).exists()
 
+    def get_rol_nombre(self, rol_id):
+        return self.filter(
+            id_rol=rol_id
+        ).values_list()
+
 
 class TareaManager(models.Manager):
 
@@ -64,10 +69,6 @@ class TareaManager(models.Manager):
                 porc_cumplimiento=porc_actualizado
             )
         
-
     def get_fechas(self):
         items = self.all()
         return items
-
-    def all_tareas(self):
-        return self.all()

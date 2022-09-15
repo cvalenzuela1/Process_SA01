@@ -6,9 +6,10 @@ from django.views.generic.edit import FormView, FormMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from .models import Usuario, Rol, Tarea
-from .forms import GestionarTareaForm, LoginForm, TerminarTareaForm
+from .forms import GestionarTareaForm, LoginForm
 from .functions import md5DigestHex
 
 
@@ -43,9 +44,16 @@ class GestionarTareaView(FormView):
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
                 estado_tarea="Activa")
+            
+            messages.success(self.request, "Tarea creada correctamente")
             return super(GestionarTareaView, self).form_valid(form)
         else:
+            messages.warning(self.request, "Fechas ingresadas son inválidas")
             return HttpResponseRedirect(reverse("app_users:tareas"))
+
+    def form_invalid(self, form):
+        messages.warning(self.request, "Fechas ingresadas tienen un formato incorrecto")
+        return HttpResponseRedirect(reverse("app_users:tareas"))
 
 
 class TareaListView(LoginRequiredMixin, ListView):
@@ -61,10 +69,13 @@ def tareaTerminar(request):
         id_tarea = request.POST.get("tarea_id")
         if id_tarea != None:
             Tarea.objects.update_tarea(id_tarea)
+            messages.success(request, "Tarea finalizada correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
-            return HttpResponseRedirect(reverse("app_home:home"))
-
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+    else:
+        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+    
 
 def actualizarProgreso(request):
     if request.method == "POST":
@@ -98,9 +109,11 @@ def actualizarProgreso(request):
                     Tarea.objects.update_porc_cumplimiento(0, tarea_id)
                 elif new_porc_cumplimiento > 0:
                     Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
-                
+
+            messages.success(request, "Progresos actualizados correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
+            messages.error(request, "Se ha producido un error al actualizar")
             return HttpResponseRedirect(reverse("app_home:tareas-list"))
     else:
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
@@ -125,6 +138,8 @@ class LoginUserView(FormView):
             user = authenticate(username=username, password=encrypted_password)
             if user is not None:
                 login(self.request, user)
+                for item in Rol.objects.get_rol_nombre(rol_id):
+                    messages.success(self.request, f"Has iniciado sesión como \"{item[1]}\"")
                 return super(LoginUserView, self).form_valid(form)
             else:
                 return HttpResponseRedirect(reverse("app_users:login"))   
@@ -135,6 +150,7 @@ class LoginUserView(FormView):
 class LogoutView(View):
     def get(self, request, *args, **kargs):
         logout(request)
+        messages.success(request, "Has cerrado sesión correctamente")
         return HttpResponseRedirect(
             reverse(
                 'app_users:login'

@@ -16,7 +16,7 @@
                 <div class="card" style="width: 14rem;">
                     <span><img id="imgTarea" src="{% static 'assets/images/tarea/2.png' %}" class="card-img-top" alt="..."><img id="imgTarea1" src="{% static 'assets/images/tarea/1.png' %}" class="card-img-top" alt="..."></span>
                     <div class="card-body">
-                        <form method="POST" action="{% url 'app_users:tareas-terminar' %}"> {% csrf_token %}
+                        <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this)"> {% csrf_token %}
                             <input name="tarea_id" type="hidden" value="{{element.id_tarea}}">
                             <h5 class="card-title">{{element.titulo_tarea}}</h5>    
                             <textarea class="card-text form-control" disabled>{{element.desc_tarea}}</textarea>
@@ -28,7 +28,7 @@
                             <hr>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-danger" disabled>Finalizar</button>&nbsp;
-                                <button type="button" class="btn btn-primary" disabled>Actualizar</button>
+                                <button type="button" class="btn btn-primary" disabled>Administrar</button>
                             </div>
                             {% else %}
                             <div class="progress">
@@ -39,7 +39,7 @@
                                 <button type="submit" class="btn btn-success">Finalizar</button>&nbsp;
                                 {% csrf_token %}
                                 <button class="btn btn-primary" type="button" onclick="showoffcanvas();" aria-controls="offcanvasExample">
-                                    Actualizar
+                                    Administrar
                                 </button> 
                             </div>
                             {% endif %}
@@ -50,12 +50,13 @@
             {% endfor %}              
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title text-white" id="offcanvasExampleLabel">Menú actualización</h5>
+                    <h5 class="offcanvas-title text-dark" id="offcanvasExampleLabel">Menú actualización</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="hideoffcanvas();" aria-label="Close"></button>
                 </div>
+                <br><br>
                 <div class="offcanvas-body">
-                    <div class="text-white">
-                    Actualización de progresos de tareas con estado "En ejecución".
+                    <div class="text-dark">
+                    Actualización de progresos de tareas con estado diferente a "Finalizada".
                     </div>
                     <form method="POST" action="{% url 'app_users:tareas-actualizar' %}">{% csrf_token %}
                         <div class="dropdown mt-3">
@@ -68,7 +69,11 @@
         </div>
     </div>
     <p align="center">{% include 'includes/paginator.html' %}</p>
-    <!-- JAVASCRIPT CODE -->
+
+{% endblock content %}
+
+{% block js %} 
+    <!-- OFFCANVAS CODE -->
     <script>
         function showoffcanvas(){
             var myCollapse = document.getElementById('offcanvasExample')
@@ -85,6 +90,30 @@
         }
         
     </script>
-    <!-- END JAVASCRIPT CODE -->
-{% endblock content %}
+    <!-- END OFFCANVAS CODE -->
+    <!-- MESSAGES -->
+    <script>
+        function finalizarTarea(form){
+            Swal.fire({
+                "titleText": "¿Está seguro de finalizar la tarea?",
+                'text': "Esta acción es irreversible!",
+                "icon": "warning",
+                "showCancelButton": true,
+                "cancelButtonText": "Cancelar",
+                "confirmButtonText": "Finalizar",
+                "cancelButtonColor": "red",
+                "confirmButtonColor": "green",
+                "reverseButtons": true,
+                "focusConfirm": true
+            })
+            .then(function(result){
+                if(result.isConfirmed){
+                    form.submit();
+                }
+            })
+            return false;
+        }
+    </script>
+    <!-- END MESSAGES -->
+{% endblock js %}
     
