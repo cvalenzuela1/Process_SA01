@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
-from django.views.generic.edit import FormView, FormMixin
+from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -139,7 +139,7 @@ class LoginUserView(FormView):
             if user is not None:
                 login(self.request, user)
                 for item in Rol.objects.get_rol_nombre(rol_id):
-                    messages.success(self.request, f"Has iniciado sesión como \"{item[1]}\"")
+                    messages.success(self.request, f"Has iniciado sesión como {str(item[1]).lower()}")
                 return super(LoginUserView, self).form_valid(form)
             else:
                 return HttpResponseRedirect(reverse("app_users:login"))   
