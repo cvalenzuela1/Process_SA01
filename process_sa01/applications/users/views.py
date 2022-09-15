@@ -142,8 +142,10 @@ class LoginUserView(FormView):
                     messages.success(self.request, f"Has iniciado sesión como {str(item[1]).lower()}")
                 return super(LoginUserView, self).form_valid(form)
             else:
+                messages.warning(self.request, "Las credenciales ingresadas no son válidas")
                 return HttpResponseRedirect(reverse("app_users:login"))   
         else:
+            messages.warning(self.request, "Las credenciales ingresadas no son válidas")
             return HttpResponseRedirect(reverse("app_users:login"))   
 
 
