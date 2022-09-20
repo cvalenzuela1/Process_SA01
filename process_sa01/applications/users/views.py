@@ -1,25 +1,64 @@
 import datetime
+import pandas as pd
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
 from django.views.generic.edit import FormView, UpdateView
-# from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-
 from .models import Usuario, Rol, Tarea
 from .forms import GestionarTareaForm, LoginForm
 from .functions import md5DigestHex
 
 
 # Create your views here.
-class TareaDetailView(UpdateView):
-    model = Tarea
+def updateTarea(request):
+    if request.method == "POST":
+        id_tarea = request.POST.get("idTarea")
+        if id_tarea != None:
+            titulo_tarea = request.POST.get("tituloTarea")
+            desc_tarea = request.POST.get("descTarea")
+            etiqueta_tarea = request.POST.get("etiquetaTarea")
+            fecha_inicio = request.POST.get("fInicio")
+            fecha_termino = request.POST.get("fTermino")
+            if  len(fecha_termino) > 0 and fecha_termino != None:
+                f_inicio = pd.to_datetime(fecha_inicio, infer_datetime_format=True)
+                f_termino = datetime.datetime.strptime(str(fecha_termino), '%Y-%m-%d')
+                diff = f_termino.date() - f_inicio.date()
+                diff_days = diff.days
+
+                if diff_days > 0:
+                    Tarea.objects.update_tarea_fields(id_tarea, titulo_tarea, desc_tarea, etiqueta_tarea, fecha_termino)
+                    messages.success(request, f"Tarea actualizada correctamente")
+                else:
+                    messages.warning(request, f"Fecha de término debe ser mayor a la de inicio")
+                    return HttpResponseRedirect(
+                        reverse(
+                            "app_users:tareas-detalle", 
+                            kwargs={'pk': id_tarea}
+                        )
+                    )
+            else:
+                Tarea.objects.update_tarea_fields(id_tarea, titulo_tarea, desc_tarea, etiqueta_tarea, None)
+                messages.success(request, f"Tarea actualizada correctamente")
+                
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        else:
+            messages.warning(request, "Ha ocurrido un problema al actualizar")
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+    else:
+        messages.error(request, "Ha ocurrido un error al actualizar")
+        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+
+
+class TareaDetailView(DetailView):
     template_name = "users/detalle_tareas.html"
-    fields = ("__all__")
+    model = Tarea
     context_object_name = "object_tarea"
+    success_url = reverse_lazy("app_users:tareas-list")
     
 
 class GestionarTareaView(FormView):
