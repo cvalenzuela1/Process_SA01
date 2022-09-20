@@ -2,7 +2,8 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
+# from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,6 +15,13 @@ from .functions import md5DigestHex
 
 
 # Create your views here.
+class TareaDetailView(UpdateView):
+    model = Tarea
+    template_name = "users/detalle_tareas.html"
+    fields = ("__all__")
+    context_object_name = "object_tarea"
+    
+
 class GestionarTareaView(FormView):
     template_name = "users/tareas.html"
     form_class = GestionarTareaForm
@@ -72,8 +80,10 @@ def tareaTerminar(request):
             messages.success(request, "Tarea finalizada correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
+            messages.warning(request, "Ha ocurrido un problema")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
     else:
+        messages.error(request, "Ha ocurrido un error")
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
     
 

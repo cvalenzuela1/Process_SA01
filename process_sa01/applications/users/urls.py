@@ -11,4 +11,5 @@ urlpatterns = [
     path('tareas-list/<int:page>/', views.TareaListView.as_view(), name='tareas-list-page'),
     path('tareas-terminar/', views.tareaTerminar, name='tareas-terminar'),
     path('tareas-actualizar/', views.actualizarProgreso, name='tareas-actualizar'),
-]
+    path('tareas-detalle/<pk>/', views.TareaDetailView.as_view(), name='tareas-detalle'),
+]   
