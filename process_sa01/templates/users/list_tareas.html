@@ -16,7 +16,7 @@
                 <div class="card" style="width: 14rem;">
                     <span><img id="imgTarea" src="{% static 'assets/images/tarea/2.png' %}" class="card-img-top" alt="..."><img id="imgTarea1" src="{% static 'assets/images/tarea/1.png' %}" class="card-img-top" alt="..."></span>
                     <div class="card-body">
-                        <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this)"> {% csrf_token %}
+                        <form action="{% url 'app_users:tareas-detalle' element.id_tarea %}">{% csrf_token %}
                             <input name="tarea_id" type="hidden" value="{{element.id_tarea}}">
                             <h5 class="card-title">{{element.titulo_tarea}}</h5>    
                             <textarea class="card-text form-control" disabled>{{element.desc_tarea}}</textarea>
@@ -27,7 +27,7 @@
                             </div>
                             <hr>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-danger" disabled>Finalizar</button>&nbsp;
+                                <button type="submit" class="btn btn-danger">Ver</button>&nbsp;
                                 <button type="button" class="btn btn-primary" disabled>Administrar</button>
                             </div>
                             {% else %}
@@ -36,8 +36,7 @@
                             </div>
                             <hr>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="submit" class="btn btn-success">Finalizar</button>&nbsp;
-                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Ver</button>&nbsp;
                                 <button class="btn btn-primary" type="button" onclick="showoffcanvas();" aria-controls="offcanvasExample">
                                     Administrar
                                 </button> 
@@ -92,28 +91,7 @@
     </script>
     <!-- END OFFCANVAS CODE -->
     <!-- MESSAGES -->
-    <script>
-        function finalizarTarea(form){
-            Swal.fire({
-                "titleText": "¿Está seguro de finalizar la tarea?",
-                'text': "Esta acción es irreversible!",
-                "icon": "warning",
-                "showCancelButton": true,
-                "cancelButtonText": "Cancelar",
-                "confirmButtonText": "Finalizar",
-                "cancelButtonColor": "red",
-                "confirmButtonColor": "green",
-                "reverseButtons": true,
-                "focusConfirm": true
-            })
-            .then(function(result){
-                if(result.isConfirmed){
-                    form.submit();
-                }
-            })
-            return false;
-        }
-    </script>
+    
     <!-- END MESSAGES -->
 {% endblock js %}
     

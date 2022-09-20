@@ -1,5 +1,4 @@
-from dataclasses import fields
-from pyexpat import model
+import datetime
 from django import forms
 from .models import Tarea, Usuario
 
@@ -40,7 +39,7 @@ class GestionarTareaForm(forms.ModelForm):
             'titulo_tarea': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': ' Título de tarea',
-                'maxlength': '20'
+                'maxlength': '35'
             }),
             'desc_tarea': forms.Textarea(attrs={
                 'class': 'form-control',

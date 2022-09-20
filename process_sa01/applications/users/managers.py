@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from django.db import models
 from django.db.models import Q
 
@@ -72,3 +73,36 @@ class TareaManager(models.Manager):
     def get_fechas(self):
         items = self.all()
         return items
+
+    def get_fecha_termino(self, pk):
+        return self.filter(
+            id_tarea=pk
+        ).values_list()[0][4]
+
+    def update_tarea_fields(self, tarea_id, titulo, desc, etiqueta, ftermino):
+
+        if titulo != None and len(titulo) > 0:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                titulo_tarea=titulo
+            )
+        if desc != None and len(desc) > 0:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                desc_tarea=desc
+            )
+        if etiqueta != None and len(etiqueta) > 0:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                etiqueta=etiqueta
+            )
+        if ftermino != None and len(ftermino) > 0:
+            self.filter(
+                id_tarea=tarea_id
+            ).update(
+                fecha_termino=ftermino
+            )
+        
