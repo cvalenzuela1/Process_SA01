@@ -14,7 +14,7 @@
             <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
         
-        {% if element.id_tarea != 'Finalizada' %}
+        {% if element.estado_tarea != 'Finalizada' %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
             {% if page_obj.number == i %}
                 <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>

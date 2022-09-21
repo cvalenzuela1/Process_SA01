@@ -69,7 +69,6 @@
                 </div><br>
             </form>
             <div class="col">
-                
                 {% if object_tarea.estado_tarea != 'Finalizada' %}
                 <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this);">{% csrf_token %}
                     <input name="tarea_id" type="hidden" value="{{object_tarea.id_tarea}}">
@@ -78,8 +77,6 @@
                 {% else %}
                 <button class="btn btn-danger" type="button" disabled>Finalizar Tarea</button>
                 {% endif %}
-                    
-                
             </div>
         </div>        
     </div>
@@ -130,5 +127,3 @@
     }
 </script>
 {% endblock js %}
-    
-    

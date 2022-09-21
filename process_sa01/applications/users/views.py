@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import Usuario, Rol, Tarea
 from .forms import GestionarTareaForm, LoginForm
-from .functions import md5DigestHex
+from .functions import getCurrentDate, md5DigestHex
 
 
 # Create your views here.
@@ -90,7 +90,8 @@ class GestionarTareaView(FormView):
                 form.cleaned_data['fecha_termino'],
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
-                estado_tarea="Activa")
+                estado_tarea="Activa",
+                estado_alterado=0)
             
             messages.success(self.request, "Tarea creada correctamente")
             return super(GestionarTareaView, self).form_valid(form)
@@ -108,14 +109,17 @@ class TareaListView(LoginRequiredMixin, ListView):
     paginate_by = 4
     model = Tarea
     context_object_name = "lista_tareas"
-    ordering = ["estado_tarea","-id_tarea"]
+
+    def get_queryset(self):
+        new_context = Tarea.objects.get_tareas_new_order()
+        return new_context
 
 
 def tareaTerminar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
         if id_tarea != None:
-            Tarea.objects.update_tarea(id_tarea)
+            Tarea.objects.update_tarea(id_tarea, getCurrentDate())
             messages.success(request, "Tarea finalizada correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
