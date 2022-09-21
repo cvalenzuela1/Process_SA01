@@ -46,11 +46,13 @@ class TareaManager(models.Manager):
         tarea.save(using=self.db)
         return tarea
 
-    def update_tarea(self, tarea_id):
+    def update_tarea(self, tarea_id, current):
         self.filter(
             id_tarea=tarea_id
         ).update(
             estado_tarea="Finalizada",
+            estado_alterado=1,
+            fecha_estado_alterado=current,
             porc_cumplimiento=100
         )
 
@@ -106,3 +108,10 @@ class TareaManager(models.Manager):
                 fecha_termino=ftermino
             )
         
+    def get_tareas_new_order(self):
+        return self.all().filter(
+            Q(estado_alterado=0) | Q(estado_alterado=1)
+        ).order_by(
+            'estado_tarea',
+            '-id_tarea'
+        )

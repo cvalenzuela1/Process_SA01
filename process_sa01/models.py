@@ -193,6 +193,8 @@ class Tarea(models.Model):
     etiqueta = models.CharField(max_length=50)
     porc_cumplimiento = models.BigIntegerField()
     estado_tarea = models.CharField(max_length=50)
+    estado_alterado = models.IntegerField()
+    fecha_estado_alterado = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
