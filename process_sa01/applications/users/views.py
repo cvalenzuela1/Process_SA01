@@ -61,7 +61,7 @@ class TareaDetailView(DetailView):
     model = Tarea
     context_object_name = "object_tarea"
     success_url = reverse_lazy("app_users:tareas-list")
-    
+
 
 class GestionarTareaView(FormView):
     template_name = "users/tareas.html"
@@ -104,15 +104,6 @@ class TareaListView(LoginRequiredMixin, ListView):
     model = Tarea
     context_object_name = "lista_tareas"
 
-    # def get_queryset(self):
-    #     new_context = Tarea.objects.get_tareas_new_order1()
-    #     username = self.request.user.nombre_usuario
-    #     password = self.request.user.password_usuario
-    #     rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
-    #     rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-    #     self.request.session["rol_nombre"] = rol_nombre
-    #     return new_context
-
     def get_queryset(self):
         username = self.request.user.nombre_usuario
         password = self.request.user.password_usuario
@@ -122,17 +113,6 @@ class TareaListView(LoginRequiredMixin, ListView):
         context = Tarea.objects.get_tareas_new_order(rol_nombre)
         
         return context
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     username = self.request.user.nombre_usuario
-    #     password = self.request.user.password_usuario
-    #     rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
-    #     rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-    #     self.request.session["rol_nombre"] = rol_nombre
-    #     context["lista_tareas"] = Tarea.objects.get_tareas_new_order(rol_nombre)
-        
-    #     return context
 
 
 def tareaTerminar(request):
@@ -148,7 +128,7 @@ def tareaTerminar(request):
     else:
         messages.error(request, "Ha ocurrido un error")
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
-    
+
 
 def actualizarProgreso(request):
     if request.method == "POST":
@@ -176,6 +156,7 @@ def actualizarProgreso(request):
                 elif new_porc_cumplimiento > 0:
                     Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
 
+            result = executeSPUpdateEstadoAlterado()
             messages.success(request, "Progresos actualizados correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
