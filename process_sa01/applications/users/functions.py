@@ -1,5 +1,6 @@
 import hashlib
 import datetime
+from django.db import connection
 
 def md5DigestHex(text):
     hex_string = hashlib.md5(text.encode("utf-8")).hexdigest()
@@ -34,3 +35,13 @@ def getDiffDaysCurrentInicio(f_inicio):
     diff_actual_inicio = f_inicio.date() - currentdate
 
     return diff_actual_inicio
+
+def executeSPUpdateEstadoAlterado():
+    cursor = connection.cursor()
+    try:
+        sentencia = "PD_TRG_UPDATE_ESTADO_ALTERADO"
+        cursor.callproc(sentencia)
+    except Exception as e:
+        print("ERROR: ",e , "\nSentencia: ", sentencia)
+    finally:
+        cursor.close()
