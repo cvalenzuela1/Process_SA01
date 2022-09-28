@@ -3,7 +3,7 @@ import pandas as pd
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
