@@ -3,7 +3,7 @@ import pandas as pd
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import Usuario, Rol, Tarea
 from .forms import GestionarTareaForm, LoginForm
-from .functions import getCurrentDate, md5DigestHex
+from .functions import *
 
 
 # Create your views here.
@@ -70,19 +70,11 @@ class GestionarTareaView(FormView):
         f_inicio = form.cleaned_data['fecha_inicio']
         f_termino = form.cleaned_data['fecha_termino']
 
-        
-        f_inicio = datetime.datetime.strptime(str(f_inicio), '%Y-%m-%d').strftime('%d/%m/%Y')
-        f_termino = datetime.datetime.strptime(str(f_termino), '%Y-%m-%d').strftime('%d/%m/%Y')
+        diff = getDiffDaysTerminoInicio(f_termino, f_inicio)
+        diff_current = getDiffDaysTerminoCurrent(f_termino)
+        diff_current_inicio = getDiffDaysCurrentInicio(f_inicio)
 
-        f_inicio = datetime.datetime.strptime(f_inicio, '%d/%m/%Y')
-        f_termino = datetime.datetime.strptime(f_termino, '%d/%m/%Y')
-
-        diff = f_termino.date() - f_inicio.date()
-        current = datetime.date.today() 
-
-        diff_current = f_inicio.date() - current
-
-        if diff.days > 0 and diff_current.days >= 0:
+        if diff.days > 0 and diff_current.days > 0 and diff_current_inicio.days >= 0:
             Tarea.objects.create_tarea(
                 form.cleaned_data['titulo_tarea'],
                 form.cleaned_data['desc_tarea'],
@@ -140,15 +132,8 @@ def actualizarProgreso(request):
                 f_termino = item.fecha_termino
                 tarea_id = item.id_tarea
 
-                f_inicio = datetime.datetime.strptime(str(f_inicio), '%Y-%m-%d').strftime("%d/%m/%Y")
-                f_termino = datetime.datetime.strptime(str(f_termino), '%Y-%m-%d').strftime("%d/%m/%Y")
-
-                f_inicio = datetime.datetime.strptime(f_inicio, '%d/%m/%Y')
-                f_termino = datetime.datetime.strptime(f_termino, '%d/%m/%Y')
-
-                diff = f_termino.date() - f_inicio.date()
-                currentdate=datetime.date.today()
-                diff_actual = f_termino.date() - currentdate
+                diff = getDiffDaysTerminoInicio(f_termino, f_inicio)
+                diff_actual = getDiffDaysTerminoCurrent(f_termino)
 
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
                 if item.porc_cumplimiento == 100:

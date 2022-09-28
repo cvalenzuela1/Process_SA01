@@ -1,6 +1,4 @@
 from django.contrib.auth.backends import ModelBackend
-# from django.contrib.auth import user_logged_in
-# from django.contrib.auth.models import update_last_login
 from .models import Usuario
 
 class UsuarioBackend(ModelBackend):

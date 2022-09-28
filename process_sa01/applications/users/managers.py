@@ -1,6 +1,8 @@
-from asyncio.windows_events import NULL
 from django.db import models
 from django.db.models import Q
+
+from .functions import getCurrentDate
+
 
 class UsuarioManager(models.Manager):
     
@@ -63,7 +65,9 @@ class TareaManager(models.Manager):
                 id_tarea=tarea_id
             ).update(
                 estado_tarea="Finalizada",
-                porc_cumplimiento=100
+                porc_cumplimiento=100,
+                estado_alterado=1,
+                fecha_estado_alterado=getCurrentDate()
             )
         else:
             self.filter(
