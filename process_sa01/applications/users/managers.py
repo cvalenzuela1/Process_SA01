@@ -23,7 +23,7 @@ class RolManager(models.Manager):
     
     def is_rol_nombre(self, rol_id):
         return self.all().filter(
-            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") 
+            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") | Q(nombre="Gerente")
         ).filter(
             id_rol=rol_id
         ).exists()
@@ -112,7 +112,25 @@ class TareaManager(models.Manager):
                 fecha_termino=ftermino
             )
         
-    def get_tareas_new_order(self):
+    def get_tareas_new_order(self, rol_nombre):
+        
+        if rol_nombre == "Funcionario" or rol_nombre == "Diseñador de procesos":
+            return self.all().filter(
+                Q(estado_alterado=0) | Q(estado_alterado=1)
+            ).order_by(
+                'estado_tarea',
+                '-id_tarea'
+            )
+        elif rol_nombre == "Gerente":
+            return self.all().filter(
+                Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
+            ).order_by(
+                'estado_tarea',
+                '-id_tarea'
+            )
+
+    def get_tareas_new_order1(self):
+        
         return self.all().filter(
             Q(estado_alterado=0) | Q(estado_alterado=1)
         ).order_by(

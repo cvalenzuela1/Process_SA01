@@ -14,18 +14,31 @@
             <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
         
-        {% if element.estado_tarea != 'Finalizada' %}
+        {% if request.session.rol_nombre == 'Funcionario' or request.session.rol_nombre == 'Diseñador de procesos' %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
-            {% if page_obj.number == i %}
-                <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
-                </li>
-            {% else %}
-                {% if i == page_obj.paginator.ELLIPSIS %}
-                    <li class="page-item"><span class="page-link">{{ i }}</span></li>
+                {% if page_obj.number == i %}
+                    <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
+                    </li>
                 {% else %}
-                    <li class="page-item"><a class="page-link" href="{% url 'app_users:tareas-list-page' i %}">{{ i }}</a></li>
+                    {% if i == page_obj.paginator.ELLIPSIS %}
+                        <li class="page-item"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{% url 'app_users:tareas-list-page' i %}">{{ i }}</a></li>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
+            {% endfor %}
+        {% elif request.session.rol_nombre == 'Gerente' %}
+            {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
+                    </li>
+                {% else %}
+                    {% if i == page_obj.paginator.ELLIPSIS %}
+                        <li class="page-item"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{% url 'app_users:tareas-list-page' i %}">{{ i }}</a></li>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
         {% endif %}
 

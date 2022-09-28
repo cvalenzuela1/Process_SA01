@@ -9,6 +9,8 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+
+from applications.users.backends import UsuarioBackend
 from .models import Usuario, Rol, Tarea
 from .forms import GestionarTareaForm, LoginForm
 from .functions import *
@@ -102,9 +104,35 @@ class TareaListView(LoginRequiredMixin, ListView):
     model = Tarea
     context_object_name = "lista_tareas"
 
+    # def get_queryset(self):
+    #     new_context = Tarea.objects.get_tareas_new_order1()
+    #     username = self.request.user.nombre_usuario
+    #     password = self.request.user.password_usuario
+    #     rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
+    #     rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
+    #     self.request.session["rol_nombre"] = rol_nombre
+    #     return new_context
+
     def get_queryset(self):
-        new_context = Tarea.objects.get_tareas_new_order()
-        return new_context
+        username = self.request.user.nombre_usuario
+        password = self.request.user.password_usuario
+        rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
+        rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
+        self.request.session["rol_nombre"] = rol_nombre
+        context = Tarea.objects.get_tareas_new_order(rol_nombre)
+        
+        return context
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     username = self.request.user.nombre_usuario
+    #     password = self.request.user.password_usuario
+    #     rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
+    #     rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
+    #     self.request.session["rol_nombre"] = rol_nombre
+    #     context["lista_tareas"] = Tarea.objects.get_tareas_new_order(rol_nombre)
+        
+    #     return context
 
 
 def tareaTerminar(request):

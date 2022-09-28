@@ -12,5 +12,5 @@ urlpatterns = [
     path('tareas-terminar/', views.tareaTerminar, name='tareas-terminar'),
     path('tareas-actualizar/', views.actualizarProgreso, name='tareas-actualizar'),
     path('tareas-detalle/<pk>/', views.TareaDetailView.as_view(), name='tareas-detalle'),
-    path('tareas-update/', views.updateTarea, name='tareas-update'),
+    path('tareas-update/', views.updateTarea, name='tareas-update')
 ]   
