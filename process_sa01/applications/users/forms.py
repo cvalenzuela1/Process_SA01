@@ -57,3 +57,37 @@ class GestionarTareaForm(forms.ModelForm):
                 'placeholder': ' Etiqueta',
             })
         }
+
+class AsignarResponsableForm(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = [
+            'titulo_tarea',
+            'desc_tarea',
+            'fecha_inicio',
+            'fecha_termino',
+            'etiqueta',
+        ]
+        widgets = {
+            'titulo_tarea': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': ' Título de tarea',
+                'maxlength': '35'
+            }),
+            'desc_tarea': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': ' Descripción tarea',
+                'rows':3,
+                'maxlength': '500'
+            }),
+            'fecha_inicio': DateInput(attrs={
+                'class': 'form-control'
+            }),
+            'fecha_termino': DateInput(attrs={
+                'class': 'form-control'
+            }),
+            'etiqueta': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': ' Etiqueta',
+            })
+        }

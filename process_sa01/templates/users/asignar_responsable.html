@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Asignar responsable
+{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/users/asignar_responsable.css' %}">
+    <!-- end links -->
+    {% include 'includes/header.html' %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <h5 class="display-6" id="h5Tarea">Tarea</h5>
+                <p class="text-muted" id="h5Tarea">Selecciona alguna tarea</p>
+                <div id="tablecontainer">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th id="columnas" scope="col">Seleccionar</th>
+                                <th id="columnas" scope="col">ID tarea</th>
+                                <th id="columnas" scope="col">Título tarea</th>
+                                <th id="columnas" scope="col">Descripción</th>
+                                <th id="columnas" scope="col">Fecha inicio</th>
+                                <th id="columnas" scope="col">Fecha término</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarea in lista_tareas %}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="{{tarea.id_tarea}}" aria-label="...">
+                                        </div>
+                                    </td>
+                                    <td>{{tarea.id_tarea}}</td>
+                                    <td>{{tarea.titulo_tarea}}</td>
+                                    <td>{{tarea.desc_tarea}}</td>
+                                    <td>{{tarea.fecha_inicio}}</td>
+                                    <td>{{tarea.fecha_termino}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col">
+                <h5 class="display-6" id="h5Tarea">Persona</h5>
+                <p class="text-muted" id="h5Tarea">Selecciona alguna persona</p>
+                <div id="tablecontainer">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th id="columnas" scope="col">Seleccionar</th>
+                                <th id="columnas" scope="col">ID persona</th>
+                                <th id="columnas" scope="col">Rut</th>
+                                <th id="columnas" scope="col">Nombre</th>
+                                <th id="columnas" scope="col">Apellido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for persona in lista_personas %}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="{{tarea.id_tarea}}" aria-label="...">
+                                        </div>
+                                    </td>
+                                    <td>{{persona.id_persona}}</td>
+                                    <td>{{persona.rut_persona}}</td>
+                                    <td>{{persona.nombre_persona}}</td>
+                                    <td>{{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        
+    </div>
+{% endblock content %}
+
+{% block js %}
+
+{% endblock js %}
+    
+    

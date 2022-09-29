@@ -42,6 +42,6 @@ def executeSPUpdateEstadoAlterado():
         sentencia = "PD_TRG_UPDATE_ESTADO_ALTERADO"
         cursor.callproc(sentencia)
     except Exception as e:
-        print("ERROR: ",e , "\nSentencia: ", sentencia)
+        print("ERROR: ", e, "\nSentencia: ", sentencia)
     finally:
         cursor.close()
