@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import RolManager, TareaManager, UsuarioManager
+from .managers import PersonaManager, RolManager, TareaManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -69,6 +69,8 @@ class Persona(models.Model):
     apellido_materno_persona = models.CharField(max_length=30)
     direccion_id_direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE, db_column='direccion_id_direccion')
 
+    objects = PersonaManager()
+
     class Meta:
         managed = False
         db_table = 'persona'
@@ -109,5 +111,3 @@ class Usuario(models.Model):
     class Meta:
         managed = False
         db_table = 'usuario'
-
-

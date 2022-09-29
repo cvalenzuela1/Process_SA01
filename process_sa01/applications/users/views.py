@@ -10,9 +10,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from applications.users.backends import UsuarioBackend
-from .models import Usuario, Rol, Tarea
-from .forms import GestionarTareaForm, LoginForm
+from .models import Usuario, Rol, Tarea, Persona
+from .forms import AsignarResponsableForm, GestionarTareaForm, LoginForm
 from .functions import *
 
 
@@ -166,6 +165,21 @@ def actualizarProgreso(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
+class AsignarResponsableView(FormView):
+    template_name = "users/asignar_responsable.html"
+    form_class = AsignarResponsableForm
+    success_url = reverse_lazy("app_users:tareas-asignar")
+
+    def form_valid(self, form):
+        return super(AsignarResponsableView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lista_tareas"] = Tarea.objects.get_tareas_new_order2()
+        context["lista_personas"] = Persona.objects.get_persona()
+        return context
+
+
 class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
@@ -197,7 +211,7 @@ class LoginUserView(FormView):
 
 
 class LogoutView(View):
-    def get(self, request, *args, **kargs):
+    def get(self, request, *args, **kwargs):
         logout(request)
         messages.success(request, "Has cerrado sesión correctamente")
         return HttpResponseRedirect(

@@ -1,0 +1,28 @@
+.container-sm{
+    margin-top: 50px;
+}
+
+#columnas{
+    font-style: italic;
+}
+
+table{
+    background-color: rgba(196, 214, 224, 0.596);
+    border-radius: 20px;
+    width: 100%;
+    max-height: 100px;
+    border-style: none;
+    justify-content: left;
+    text-align: left;
+}
+
+#tablecontainer{
+    margin-left: 30px;
+    height: 350px;
+    width: 600px;
+	overflow: auto;
+}
+
+#h5Tarea{
+    margin-left: 40px;
+}

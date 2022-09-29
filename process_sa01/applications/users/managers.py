@@ -137,3 +137,16 @@ class TareaManager(models.Manager):
             'estado_tarea',
             '-id_tarea'
         )
+    
+    def get_tareas_new_order2(self):
+        
+        return self.all().filter(
+            estado_alterado=0
+        ).order_by(
+            'id_tarea'
+        )
+
+class PersonaManager(models.Manager):
+
+    def get_persona(self):
+        return self.all()
