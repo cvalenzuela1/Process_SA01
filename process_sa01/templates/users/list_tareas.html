@@ -73,23 +73,6 @@
 {% endblock content %}
 
 {% block js %} 
-    <!-- OFFCANVAS CODE -->
-    <script>
-        function showoffcanvas(){
-            var myCollapse = document.getElementById('offcanvasExample')
-            var bsCollapse = new bootstrap.Collapse(myCollapse, {
-                show: true
-            })
-        }
-
-        function hideoffcanvas(){
-            var myCollapse = document.getElementById('offcanvasExample')
-            var bsCollapse = new bootstrap.Collapse(myCollapse, {
-                show: false
-            })
-        }
-        
-    </script>
-    <!-- END OFFCANVAS CODE -->
+    <script src="{% static 'js/users/list_tareas.js' %}"></script>
 {% endblock js %}
     
