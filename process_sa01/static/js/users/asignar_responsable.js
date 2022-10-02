@@ -103,8 +103,8 @@ for (i = 0; i < acc.length; i++) {
 
 // CHECKBOX
 // USAR CHECKBOX LISTENER
-const btn = document.querySelector('#btn');
-btn.addEventListener('click', function() {
+const btnObtenerDatos = document.querySelector('#btnObtenerDatos');
+btnObtenerDatos.addEventListener('click', function() {
     let checkboxes = document.querySelectorAll('input[id="checkboxNoLabelPersona"]:checked');
     let values = [];
     checkboxes.forEach((checkbox) => {
@@ -117,7 +117,54 @@ btn.addEventListener('click', function() {
         values1.push(checkbox.value);
     });
 
-    alert(values);
-    alert(values1);
+    // Mostrar TABLA DETALLE y botón ESCONDER TABLA
+    var x = document.getElementById("tablaDetalle");
+    var btn = document.getElementById("btnEsconderTabla");
+    if (x.style.display === "none" && values1.length > 0 && values.length > 0) {
+        x.style.display = "";
+        btn.style.display = ""
+        // Llenar datos en accordion Persona
+        let valuesSplit = [];
+        for (const key in values) {
+            // alert(`${key}: ${values[key]}`);
+            valuesSplit.push(String(values[key]).split("|"));
+        }
+        var detallePersona = document.getElementById("detallePersona");
+        var personaPanel = document.getElementById("personaPanel");
+        for (const key in valuesSplit) {
+            // alert(`${key}: ${valuesSplit[0][1]}`);
+            detallePersona.textContent = valuesSplit[0][1] +" "+ valuesSplit[0][2] +" "+ valuesSplit[0][3];
+            personaPanel.textContent = "Rut: "+valuesSplit[0][0]+"\r\n";
+            personaPanel.textContent += "Nombre completo: "+valuesSplit[0][1]+" "+valuesSplit[0][2]+" "+valuesSplit[0][3];
+        }
+
+        // Llenar datos en accordion Tarea
+        let valuesSplit1 = [];
+        for (const key in values1) {
+            valuesSplit1.push(String(values1[key]).split("|"));
+        }
+        var detalleTarea = document.getElementById("detalleTarea");
+        var tareaPanel = document.getElementById("tareaPanel");
+        for (const key in valuesSplit1) {
+            // alert(`${key}: ${valuesSplit[0][1]}`);
+            detalleTarea.textContent = "Tarea: "+valuesSplit1[0][1];
+            tareaPanel.textContent = "Título: "+valuesSplit1[0][1]+"\r\n";
+            tareaPanel.textContent += "Descripción: "+valuesSplit1[0][2]+"\r\n";
+            tareaPanel.textContent += "Fecha inicio: "+valuesSplit1[0][3]+"\r\n";
+            tareaPanel.textContent += "Fecha término: "+valuesSplit1[0][4];
+        }
+    }
 });
 // END CHECKBOX
+
+// Esconder tabla detalle
+const btnEsconderTabla = document.querySelector('#btnEsconderTabla');
+btnEsconderTabla.addEventListener('click', function() {
+    var x = document.getElementById("tablaDetalle");
+    var btn = document.getElementById("btnEsconderTabla");
+    if (x.style.display === "") {
+        x.style.display = "none";
+        btn.style.display = "none"
+    }
+});
+// END Esconder tabla detalle

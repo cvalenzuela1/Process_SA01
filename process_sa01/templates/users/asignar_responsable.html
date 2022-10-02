@@ -11,22 +11,23 @@
     <!-- end links -->
     {% include 'includes/header.html' %}
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" id="tablaDetalle" style="display: none;">
             <div class="col-6">
-                <button class="acordeonJS">Section 1</button>
+                <button class="acordeonJS" id="detallePersona">Persona</button>
                 <div class="panel">
-                    <p>Lorem ipsum...</p>
+                    <p id="personaPanel"></p>
                 </div>
             </div>
             <div class="col-6">
-                <button class="acordeonJS">Section 1</button>
+                <button class="acordeonJS" id="detalleTarea">Tarea</button>
                 <div class="panel">
-                    <p>Lorem ipsum...</p>
+                    <p id="tareaPanel"></p>
                 </div>
             </div>
         </div>
         <hr class="my-3">
-        <button id="btn" class="btn btn-primary">Obtener datos</button>
+        <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
+        <button id="btnEsconderTabla" class="btn btn-success" style="display: none;">Esconder tabla</button>
         <hr class="my-3">
         <div class="row">
             <div class="col-6">
@@ -51,7 +52,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}} - {{persona.nombre_persona}} {{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
+                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
                                         </div>
                                     </td>
                                     <td>{{persona.rut_persona}}</td>

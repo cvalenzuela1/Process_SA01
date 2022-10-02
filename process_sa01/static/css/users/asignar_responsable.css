@@ -1,5 +1,5 @@
 body{
-    height: 800px;
+    height: 1000px;
 }
 
 .container-sm{
@@ -19,14 +19,6 @@ body{
     justify-content: left;
     text-align: left;
 }
-
-#thcontainer{
-    position: sticky;
-}
-#tdcontainer{
-    position: sticky;
-}
-
 
 #tablecontainer{
     margin-left: 30px;
@@ -108,5 +100,14 @@ body{
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+}
+
+#tablaDetalle {
+    margin-top: 20px;
+    background-color: transparent;
+}
+
+#personaPanel, #tareaPanel{
+    white-space: pre;
 }
 /* END ACCORDION */
