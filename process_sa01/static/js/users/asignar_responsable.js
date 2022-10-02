@@ -84,9 +84,54 @@ function btnCleanTareaClick(){
     filterTarea();
 }
 
+function addPaddingBottomRow(panel) {
+    var paddingBottomRow = document.getElementById("tablaDetalle");
+    paddingBottomRow.style.paddingBottom = panel.scrollHeight+120+ "px";
+}
+
+function noPaddingBottomRow() {
+    var paddingBottomRow = document.getElementById("tablaDetalle");
+    paddingBottomRow.style.paddingBottom = "0px";
+}
+
+function updateMaxHeightPanel() {
+    let activeBtn = document.getElementsByClassName("active");
+    if (activeBtn.length > 0){
+        var panel1 = document.getElementById("panel1");
+        panel1.style.maxHeight = panel1.scrollHeight+(panel1.scrollHeight+panel1.scrollHeight/4)+"px";
+        addPaddingBottomRow(panel1);
+    }
+}
+
+function resetMaxHeight() {
+    var panel1 = document.getElementById("panel1");
+    panel1.style.maxHeight = "1000px";
+    alert("RESET WORKS");
+}
+
+function getValues(){
+    let checkboxes = document.querySelectorAll('input[id="checkboxNoLabelPersona"]:checked');
+    let values = [];
+    checkboxes.forEach((checkbox) => {
+        values.push(checkbox.value);
+    });
+
+    return values;
+}
+
+function getValues1(){
+    let checkboxes1 = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
+    let values1 = [];
+    checkboxes1.forEach((checkbox) => {
+        values1.push(checkbox.value);
+    });
+
+    return values1;
+}
 // ACCORDION //
 var acc = document.getElementsByClassName("acordeonJS");
 var i;
+var paddingBottomRow = document.getElementById("tablaDetalle");
 
 for (i = 0; i < acc.length; i++) {
     acc[i].addEventListener("click", function() {
@@ -94,64 +139,57 @@ for (i = 0; i < acc.length; i++) {
         var panel = this.nextElementSibling;
         if (panel.style.maxHeight) {
           panel.style.maxHeight = null;
+          noPaddingBottomRow();
         } else {
           panel.style.maxHeight = panel.scrollHeight + "px";
+          addPaddingBottomRow(panel);
         }
     });
 }
 // END ACCORDION //
-
+let waspressed = false;
 // CHECKBOX
 // USAR CHECKBOX LISTENER
 const btnObtenerDatos = document.querySelector('#btnObtenerDatos');
 btnObtenerDatos.addEventListener('click', function() {
-    let checkboxes = document.querySelectorAll('input[id="checkboxNoLabelPersona"]:checked');
-    let values = [];
-    checkboxes.forEach((checkbox) => {
-        values.push(checkbox.value);
-    });
-    
-    let checkboxes1 = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
-    let values1 = [];
-    checkboxes1.forEach((checkbox) => {
-        values1.push(checkbox.value);
-    });
-
+    // Obtener valores de checkboxes
+    let values = getValues();
+    let values1 = getValues1();
+    // Actualizar maxHeight
+    updateMaxHeightPanel();
+    if(waspressed === true){
+        resetMaxHeight();
+        waspressed = false;
+    }
     // Mostrar TABLA DETALLE y botón ESCONDER TABLA
     var x = document.getElementById("tablaDetalle");
     var btn = document.getElementById("btnEsconderTabla");
-    if (x.style.display === "none" && values1.length > 0 && values.length > 0) {
+    if (x.style.display === "none" || x.style.display === "" && values1.length > 0 && values.length > 0) {
         x.style.display = "";
-        btn.style.display = ""
+        btn.style.display = "";
         // Llenar datos en accordion Persona
         let valuesSplit = [];
         for (const key in values) {
-            // alert(`${key}: ${values[key]}`);
             valuesSplit.push(String(values[key]).split("|"));
         }
         var detallePersona = document.getElementById("detallePersona");
-        var personaPanel = document.getElementById("personaPanel");
         for (const key in valuesSplit) {
-            // alert(`${key}: ${valuesSplit[0][1]}`);
-            detallePersona.textContent = valuesSplit[0][1] +" "+ valuesSplit[0][2] +" "+ valuesSplit[0][3];
-            personaPanel.textContent = "Rut: "+valuesSplit[0][0]+"\r\n";
-            personaPanel.textContent += "Nombre completo: "+valuesSplit[0][1]+" "+valuesSplit[0][2]+" "+valuesSplit[0][3];
+            detallePersona.textContent ="Nombre: "+valuesSplit[key][1] +" "+ valuesSplit[key][2] +" "+ valuesSplit[key][3]+"                Rut: "+valuesSplit[key][0];
         }
-
         // Llenar datos en accordion Tarea
         let valuesSplit1 = [];
         for (const key in values1) {
             valuesSplit1.push(String(values1[key]).split("|"));
         }
-        var detalleTarea = document.getElementById("detalleTarea");
-        var tareaPanel = document.getElementById("tareaPanel");
+        const list = document.getElementById("panelData");
+        list.innerHTML = "";
         for (const key in valuesSplit1) {
-            // alert(`${key}: ${valuesSplit[0][1]}`);
-            detalleTarea.textContent = "Tarea: "+valuesSplit1[0][1];
-            tareaPanel.textContent = "Título: "+valuesSplit1[0][1]+"\r\n";
-            tareaPanel.textContent += "Descripción: "+valuesSplit1[0][2]+"\r\n";
-            tareaPanel.textContent += "Fecha inicio: "+valuesSplit1[0][3]+"\r\n";
-            tareaPanel.textContent += "Fecha término: "+valuesSplit1[0][4];
+            list.innerHTML += `<tr>
+                                    <td>${valuesSplit1[key][1]}</td>
+                                    <td><textarea class="form-control" cols="13" rows="2">${valuesSplit1[key][2]}</textarea></td>
+                                    <td>${valuesSplit1[key][3]}</td>
+                                    <td>${valuesSplit1[key][4]}</td>
+                               </tr>`;
         }
     }
 });
@@ -163,8 +201,9 @@ btnEsconderTabla.addEventListener('click', function() {
     var x = document.getElementById("tablaDetalle");
     var btn = document.getElementById("btnEsconderTabla");
     if (x.style.display === "") {
+        waspressed = true;
         x.style.display = "none";
-        btn.style.display = "none"
+        btn.style.display = "none";
     }
 });
 // END Esconder tabla detalle

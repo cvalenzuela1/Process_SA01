@@ -12,23 +12,34 @@
     {% include 'includes/header.html' %}
     <div class="container-fluid">
         <div class="row" id="tablaDetalle" style="display: none;">
-            <div class="col-6">
-                <button class="acordeonJS" id="detallePersona">Persona</button>
-                <div class="panel">
-                    <p id="personaPanel"></p>
-                </div>
-            </div>
-            <div class="col-6">
-                <button class="acordeonJS" id="detalleTarea">Tarea</button>
-                <div class="panel">
-                    <p id="tareaPanel"></p>
+            <div class="col-9">
+                <button class="acordeonJS" id="detallePersona"></button>
+                <div class="panel" id="panel1">
+                    <div id="tableDetalleTareasContainer">
+                        <table id="tablaDetalleTareas" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="columnas" scope="col">Título tarea</th>
+                                    <th id="columnas" scope="col">Descripción</th>
+                                    <th id="columnas" scope="col">Fecha inicio</th>
+                                    <th id="columnas" scope="col">Fecha término</th>
+                                </tr>
+                            </thead>
+                            <tbody id="panelData">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <hr class="my-3">
-        <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
-        <button id="btnEsconderTabla" class="btn btn-success" style="display: none;">Esconder tabla</button>
-        <hr class="my-3">
+        <div id="separator" class="separator">
+        </div>
+        <div id="botones">
+            <hr class="my-3">
+            <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
+            <button id="btnEsconderTabla" class="btn btn-success" style="display: none;">Esconder tabla</button>
+            <hr class="my-3">
+        </div>
         <div class="row">
             <div class="col-6">
                 <h5 class="display-6" id="h5Tarea">Responsable</h5>
