@@ -23,25 +23,25 @@ function filterPersona() {
 }
 
 function filterTarea() {
-  // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterInputTarea");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("tablaTarea");
-  tr = table.getElementsByTagName("tr");
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("filterInputTarea");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tablaTarea");
+    tr = table.getElementsByTagName("tr");
 
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[1];
-      if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-      } else {
-          tr[i].style.display = "none";
-      }
-      }
-  }
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
 }
 // Validar si filtro es númerica y contiene guión para el rut
 function validate(evt) {
@@ -106,7 +106,7 @@ function updateMaxHeightPanel() {
 function resetMaxHeight() {
     var panel1 = document.getElementById("panel1");
     panel1.style.maxHeight = "1000px";
-    alert("RESET WORKS");
+    // alert("RESET WORKS");
 }
 
 function getValues(){
@@ -128,11 +128,10 @@ function getValues1(){
 
     return values1;
 }
+
 // ACCORDION //
 var acc = document.getElementsByClassName("acordeonJS");
 var i;
-var paddingBottomRow = document.getElementById("tablaDetalle");
-
 for (i = 0; i < acc.length; i++) {
     acc[i].addEventListener("click", function() {
         this.classList.toggle("active");
@@ -147,11 +146,13 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 // END ACCORDION //
+
 let waspressed = false;
 // CHECKBOX
 // USAR CHECKBOX LISTENER
 const btnObtenerDatos = document.querySelector('#btnObtenerDatos');
 btnObtenerDatos.addEventListener('click', function() {
+    alert("HOLA");
     // Obtener valores de checkboxes
     let values = getValues();
     let values1 = getValues1();
@@ -164,9 +165,11 @@ btnObtenerDatos.addEventListener('click', function() {
     // Mostrar TABLA DETALLE y botón ESCONDER TABLA
     var x = document.getElementById("tablaDetalle");
     var btn = document.getElementById("btnEsconderTabla");
-    if (x.style.display === "none" || x.style.display === "" && values1.length > 0 && values.length > 0) {
+    var btn1 = document.getElementById("btnAsignarTareas");
+    if (x.style.display === "none" && values1.length > 0 && values.length > 0) {
         x.style.display = "";
         btn.style.display = "";
+        btn1.style.display = "";
         // Llenar datos en accordion Persona
         let valuesSplit = [];
         for (const key in values) {
@@ -192,18 +195,51 @@ btnObtenerDatos.addEventListener('click', function() {
                                </tr>`;
         }
     }
+    alert("HOLA2");
 });
 // END CHECKBOX
 
 // Esconder tabla detalle
-const btnEsconderTabla = document.querySelector('#btnEsconderTabla');
-btnEsconderTabla.addEventListener('click', function() {
-    var x = document.getElementById("tablaDetalle");
-    var btn = document.getElementById("btnEsconderTabla");
-    if (x.style.display === "") {
-        waspressed = true;
-        x.style.display = "none";
-        btn.style.display = "none";
-    }
-});
+function esconderTabla() {
+    $("#tablaDetalle").hide("slow");
+    $("#btnEsconderTabla").hide();
+    $("#btnAsignarTareas").hide();
+    $("#detallePersona").toggleClass("active");
+    alert("HOLA3");
+    // var panel = document.getElementById("panel1");
+    // if (panel.style.maxHeight) {
+    //     panel.style.maxHeight = null;
+    //     noPaddingBottomRow();
+    // }
+}
 // END Esconder tabla detalle
+
+// Obtener datos tareas
+function asignarTareas() {
+    alert("ASIGNAR TAREA");
+    let valuesTarea = getValues1();
+    let valuesPersona = getValues();
+
+    let valuesSplitPersona = [];
+    for (const key in valuesPersona) {
+        valuesSplitPersona.push(String(valuesPersona[key]).split("|"));
+    }
+    const listPersonaTarea = document.getElementById("formAsignarTareas");
+    for (const key in valuesSplitPersona) {
+        listPersonaTarea.innerHTML +=`<input type="hidden" id="persona${valuesSplitPersona[key][4]}" value=${valuesSplitPersona[key][4]}>`;
+        // alert("PERSONA: "+valuesSplitPersona[key][4]);
+    }
+    
+    let valuesSplitTarea = [];
+    for (const key in valuesTarea) {
+        valuesSplitTarea.push(String(valuesTarea[key]).split("|"));
+    }
+    let contador = 0;
+    for (const key in valuesSplitTarea) {
+        listPersonaTarea.innerHTML += `<input type="hidden" id="tarea${valuesSplitTarea[key][0]}" value=${valuesSplitTarea[key][0]}>`;
+        contador+=1;
+        // alert("TAREAS: "+valuesSplitTarea[key][0]);
+    }
+    listPersonaTarea.innerHTML += `<input type="hidden" id="tareaContador" value=${contador}>`;
+}
+// END Obtener datos tareas

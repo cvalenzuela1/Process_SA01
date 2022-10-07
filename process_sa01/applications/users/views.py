@@ -174,6 +174,7 @@ class AsignarResponsableView(FormView):
     success_url = reverse_lazy("app_users:tareas-asignar")
 
     def form_valid(self, form):
+        tareas = form.cleaned_data["tarea"]
         return super(AsignarResponsableView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -187,6 +188,11 @@ class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
     success_url = reverse_lazy("app_home:home")
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(LoginUserView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         username=form.cleaned_data['nombre_usuario']

@@ -1,35 +1,30 @@
 {% extends 'base.html' %}
-{% block content %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/users/test1.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/asignar_responsable.css' %}">
-    {% include 'includes/header.html' %}
-    
-    <div class="container-fluid">
-        <h2>Accordion</h2>
-        <div class="row">
-            <div class="col"><button class="acordeonJS">Section 1</button>
-                <div class="panel">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div></div>
-        </div>
-        <div class="row">
-            <div class="col"><button class="acordeonJS">Section 2</button>
-                <div class="panel">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div></div>
-        </div>
-        <div class="row">
-            <div class="col"><button class="acordeonJS">Section 3</button>
-                <div class="panel">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div></div>
-        </div>
-    </div>
-    
-    <script src="{% static 'js/users/test1.js' %}"></script>
-{% endblock content %}
-    
 
-    
-    
+{% block title %}
+  Test1
+{% endblock title %}
+
+{% block content %}
+  {% include 'includes/header.html' %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/users/test1.css' %}">
+  <a role="button" id="expand" onclick="clickBtnExpand()">Expand / Collapse</a>
+  <div id="myDiv" class="links">
+    <ul>
+      <li><a role="button">Link 1a</a></li>
+      <li><a role="button">Link 2</a></li>
+      <li><a role="button">Link 3</a></li>
+      <li><a role="button">Link 4</a></li>
+    </ul>
+  </div>
+  <div class="other-content">
+    <p>A mote of dust suspended in a sunbeam ship of the imagination another world paroxysm of global death Apollonius of Perga Sea of Tranquility. Star stuff harvesting star light stirred by starlight inconspicuous motes of rock and gas radio telescope
+      quasar across the centuries. Extraordinary claims require extraordinary evidence hundreds of thousands from which we spring the only home we've ever known cosmic ocean vastness is bearable only through love and billions upon billions upon billions
+      upon billions upon billions upon billions upon billions.</p>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/users/test1.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock js %}

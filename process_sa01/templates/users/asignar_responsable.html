@@ -11,104 +11,111 @@
     <!-- end links -->
     {% include 'includes/header.html' %}
     <div class="container-fluid">
-        <div class="row" id="tablaDetalle" style="display: none;">
-            <div class="col-9">
-                <button class="acordeonJS" id="detallePersona"></button>
-                <div class="panel" id="panel1">
-                    <div id="tableDetalleTareasContainer">
-                        <table id="tablaDetalleTareas" class="table table-hover">
+        <div>
+            <div class="row" id="tablaDetalle" style="display: none;">
+                <div class="col-9">
+                    <button class="acordeonJS" id="detallePersona"></button>
+                    <div class="panel" id="panel1">
+                        <div id="tableDetalleTareasContainer">
+                            <table id="tablaDetalleTareas" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th id="columnas" scope="col">Título tarea</th>
+                                        <th id="columnas" scope="col">Descripción</th>
+                                        <th id="columnas" scope="col">Fecha inicio</th>
+                                        <th id="columnas" scope="col">Fecha término</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="panelData">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="botones">
+                <hr class="my-3">
+                <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
+                <button id="btnEsconderTabla" class="btn btn-success" style="display: none;" onclick="esconderTabla()">Esconder tabla</button>
+                <form method="POST" id="formAsignarTareas">{% csrf_token %}
+                    <button id="btnAsignarTareas" class="btn btn-info" style="display: none;" onclick="asignarTarea()">Asignar</button>
+                </form>
+                <hr class="my-3">
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-6">
+                    <h5 class="display-6" id="h5Tarea">Responsable</h5>
+                    <p class="text-muted" id="h5Tarea">Selecciona alguna persona</p>
+                    <div class="btn-group">
+                        <input maxlength="10" type="text" id="filterInputPersona" onkeypress="validate(event)" onkeyup="filterPersona()" placeholder="Buscar por RUT de persona...">
+                        <button id="btnCleanPersona" class="btn btn-primary" onclick="btnCleanPersonaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+                    </div>
+                    <div id="tablecontainer">
+                        <table id="tablaPersona" class="table table-hover">
                             <thead>
                                 <tr>
+                                    <th id="columnas" scope="col">ID persona</th>
+                                    <th id="columnas" scope="col">Rut</th>
+                                    <th id="columnas" scope="col">Nombre</th>
+                                    <th id="columnas" scope="col">Apellidos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for persona in lista_personas %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}|{{persona.id_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
+                                            </div>
+                                        </td>
+                                        <td>{{persona.rut_persona}}</td>
+                                        <td>{{persona.nombre_persona}}</td>
+                                        <td>{{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col">
+                    <h5 class="display-6" id="h5Tarea">Asignar tareas</h5>
+                    <p class="text-muted" id="h5Tarea">Selecciona alguna tarea</p>
+                    <div class="btn-group">
+                        <input maxlength="45" type="text" id="filterInputTarea" onkeyup="filterTarea()" placeholder="Buscar por título de tarea...">
+                        <button id="btnCleanTarea" class="btn btn-primary" onclick="btnCleanTareaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+                    </div>
+                    <div id="tablecontainer">
+                        <table id="tablaTarea" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="columnas" scope="col">ID tarea</th>
                                     <th id="columnas" scope="col">Título tarea</th>
                                     <th id="columnas" scope="col">Descripción</th>
                                     <th id="columnas" scope="col">Fecha inicio</th>
                                     <th id="columnas" scope="col">Fecha término</th>
                                 </tr>
                             </thead>
-                            <tbody id="panelData">
+                            <tbody>
+                                {% for tarea in lista_tareas %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="...">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            </div>
+                                        </td>
+                                        <td>{{tarea.titulo_tarea}}</td>
+                                        <td><textarea class="form-control" cols="13" rows="2">{{tarea.desc_tarea}}</textarea></td>
+                                        <td>{{tarea.fecha_inicio}}</td>
+                                        <td>{{tarea.fecha_termino}}</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div id="separator" class="separator">
-        </div>
-        <div id="botones">
-            <hr class="my-3">
-            <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
-            <button id="btnEsconderTabla" class="btn btn-success" style="display: none;">Esconder tabla</button>
-            <hr class="my-3">
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <h5 class="display-6" id="h5Tarea">Responsable</h5>
-                <p class="text-muted" id="h5Tarea">Selecciona alguna persona</p>
-                <div class="btn-group">
-                    <input maxlength="10" type="text" id="filterInputPersona" onkeypress="validate(event)" onkeyup="filterPersona()" placeholder="Buscar por RUT de persona...">
-                    <button id="btnCleanPersona" class="btn btn-primary" onclick="btnCleanPersonaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
-                </div>
-                <div id="tablecontainer">
-                    <table id="tablaPersona" class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th id="columnas" scope="col">ID persona</th>
-                                <th id="columnas" scope="col">Rut</th>
-                                <th id="columnas" scope="col">Nombre</th>
-                                <th id="columnas" scope="col">Apellidos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for persona in lista_personas %}
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
-                                        </div>
-                                    </td>
-                                    <td>{{persona.rut_persona}}</td>
-                                    <td>{{persona.nombre_persona}}</td>
-                                    <td>{{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col">
-                <h5 class="display-6" id="h5Tarea">Asignar tareas</h5>
-                <p class="text-muted" id="h5Tarea">Selecciona alguna tarea</p>
-                <div class="btn-group">
-                    <input maxlength="45" type="text" id="filterInputTarea" onkeyup="filterTarea()" placeholder="Buscar por título de tarea...">
-                    <button id="btnCleanTarea" class="btn btn-primary" onclick="btnCleanTareaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
-                </div>
-                <div id="tablecontainer">
-                    <table id="tablaTarea" class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th id="columnas" scope="col">ID tarea</th>
-                                <th id="columnas" scope="col">Título tarea</th>
-                                <th id="columnas" scope="col">Descripción</th>
-                                <th id="columnas" scope="col">Fecha inicio</th>
-                                <th id="columnas" scope="col">Fecha término</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for tarea in lista_tareas %}
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="...">&nbsp;&nbsp;{{tarea.id_tarea}}
-                                        </div>
-                                    </td>
-                                    <td>{{tarea.titulo_tarea}}</td>
-                                    <td><textarea class="form-control" cols="13" rows="2">{{tarea.desc_tarea}}</textarea></td>
-                                    <td>{{tarea.fecha_inicio}}</td>
-                                    <td>{{tarea.fecha_termino}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -117,4 +124,5 @@
 
 {% block js %}
     <script src="{% static 'js/users/asignar_responsable.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 {% endblock js %}
