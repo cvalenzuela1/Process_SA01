@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.db.models import Q
 
@@ -52,11 +53,21 @@ class TareaManager(models.Manager):
         self.filter(
             id_tarea=tarea_id
         ).update(
-            estado_tarea="Finalizada",
+            estado_id_estado=4,
             estado_alterado=1,
             fecha_estado_alterado=current,
             porc_cumplimiento=100
         )
+
+    def update_tarea_estado(self, lista_tareas):
+
+        for tarea in lista_tareas:
+            self.filter(
+                id_tarea=tarea
+            ).update(
+                estado_id_estado=2
+            )
+
 
     def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
         
@@ -118,14 +129,14 @@ class TareaManager(models.Manager):
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1)
             ).order_by(
-                'estado_tarea',
+                'estado_alterado',
                 '-id_tarea'
             )
         elif rol_nombre == "Gerente":
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
             ).order_by(
-                'estado_tarea',
+                'estado_alterado',
                 '-id_tarea'
             )
 
@@ -134,7 +145,7 @@ class TareaManager(models.Manager):
         return self.all().filter(
             Q(estado_alterado=0) | Q(estado_alterado=1)
         ).order_by(
-            'estado_tarea',
+            'estado_alterado',
             '-id_tarea'
         )
     
@@ -146,7 +157,33 @@ class TareaManager(models.Manager):
             'id_tarea'
         )
 
+
 class PersonaManager(models.Manager):
 
     def get_persona(self):
         return self.all()
+
+
+class TareaPersonaManager(models.Manager):
+
+    def create_tarea_persona(self, persona_id, lista_tareas):
+
+        for tarea in lista_tareas:
+            tarea_persona = self.model(
+                persona_id_persona= persona_id,
+                tarea_id_tarea= lista_tareas[tarea],
+            )
+            tarea_persona.save(using=self.db)
+
+
+class EstadoManager(models.Manager):
+    
+    def get_estado(self, estado_nombre):
+        return self.filter(
+            estado=estado_nombre
+        ).values_list()
+
+    def get_estado_nombre(self, estado_id):
+        return self.filter(
+            id_estado=estado_id
+        ).values_list()

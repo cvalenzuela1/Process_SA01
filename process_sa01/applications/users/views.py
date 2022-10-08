@@ -10,8 +10,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from .models import Usuario, Rol, Tarea, Persona
-from .forms import AsignarResponsableForm, GestionarTareaForm, LoginForm
+from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona
+from .forms import GestionarTareaForm, LoginForm
 from .functions import *
 
 
@@ -78,6 +78,8 @@ class GestionarTareaView(FormView):
         diff_current = getDiffDaysTerminoCurrent(f_termino)
         diff_current_inicio = getDiffDaysCurrentInicio(f_inicio)
 
+        estado_tarea = Estado.objects.get_estado("Activa")[0][0]
+
         if diff.days > 0 and diff_current.days > 0 and diff_current_inicio.days >= 0:
             Tarea.objects.create_tarea(
                 form.cleaned_data['titulo_tarea'],
@@ -86,8 +88,8 @@ class GestionarTareaView(FormView):
                 form.cleaned_data['fecha_termino'],
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
-                estado_tarea="Activa",
-                estado_alterado=0)
+                estado_alterado=0,
+                estado_id_estado=Estado(estado_tarea))
             
             messages.success(self.request, "Tarea creada correctamente")
             return super(GestionarTareaView, self).form_valid(form)
@@ -168,20 +170,27 @@ def actualizarProgreso(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class AsignarResponsableView(FormView):
+class AsignarResponsableView(TemplateView):
     template_name = "users/asignar_responsable.html"
-    form_class = AsignarResponsableForm
-    success_url = reverse_lazy("app_users:tareas-asignar")
-
-    def form_valid(self, form):
-        tareas = form.cleaned_data["tarea"]
-        return super(AsignarResponsableView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lista_tareas"] = Tarea.objects.get_tareas_new_order2()
         context["lista_personas"] = Persona.objects.get_persona()
         return context
+
+    def post(self, request):
+        persona_id = request.POST.get("idPersona")
+        contador_tareas = request.POST.get("tareaContador")
+        lista_tareas = []
+        for i in range(1, int(contador_tareas)+1):
+            lista_tareas.append(request.POST.get(f"tarea{i}"))
+        
+        lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
+        Tarea.objects.update_tarea_estado(lista_tareas)
+        TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
+        messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con ID: \"{persona_id}\"")
+        return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
 
 
 class LoginUserView(FormView):

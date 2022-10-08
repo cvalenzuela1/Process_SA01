@@ -106,7 +106,6 @@ function updateMaxHeightPanel() {
 function resetMaxHeight() {
     var panel1 = document.getElementById("panel1");
     panel1.style.maxHeight = "1000px";
-    // alert("RESET WORKS");
 }
 
 function getValues(){
@@ -147,12 +146,39 @@ for (i = 0; i < acc.length; i++) {
 }
 // END ACCORDION //
 
+// Obtener datos tareas
+function asignarTareas() {
+    let valuesTarea = getValues1();
+    let valuesPersona = getValues();
+
+    let valuesSplitPersona = [];
+    for (const key in valuesPersona) {
+        valuesSplitPersona.push(String(valuesPersona[key]).split("|"));
+    }
+    const listPersonaTarea = document.getElementById("formAsignarTareas");
+    for (const key in valuesSplitPersona) {
+        listPersonaTarea.innerHTML +=`<input type="hidden" id="idPersona" name="idPersona" value=${valuesSplitPersona[key][4]}>`;
+    }
+    
+    let valuesSplitTarea = [];
+    for (const key in valuesTarea) {
+        valuesSplitTarea.push(String(valuesTarea[key]).split("|"));
+    }
+    let contador = 0;
+    for (const key in valuesSplitTarea) {
+        contador+=1;
+        listPersonaTarea.innerHTML += `<input type="hidden" id="tarea${contador}" name="tarea${contador}" value=${valuesSplitTarea[key][0]}>`;
+    }
+    listPersonaTarea.innerHTML += `<input type="hidden" id="tareaContador" name="tareaContador" value=${contador}>`;
+}
+// END Obtener datos tareas
+
+
 let waspressed = false;
 // CHECKBOX
 // USAR CHECKBOX LISTENER
 const btnObtenerDatos = document.querySelector('#btnObtenerDatos');
 btnObtenerDatos.addEventListener('click', function() {
-    alert("HOLA");
     // Obtener valores de checkboxes
     let values = getValues();
     let values1 = getValues1();
@@ -194,8 +220,9 @@ btnObtenerDatos.addEventListener('click', function() {
                                     <td>${valuesSplit1[key][4]}</td>
                                </tr>`;
         }
+        asignarTareas();
     }
-    alert("HOLA2");
+    
 });
 // END CHECKBOX
 
@@ -205,41 +232,28 @@ function esconderTabla() {
     $("#btnEsconderTabla").hide();
     $("#btnAsignarTareas").hide();
     $("#detallePersona").toggleClass("active");
-    alert("HOLA3");
-    // var panel = document.getElementById("panel1");
-    // if (panel.style.maxHeight) {
-    //     panel.style.maxHeight = null;
-    //     noPaddingBottomRow();
-    // }
 }
 // END Esconder tabla detalle
 
-// Obtener datos tareas
-function asignarTareas() {
-    alert("ASIGNAR TAREA");
-    let valuesTarea = getValues1();
-    let valuesPersona = getValues();
-
-    let valuesSplitPersona = [];
-    for (const key in valuesPersona) {
-        valuesSplitPersona.push(String(valuesPersona[key]).split("|"));
-    }
-    const listPersonaTarea = document.getElementById("formAsignarTareas");
-    for (const key in valuesSplitPersona) {
-        listPersonaTarea.innerHTML +=`<input type="hidden" id="persona${valuesSplitPersona[key][4]}" value=${valuesSplitPersona[key][4]}>`;
-        // alert("PERSONA: "+valuesSplitPersona[key][4]);
-    }
-    
-    let valuesSplitTarea = [];
-    for (const key in valuesTarea) {
-        valuesSplitTarea.push(String(valuesTarea[key]).split("|"));
-    }
-    let contador = 0;
-    for (const key in valuesSplitTarea) {
-        listPersonaTarea.innerHTML += `<input type="hidden" id="tarea${valuesSplitTarea[key][0]}" value=${valuesSplitTarea[key][0]}>`;
-        contador+=1;
-        // alert("TAREAS: "+valuesSplitTarea[key][0]);
-    }
-    listPersonaTarea.innerHTML += `<input type="hidden" id="tareaContador" value=${contador}>`;
+// Asignar tarea FORM
+function asignarTareasForm(form){
+    Swal.fire({
+        "titleText": "¿Está seguro de asignar las tareas?",
+        'text': "Esta acción se puede realizar nuevamente",
+        "icon": "warning",
+        "showCancelButton": true,
+        "cancelButtonText": "Cancelar",
+        "confirmButtonText": "Editar",
+        "cancelButtonColor": "red",
+        "confirmButtonColor": "green",
+        "reverseButtons": true,
+        "focusConfirm": true
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+            form.submit();
+        }
+    })
+    return false;
 }
-// END Obtener datos tareas
+// END Asignar tarea FORM

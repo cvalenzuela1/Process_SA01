@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import PersonaManager, RolManager, TareaManager, UsuarioManager
+from .managers import EstadoManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -42,6 +42,17 @@ class Direccion(models.Model):
         db_table = 'direccion'
 
 
+class Estado(models.Model):
+    id_estado = models.BigAutoField(primary_key=True)
+    estado = models.CharField(max_length=50)
+
+    objects = EstadoManager()
+
+    class Meta:
+        managed = False
+        db_table = 'estado'
+
+
 class Tarea(models.Model):
     id_tarea = models.BigAutoField(primary_key=True)
     titulo_tarea = models.CharField(max_length=50)
@@ -50,11 +61,14 @@ class Tarea(models.Model):
     fecha_termino = models.DateField()
     etiqueta = models.CharField(max_length=50)
     porc_cumplimiento = models.BigIntegerField()
-    estado_tarea = models.CharField(max_length=50)
     estado_alterado = models.IntegerField()
     fecha_estado_alterado = models.DateField(blank=True, null=True)
+    estado_id_estado = models.ForeignKey(Estado, on_delete=models.CASCADE, db_column='estado_id_estado')
 
     objects = TareaManager()
+
+    def __unicode__(self):
+        return self.id_tarea
 
     class Meta:
         managed = False
@@ -71,6 +85,9 @@ class Persona(models.Model):
 
     objects = PersonaManager()
 
+    def __unicode__(self):
+        return self.id_persona
+
     class Meta:
         managed = False
         db_table = 'persona'
@@ -80,6 +97,8 @@ class TareaPersona(models.Model):
     id_tarea_persona = models.BigAutoField(primary_key=True)
     persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
     tarea_id_tarea = models.ForeignKey(Tarea, models.DO_NOTHING, db_column='tarea_id_tarea')
+
+    objects = TareaPersonaManager()
 
     class Meta:
         managed = False

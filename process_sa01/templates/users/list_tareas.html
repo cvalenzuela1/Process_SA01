@@ -21,8 +21,16 @@
                             <input name="tarea_id" type="hidden" value="{{element.id_tarea}}">
                             <h5 class="card-title">{{element.titulo_tarea}}</h5>    
                             <textarea class="card-text form-control" disabled>{{element.desc_tarea}}</textarea>
-                            <small class="text-muted">Estado: {{element.estado_tarea}}</small>
-                            {% if element.estado_tarea == 'Finalizada' %}
+                            {% if  element.estado_id_estado.id_estado == 1 %}
+                            <small class="text-muted">Estado: Activa</small>
+                            {% elif element.estado_id_estado.id_estado == 2 %}
+                            <small class="text-muted">Estado: Asignada</small>
+                            {% elif element.estado_id_estado.id_estado == 3 %}
+                            <small class="text-muted">Estado: En ejecución</small>
+                            {% elif element.estado_id_estado.id_estado == 4 %}
+                            <small class="text-muted">Estado: Finalizada</small>
+                            {% endif %}
+                            {% if element.estado_id_estado.id_estado == 4 %}
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-label="Danger example" style="width: {{element.porc_cumplimiento}}%" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
