@@ -11,23 +11,42 @@
     <!-- end links -->
     {% include 'includes/header.html' %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-6">
-                <button class="acordeonJS">Section 1</button>
-                <div class="panel">
-                    <p>Lorem ipsum...</p>
-                </div>
-            </div>
-            <div class="col-6">
-                <button class="acordeonJS">Section 1</button>
-                <div class="panel">
-                    <p>Lorem ipsum...</p>
+        <div class="row" id="tablaDetalle" style="display: none;">
+            <div class="col-9">
+                <button class="acordeonJS" id="detallePersona"></button>
+                <div class="panel" id="panel1">
+                    <div id="tableDetalleTareasContainer">
+                        <table id="tablaDetalleTareas" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="columnas" scope="col">Título tarea</th>
+                                    <th id="columnas" scope="col">Descripción</th>
+                                    <th id="columnas" scope="col">Fecha inicio</th>
+                                    <th id="columnas" scope="col">Fecha término</th>
+                                </tr>
+                            </thead>
+                            <tbody id="panelData">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <hr class="my-3">
-        <button id="btn" class="btn btn-primary">Obtener datos</button>
-        <hr class="my-3">
+        <div class="row" id="botones">
+            <hr class="my-3">
+            <div class="col-2">
+                <button id="btnObtenerDatos" class="btn btn-primary">Obtener datos</button>
+            </div>
+            <div class="col-2">
+                <button id="btnEsconderTabla" class="btn btn-success" style="display: none;" onclick="esconderTabla()">Esconder tabla</button>
+            </div>
+            <div class="col-2">
+                <form method="POST" id="formAsignarTareas" onsubmit="return asignarTareasForm(this);">{% csrf_token %}
+                    <button id="btnAsignarTareas" class="btn btn-info" style="display: none;" type="submit">Asignar tareas</button>
+                </form>
+            </div>
+            <hr class="my-3">
+        </div>
         <div class="row">
             <div class="col-6">
                 <h5 class="display-6" id="h5Tarea">Responsable</h5>
@@ -51,7 +70,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}} - {{persona.nombre_persona}} {{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
+                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}|{{persona.id_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
                                         </div>
                                     </td>
                                     <td>{{persona.rut_persona}}</td>
@@ -84,6 +103,7 @@
                         <tbody>
                             {% for tarea in lista_tareas %}
                                 <tr>
+                                    {% if  tarea.estado_id_estado.id_estado == 1 %}
                                     <td>
                                         <div>
                                             <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="...">&nbsp;&nbsp;{{tarea.id_tarea}}
@@ -93,6 +113,10 @@
                                     <td><textarea class="form-control" cols="13" rows="2">{{tarea.desc_tarea}}</textarea></td>
                                     <td>{{tarea.fecha_inicio}}</td>
                                     <td>{{tarea.fecha_termino}}</td>
+                                    {% else %}
+                                    
+                                    {% endif %}
+                                    
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -105,4 +129,5 @@
 
 {% block js %}
     <script src="{% static 'js/users/asignar_responsable.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 {% endblock js %}

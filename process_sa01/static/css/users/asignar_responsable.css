@@ -1,5 +1,5 @@
 body{
-    height: 800px;
+    height: 1000px;
 }
 
 .container-sm{
@@ -20,14 +20,6 @@ body{
     text-align: left;
 }
 
-#thcontainer{
-    position: sticky;
-}
-#tdcontainer{
-    position: sticky;
-}
-
-
 #tablecontainer{
     margin-left: 30px;
     height: 350px;
@@ -45,7 +37,6 @@ body{
 }
 
 #filterInputPersona, #filterInputTarea {
-    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
     background-position: 10px 12px; /* Position the search icon */
     background-repeat: no-repeat; /* Do not repeat the icon image */
     width: 450px; /* Full-width */
@@ -109,4 +100,31 @@ body{
     overflow: hidden;
     transition: max-height 0.2s ease-out;
 }
+
+#tablaDetalle {
+    /* padding-bottom: 500px; */
+    margin-top: 20px;
+    background-color: transparent;
+}
+
+#detallePersona{
+    /* \r\n */
+    white-space: pre;
+}
+
+#tablaDetalleTareasContainer{
+    overflow-y:scroll;
+    height:100px;
+    display:block;
+}
+
+/* #tablaDetalleTareas{
+    background-color: rgba(196, 214, 224, 0.596);
+    border-radius: 20px;
+    width: 100%;
+    max-height: 100px;
+    border-style: none;
+    justify-content: left;
+    text-align: left;
+} */
 /* END ACCORDION */
