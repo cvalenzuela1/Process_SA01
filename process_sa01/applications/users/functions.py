@@ -45,3 +45,13 @@ def executeSPUpdateEstadoAlterado():
         print("ERROR: ", e, "\nSentencia: ", sentencia)
     finally:
         cursor.close()
+
+def executeSPUpdateEstadoTareas():
+    cursor = connection.cursor()
+    try:
+        sentencia = "PD_UPDATE_ESTADO_TAREAS"
+        cursor.callproc(sentencia)
+    except Exception as e:
+        print("ERROR: ", e, "\nSentencia: ", sentencia)
+    finally:
+        cursor.close()

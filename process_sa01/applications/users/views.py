@@ -160,7 +160,10 @@ def actualizarProgreso(request):
                 elif new_porc_cumplimiento > 0:
                     Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
 
-            result = executeSPUpdateEstadoAlterado()
+            # Ejecución de procedimientos almacenados
+            executeSPUpdateEstadoAlterado()
+            executeSPUpdateEstadoTareas()
+            # END ejecución de procedimientos almacenados
             messages.success(request, "Progresos actualizados correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
