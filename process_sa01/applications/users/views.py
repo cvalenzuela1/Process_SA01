@@ -64,6 +64,11 @@ class TareaDetailView(DetailView):
     context_object_name = "object_tarea"
     success_url = reverse_lazy("app_users:tareas-list")
 
+    # def get_context_data(self, **kwargs):
+    #     context = super(TareaDetailView, self).get_context_data(**kwargs)
+    #     context["object_tarea"] = TareaPersona.objects.filter(tarea_id_tarea=self.get_object())
+    #     return context
+
 
 class GestionarTareaView(FormView):
     template_name = "users/tareas.html"

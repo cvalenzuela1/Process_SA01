@@ -109,10 +109,10 @@ function resetMaxHeight() {
 }
 
 function getValues(){
-    let checkboxes = document.querySelectorAll('input[id="checkboxNoLabelPersona"]:checked');
+    let radiobtn = document.querySelectorAll('input[name="radioPersona"]:checked');
     let values = [];
-    checkboxes.forEach((checkbox) => {
-        values.push(checkbox.value);
+    radiobtn.forEach((radio) => {
+        values.push(radio.value);
     });
 
     return values;
@@ -127,6 +127,18 @@ function getValues1(){
 
     return values1;
 }
+
+// CHECKBOX LISTENER
+function countCheckboxes(){
+    var x = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
+    if (x.length > 4){
+        document.querySelector('#btnObtenerDatos').disabled = true;
+    }
+    else{
+        document.querySelector('#btnObtenerDatos').disabled = false;
+    }
+}
+// END CHECKBOX LISTENER
 
 // ACCORDION //
 var acc = document.getElementsByClassName("acordeonJS");
@@ -243,9 +255,9 @@ function asignarTareasForm(form){
         "icon": "warning",
         "showCancelButton": true,
         "cancelButtonText": "Cancelar",
-        "confirmButtonText": "Editar",
+        "confirmButtonText": "Asignar",
         "cancelButtonColor": "red",
-        "confirmButtonColor": "green",
+        "confirmButtonColor": "blue",
         "reverseButtons": true,
         "focusConfirm": true
     })
