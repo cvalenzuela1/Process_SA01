@@ -70,7 +70,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}|{{persona.id_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
+                                            <input class="form-check-input" type="radio" id="radioBtnNoLabelPersona" name="radioPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}|{{persona.id_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
                                         </div>
                                     </td>
                                     <td>{{persona.rut_persona}}</td>
@@ -106,7 +106,7 @@
                                     {% if  tarea.estado_id_estado.id_estado == 1 %}
                                     <td>
                                         <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="...">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
                                         </div>
                                     </td>
                                     <td>{{tarea.titulo_tarea}}</td>

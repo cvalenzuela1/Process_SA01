@@ -61,8 +61,16 @@ def updateTarea(request):
 class TareaDetailView(DetailView):
     template_name = "users/detalle_tareas.html"
     model = Tarea
-    context_object_name = "object_tarea"
+    # context_object_name = "object_tarea"
     success_url = reverse_lazy("app_users:tareas-list")
+
+    def get_context_data(self, **kwargs):
+        context = super(TareaDetailView, self).get_context_data(**kwargs)
+        print(self.kwargs['pk'])
+        tareaPersona = TareaPersona.objects.get_tarea_by_id(self.kwargs['pk'])
+        for item in tareaPersona:
+            context["tareaPersona"] = item.persona_id_persona
+        return context
 
 
 class GestionarTareaView(FormView):
@@ -113,7 +121,7 @@ class TareaListView(LoginRequiredMixin, ListView):
         password = self.request.user.password_usuario
         rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
         rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-        self.request.session["rol_nombre"] = rol_nombre
+        # self.request.session["rol_nombre"] = rol_nombre
         context = Tarea.objects.get_tareas_new_order(rol_nombre)
         
         return context
@@ -160,7 +168,10 @@ def actualizarProgreso(request):
                 elif new_porc_cumplimiento > 0:
                     Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
 
-            result = executeSPUpdateEstadoAlterado()
+            # Ejecución de procedimientos almacenados
+            executeSPUpdateEstadoAlterado()
+            executeSPUpdateEstadoTareas()
+            # END ejecución de procedimientos almacenados
             messages.success(request, "Progresos actualizados correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:

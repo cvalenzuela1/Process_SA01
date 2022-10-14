@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Tarea N°{{object_tarea.id_tarea}}
+    Tarea N°{{object.id_tarea}}
 {% endblock title %}
 
 {% block content %}
@@ -11,32 +11,32 @@
     <div class="container-sm">
         <div class="row align-items-start">
             <form method="POST" action="{% url 'app_users:tareas-update' %}" onsubmit="return editarTarea(this);">{% csrf_token %}
-                <input name="idTarea" type="hidden" value="{{object_tarea.id_tarea}}">
+                <input name="idTarea" type="hidden" value="{{object.id_tarea}}">
                 <div class="col-6">
                     <label class="form-label" for="tituloTarea">Título tarea: </label>
-                    <input class="form-control" type="text" name="tituloTarea" id="tituloTarea" value="{{object_tarea.titulo_tarea}}" maxlength="35">
+                    <input class="form-control" type="text" name="tituloTarea" id="tituloTarea" value="{{object.titulo_tarea}}" maxlength="35">
                     <br>
                 </div>
                 <div class="col-6"></div>
                 <div class="col-6">
                     <label class="form-label" for="etiquetaTarea">Etiqueta tarea: </label>
-                    <input class="form-control" type="text" name="etiquetaTarea" id="etiquetaTarea" value="{{object_tarea.etiqueta}}" maxlength="20">
+                    <input class="form-control" type="text" name="etiquetaTarea" id="etiquetaTarea" value="{{object.etiqueta}}" maxlength="20">
                     <br>
                 </div>
                 <div class="col-6"></div>
                 <div class="col-6">
                     <label class="form-label" for="descTarea">Descripción: </label>
-                    <textarea name="descTarea" id="descTarea" class="form-control" cols="30" rows="3" maxlength="500">{{object_tarea.desc_tarea}}</textarea>
+                    <textarea name="descTarea" id="descTarea" class="form-control" cols="30" rows="3" maxlength="500">{{object.desc_tarea}}</textarea>
                     <br>
                 </div>
                 <div class="col-6"></div>
                 <div class="col-6">
                     <label class="form-label" for="fTermino">Porcentaje de cumplimiento: </label><br>
-                    {% if object_tarea.porc_cumplimiento > 0 %}
+                    {% if object.porc_cumplimiento > 0 %}
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{object_tarea.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{object_tarea.porc_cumplimiento}}%"></div>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{object.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{object.porc_cumplimiento}}%"></div>
                     </div>
-                    <small class="text-muted">{{object_tarea.porc_cumplimiento}}%</small>
+                    <small class="text-muted">{{object.porc_cumplimiento}}%</small>
                     {% else %}
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
@@ -46,30 +46,31 @@
                     <br><br>
                 </div>
                 <div class="col-12">
-                    {% if  object_tarea.estado_id_estado.id_estado == 1 %}
+                    {% if  object.estado_id_estado.id_estado == 1 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Activa</small></label>
-                    {% elif object_tarea.estado_id_estado.id_estado == 2 %}
+                    {% elif object.estado_id_estado.id_estado == 2 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Asignada</small></label>
-                    {% elif object_tarea.estado_id_estado.id_estado == 3 %}
+                    <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
+                    {% elif object.estado_id_estado.id_estado == 3 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">En ejecución</small></label>
-                    {% elif object_tarea.estado_id_estado.id_estado == 4 %}
+                    {% elif object.estado_id_estado.id_estado == 4 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Finalizada</small></label>
                     {% endif %}
                     <br><br>
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="fInicio">Fecha inicio: </label><br>
-                    <input type="text" name="fInicio" id="fInicio" value="{{object_tarea.fecha_inicio}}" readonly>
+                    <input type="text" name="fInicio" id="fInicio" value="{{object.fecha_inicio}}" readonly>
                     <br><br>
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="fTermino">Fecha término: </label><br>
-                    <small class="text-muted">Actual: </small>{{object_tarea.fecha_termino}}
+                    <small class="text-muted">Actual: </small>{{object.fecha_termino}}
                     <br>
                 </div>
                 <div class="col-12">
                     <small class="text-muted">Nueva: </small>
-                    <input type="date" name="fTermino" id="fTermino" value="{{object_tarea.fecha_termino}}">
+                    <input type="date" name="fTermino" id="fTermino" value="{{object.fecha_termino}}">
                 </div>
                 <hr class="my-4">
                 <div class="col-2">
@@ -77,9 +78,9 @@
                 </div><br>
             </form>
             <div class="col">
-                {% if object_tarea.estado_id_estado.id_estado != 4 %}
+                {% if object.estado_id_estado.id_estado != 4 %}
                 <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this);">{% csrf_token %}
-                    <input name="tarea_id" type="hidden" value="{{object_tarea.id_tarea}}">
+                    <input name="tarea_id" type="hidden" value="{{object.id_tarea}}">
                     <button class="btn btn-danger" type="submit">Finalizar Tarea</button>
                 </form>
                 {% else %}

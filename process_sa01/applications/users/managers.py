@@ -68,14 +68,13 @@ class TareaManager(models.Manager):
                 estado_id_estado=2
             )
 
-
     def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
         
         if porc_actualizado >= 100:
             self.filter(
                 id_tarea=tarea_id
             ).update(
-                estado_tarea="Finalizada",
+                estado_id_estado=4,
                 porc_cumplimiento=100,
                 estado_alterado=1,
                 fecha_estado_alterado=getCurrentDate()
@@ -157,7 +156,6 @@ class TareaManager(models.Manager):
             'id_tarea'
         )
 
-
 class PersonaManager(models.Manager):
 
     def get_persona(self):
@@ -174,6 +172,11 @@ class TareaPersonaManager(models.Manager):
                 tarea_id_tarea= lista_tareas[tarea],
             )
             tarea_persona.save(using=self.db)
+
+    def get_tarea_by_id(self, tarea_id):
+        return self.filter(
+            tarea_id_tarea=tarea_id
+            )
 
 
 class EstadoManager(models.Manager):
