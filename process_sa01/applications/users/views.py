@@ -121,7 +121,7 @@ class TareaListView(LoginRequiredMixin, ListView):
         password = self.request.user.password_usuario
         rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
         rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-        # self.request.session["rol_nombre"] = rol_nombre
+        self.request.session["rol_nombre"] = rol_nombre
         context = Tarea.objects.get_tareas_new_order(rol_nombre)
         
         return context
