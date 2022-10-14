@@ -173,6 +173,11 @@ class TareaPersonaManager(models.Manager):
             )
             tarea_persona.save(using=self.db)
 
+    def get_tarea_by_id(self, tarea_id):
+        return self.filter(
+            tarea_id_tarea=tarea_id
+            )
+
 
 class EstadoManager(models.Manager):
     
