@@ -58,7 +58,7 @@ def updateTarea(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class TareaDetailView(DetailView):
+class TareaDetailView(LoginRequiredMixin, DetailView):
     template_name = "users/detalle_tareas.html"
     model = Tarea
     # context_object_name = "object_tarea"
@@ -66,10 +66,14 @@ class TareaDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TareaDetailView, self).get_context_data(**kwargs)
-        print(self.kwargs['pk'])
         tareaPersona = TareaPersona.objects.get_tarea_by_id(self.kwargs['pk'])
         for item in tareaPersona:
             context["tareaPersona"] = item.persona_id_persona
+            break
+        f_termino = Tarea.objects.get_fecha_termino(self.kwargs['pk'])
+        diff_days = getDiffDaysTerminoCurrent(f_termino)
+        context["diffDays"] = int(diff_days.days)
+
         return context
 
 

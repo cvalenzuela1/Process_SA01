@@ -36,23 +36,56 @@
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{object.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{object.porc_cumplimiento}}%"></div>
                     </div>
-                    <small class="text-muted">{{object.porc_cumplimiento}}%</small>
+                    <small class="text-muted">{{object.porc_cumplimiento}}%</small><br>
+                        {% if diffDays > 7 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
+                        </div>
+                        {% elif diffDays <= 7 and diffDays >= 1 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
+                        </div>  
+                        {% elif diffDays <= 0 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
+                        </div>
+                        {% endif %}
                     {% else %}
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                     </div>
-                    <small class="text-muted">0%</small>
+                    <small class="text-muted">0%</small><br>
+                        {% if diffDays > 7 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
+                        </div>
+                        {% elif diffDays <= 7 and diffDays >= 1 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
+                        </div>
+                        {% elif diffDays <= 0 %}
+                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                        <div class="square">
+                            <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
+                        </div>
+                        {% endif %}
                     {% endif %}
                     <br><br>
                 </div>
                 <div class="col-12">
-                    {% if  object.estado_id_estado.id_estado == 1 %}
+                    {% if object.estado_id_estado.id_estado == 1 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Activa</small></label>
                     {% elif object.estado_id_estado.id_estado == 2 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Asignada</small></label>
                     <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 3 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">En ejecución</small></label>
+                    <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 4 %}
                     <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Finalizada</small></label>
                     {% endif %}
