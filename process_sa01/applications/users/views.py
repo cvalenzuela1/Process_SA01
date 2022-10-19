@@ -82,6 +82,13 @@ class GestionarTareaView(FormView):
     form_class = GestionarTareaForm
     success_url = reverse_lazy("app_users:tareas-list")
 
+    def get(self, request, *args, **kwargs):
+        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
+        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(GestionarTareaView, self).get(request, *args, **kwargs)
+
     def form_valid(self, form):
         f_inicio = form.cleaned_data['fecha_inicio']
         f_termino = form.cleaned_data['fecha_termino']
@@ -119,6 +126,13 @@ class TareaListView(LoginRequiredMixin, ListView):
     paginate_by = 4
     model = Tarea
     context_object_name = "lista_tareas"
+
+    def get(self, request, *args, **kwargs):
+        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
+        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         username = self.request.user.nombre_usuario
@@ -206,6 +220,21 @@ class AsignarResponsableView(TemplateView):
         TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
         messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con ID: \"{persona_id}\"")
         return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
+
+
+class TareasAsignadasListView(ListView):
+    template_name = "users/list_tareas_asignadas.html"
+    paginate_by = 6
+    model = TareaPersona
+    context_object_name = "tareas_asignadas"
+
+    def get_queryset(self):
+        persona_id = self.request.user.persona_id_persona.id_persona
+        tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
+        context = TareaPersona.objects.get_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
+        type(context)
+        
+        return context
 
 
 class LoginUserView(FormView):

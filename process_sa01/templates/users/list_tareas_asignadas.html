@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Tareas asignadas
+{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/users/list_tareas_asignadas.css' %}">
+    {% include 'includes/header.html' %}
+    <div class="container-sm">
+        {% for tarea in tareas_asignadas %}
+            <div class="row">
+                <div class="col-6">
+                {% for item in tarea %}
+                    <a href="#" class="btn btn-secondary">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</a>
+                {% endfor %}
+                </div>
+                <div class="col-6"></div>
+            </div><br>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block js %} 
+
+{% endblock js %}
+    

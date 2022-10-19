@@ -65,7 +65,7 @@ class TareaManager(models.Manager):
             self.filter(
                 id_tarea=tarea
             ).update(
-                estado_id_estado=2
+                estado_id_estado=5
             )
 
     def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
@@ -156,6 +156,11 @@ class TareaManager(models.Manager):
             'id_tarea'
         )
 
+    def get_tareas_solicitadas(self):
+        return self.all().filter(
+            estado_id_estado=5
+        )
+
 class PersonaManager(models.Manager):
 
     def get_persona(self):
@@ -177,6 +182,15 @@ class TareaPersonaManager(models.Manager):
         return self.filter(
             tarea_id_tarea=tarea_id
             )
+
+    def get_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
+        lista = []
+        for tarea in tareas_solicitadas:
+                lista.append(self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ))
+        return lista
 
 
 class EstadoManager(models.Manager):

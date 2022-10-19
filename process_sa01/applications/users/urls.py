@@ -14,5 +14,8 @@ urlpatterns = [
     path('tareas-detalle/<pk>/', views.TareaDetailView.as_view(), name='tareas-detalle'),
     path('tareas-update/', views.updateTarea, name='tareas-update'),
     path('tareas-asignar/', views.AsignarResponsableView.as_view(), name='tareas-asignar'),
+    path('tareas-list-asignadas/', views.TareasAsignadasListView.as_view(), name='tareas-list-asignadas'),
+    path('tareas-list-asignadas/', views.TareasAsignadasListView.as_view(), name='tareas-list-asignadas-page/<int:page>/'),
+    # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   
