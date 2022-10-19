@@ -1,3 +1,4 @@
+from email.charset import QP
 from operator import mod
 from django.db import models
 from django.db.models import Q
@@ -127,6 +128,8 @@ class TareaManager(models.Manager):
         if rol_nombre == "Funcionario" or rol_nombre == "Diseñador de procesos":
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1)
+            ).filter(
+               ~Q(estado_id_estado=5) 
             ).order_by(
                 'estado_alterado',
                 '-id_tarea'
@@ -134,6 +137,8 @@ class TareaManager(models.Manager):
         elif rol_nombre == "Gerente":
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
+            ).filter(
+               ~Q(estado_id_estado=5) 
             ).order_by(
                 'estado_alterado',
                 '-id_tarea'
@@ -159,6 +164,25 @@ class TareaManager(models.Manager):
     def get_tareas_solicitadas(self):
         return self.all().filter(
             estado_id_estado=5
+        )
+
+    def update_tarea_solicitada(self, tarea_id):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            estado_id_estado=2
+        )
+
+    def update_tarea_rechazada(self, tarea_id):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            estado_id_estado=6
+        )
+
+    def get_tareas_asignadas(self):
+        return self.all().filter(
+            estado_id_estado=2
         )
 
 class PersonaManager(models.Manager):
@@ -191,6 +215,19 @@ class TareaPersonaManager(models.Manager):
                 tarea_id_tarea=tarea.id_tarea
             ))
         return lista
+    
+    def count_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
+        lista = []
+        for tarea in tareas_solicitadas:
+            if self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
+                lista.append(self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ))
+        return len(lista)
 
 
 class EstadoManager(models.Manager):
