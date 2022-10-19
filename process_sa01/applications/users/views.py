@@ -19,6 +19,17 @@ from .functions import *
 class Test1TemplateView(TemplateView):
     template_name = "users/test1.html"
 
+
+class CountTareasSolicitadas(object):
+    def get_context_data(self, **kwargs):
+        context = super(CountTareasSolicitadas, self).get_context_data(**kwargs)
+        persona_id = self.request.user.persona_id_persona.id_persona
+        tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
+        context["count_tareas_solicitadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
+
+        return context
+    
+
 def updateTarea(request):
     if request.method == "POST":
         id_tarea = request.POST.get("idTarea")
@@ -58,7 +69,7 @@ def updateTarea(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class TareaDetailView(DetailView):
+class TareaDetailView(CountTareasSolicitadas, LoginRequiredMixin, DetailView):
     template_name = "users/detalle_tareas.html"
     model = Tarea
     # context_object_name = "object_tarea"
@@ -66,17 +77,28 @@ class TareaDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TareaDetailView, self).get_context_data(**kwargs)
-        print(self.kwargs['pk'])
         tareaPersona = TareaPersona.objects.get_tarea_by_id(self.kwargs['pk'])
         for item in tareaPersona:
             context["tareaPersona"] = item.persona_id_persona
+            break
+        f_termino = Tarea.objects.get_fecha_termino(self.kwargs['pk'])
+        diff_days = getDiffDaysTerminoCurrent(f_termino)
+        context["diffDays"] = int(diff_days.days)
+
         return context
 
 
-class GestionarTareaView(FormView):
+class GestionarTareaView(CountTareasSolicitadas, FormView):
     template_name = "users/tareas.html"
     form_class = GestionarTareaForm
     success_url = reverse_lazy("app_users:tareas-list")
+
+    def get(self, request, *args, **kwargs):
+        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
+        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(GestionarTareaView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         f_inicio = form.cleaned_data['fecha_inicio']
@@ -110,18 +132,25 @@ class GestionarTareaView(FormView):
         return HttpResponseRedirect(reverse("app_users:tareas"))
 
 
-class TareaListView(LoginRequiredMixin, ListView):
+class TareaListView(CountTareasSolicitadas, LoginRequiredMixin, ListView):
     template_name = "users/list_tareas.html"
     paginate_by = 4
     model = Tarea
     context_object_name = "lista_tareas"
+
+    def get(self, request, *args, **kwargs):
+        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
+        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         username = self.request.user.nombre_usuario
         password = self.request.user.password_usuario
         rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
         rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-        # self.request.session["rol_nombre"] = rol_nombre
+        self.request.session["rol_nombre"] = rol_nombre
         context = Tarea.objects.get_tareas_new_order(rol_nombre)
         
         return context
@@ -181,7 +210,7 @@ def actualizarProgreso(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class AsignarResponsableView(TemplateView):
+class AsignarResponsableView(CountTareasSolicitadas, LoginRequiredMixin, TemplateView):
     template_name = "users/asignar_responsable.html"
 
     def get_context_data(self, **kwargs):
@@ -200,8 +229,54 @@ class AsignarResponsableView(TemplateView):
         lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
         Tarea.objects.update_tarea_estado(lista_tareas)
         TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
-        messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con ID: \"{persona_id}\"")
+        if int(contador_tareas) == 1:
+            messages.success(request, f"Se ha asignado {contador_tareas} tarea a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
+        elif int(contador_tareas) > 1:
+            messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
         return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
+
+
+class TareasSolicitadasListView(CountTareasSolicitadas, LoginRequiredMixin, ListView):
+    template_name = "users/list_tareas_solicitadas.html"
+    paginate_by = 6
+    model = TareaPersona
+    context_object_name = "tareas_solicitadas"
+
+    def get_queryset(self):
+        persona_id = self.request.user.persona_id_persona.id_persona
+        tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
+        context = TareaPersona.objects.get_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
+        
+        return context
+
+def tareaAceptar(request):
+    if request.method == "POST":
+        id_tarea = request.POST.get("tarea_id")
+        if id_tarea != None:
+            Tarea.objects.update_tarea_solicitada(id_tarea)
+            messages.success(request, "Tarea aceptada correctamente")
+            return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+        else:
+            messages.warning(request, "Ha ocurrido un problema")
+            return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+    else:
+        messages.error(request, "Ha ocurrido un error")
+        return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+
+
+def tareaRechazar(request):
+    if request.method == "POST":
+        id_tarea = request.POST.get("tarea_id")
+        if id_tarea != None:
+            Tarea.objects.update_tarea_rechazada(id_tarea)
+            messages.success(request, "Tarea rechazada correctamente")
+            return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+        else:
+            messages.warning(request, "Ha ocurrido un problema")
+            return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+    else:
+        messages.error(request, "Ha ocurrido un error")
+        return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
 
 
 class LoginUserView(FormView):

@@ -26,11 +26,18 @@
                                 Gestionar
                             </a>
                             <ul id="menudropdown" class="dropdown-menu">
-                                <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Gestionar tareas</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
+                                {% if user.permisos_id_permiso.tipo_permiso == 'Gerente' or user.permisos_id_permiso.tipo_permiso == 'Funcionario Crear' %}
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Gestionar tareas</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
+                                    {% if user.permisos_id_permiso.tipo_permiso == 'Gerente' %}
+                                        <li><hr class="dropdown-divider"></li>
+                                    {% endif %}
+                                {% endif %}
+                                    
+                                {% if user.permisos_id_permiso.tipo_permiso == 'Gerente' or user.permisos_id_permiso.tipo_permiso == 'Funcionario Asignar' %}
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
+                                {% endif %}
                             </ul>
                         </div>
                         {%else%}
@@ -45,6 +52,12 @@
                             </a>
                             <ul id="menudropdown" class="dropdown-menu">
                                 {% if user.is_authenticated %}
+                                    
+                                    {% if user.permisos_id_permiso.tipo_permiso != 'Diseñador de procesos' %}
+                                        <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-solicitadas' %}">Tareas solicitadas<span class="badge">{{count_tareas_solicitadas}}</span></a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    {% endif %}
+                                        
                                     <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:logout' %}">Finalizar sesión</a></li>
                                 {% else %}
                                     <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:login' %}">Iniciar sesión</a></li>

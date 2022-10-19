@@ -28,6 +28,8 @@
                             <small class="text-muted">Estado: En ejecución</small>
                             {% elif element.estado_id_estado.id_estado == 4 %}
                             <small class="text-muted">Estado: Finalizada</small>
+                            {% elif element.estado_id_estado.id_estado == 6 %}
+                            <small class="text-muted">Estado: Rechazada</small>
                             {% endif %}
                             {% if element.estado_id_estado.id_estado == 4 %}
                             <div class="progress">

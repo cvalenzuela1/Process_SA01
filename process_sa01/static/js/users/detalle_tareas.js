@@ -40,3 +40,7 @@ function editarTarea(form){
     })
     return false;
 }
+
+$( function() {
+    $( document ).tooltip();
+} );
