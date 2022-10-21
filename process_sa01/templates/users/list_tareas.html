@@ -72,6 +72,15 @@
                             <button class="btn btn-primary" type="submit">Actualizar progresos</button>
                         </div>
                     </form>
+                    <hr>
+                    <div class="text-dark">
+                        Alertar a responsables de tareas que tengan un día de plazo o estén atrasadas
+                        </div>
+                        <form method="POST" action="{% url 'app_users:tareas-alertar-atrasos' %}">{% csrf_token %}
+                            <div class="dropdown mt-3">
+                                <button class="btn btn-success" type="submit">Alertar atrasos</button>
+                            </div>
+                        </form>
                 </div>
             </div>
             </div>

@@ -178,6 +178,7 @@ class Persona(models.Model):
     nombre_persona = models.CharField(max_length=30)
     apellido_paterno_persona = models.CharField(max_length=30)
     apellido_materno_persona = models.CharField(max_length=30)
+    email_persona = models.CharField(max_length=50)
     direccion_id_direccion = models.ForeignKey(Direccion, models.DO_NOTHING, db_column='direccion_id_direccion')
 
     class Meta:
