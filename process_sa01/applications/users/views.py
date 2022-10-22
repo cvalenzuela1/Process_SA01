@@ -1,6 +1,7 @@
 import datetime
 import pandas as pd
 from django.shortcuts import render
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, View, TemplateView
 from django.views.generic.edit import FormView
@@ -9,6 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.conf import settings
 
 from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona
 from .forms import GestionarTareaForm, LoginForm
@@ -23,9 +25,10 @@ class Test1TemplateView(TemplateView):
 class CountTareasSolicitadas(object):
     def get_context_data(self, **kwargs):
         context = super(CountTareasSolicitadas, self).get_context_data(**kwargs)
-        persona_id = self.request.user.persona_id_persona.id_persona
-        tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
-        context["count_tareas_solicitadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
+        if self.request.user.is_authenticated:
+            persona_id = self.request.user.persona_id_persona.id_persona
+            tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
+            context["count_tareas_solicitadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
 
         return context
     
@@ -185,17 +188,18 @@ def actualizarProgreso(request):
                 diff_actual = getDiffDaysTerminoCurrent(f_termino)
 
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
-                if item.porc_cumplimiento == 100:
-                    continue
-                if diff_actual.days <= 0:
-                    Tarea.objects.update_porc_cumplimiento(100, tarea_id)
-                    continue
-                elif diff_actual.days == diff.days:
-                    new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
-                if new_porc_cumplimiento < 0:
-                    Tarea.objects.update_porc_cumplimiento(0, tarea_id)
-                elif new_porc_cumplimiento > 0:
-                    Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
+                if item.estado_id_estado.id_estado == 2 or item.estado_id_estado.id_estado == 3:
+                    if item.porc_cumplimiento == 100:
+                        continue
+                    if diff_actual.days <= 0:
+                        Tarea.objects.update_porc_cumplimiento(100, tarea_id)
+                        continue
+                    elif diff_actual.days == diff.days:
+                        new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                    if new_porc_cumplimiento < 0:
+                        Tarea.objects.update_porc_cumplimiento(0, tarea_id)
+                    elif new_porc_cumplimiento > 0:
+                        Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
 
             # Ejecución de procedimientos almacenados
             executeSPUpdateEstadoAlterado()
@@ -249,6 +253,7 @@ class TareasSolicitadasListView(CountTareasSolicitadas, LoginRequiredMixin, List
         
         return context
 
+
 def tareaAceptar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
@@ -277,6 +282,26 @@ def tareaRechazar(request):
     else:
         messages.error(request, "Ha ocurrido un error")
         return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+
+
+def alertarAtrasos(request):
+    if request.method == "POST":
+        # Enviar mail a responsables de tareas atrasadas
+        asunto = 'Alerta de atraso'
+        mensaje = 'Título de tarea atrasada: '
+        email_remitente = 'noneshater@gmail.com'
+        tareas_atrasadas = Tarea.objects.get_tareas_atrasadas()
+        oTareaPersona = TareaPersona.objects.get_tareas_by_tareas_atrasadas(tareas_atrasadas)
+        for tarea_persona in oTareaPersona:
+            for item in tarea_persona:
+                email_destinatario = item.persona_id_persona.email_persona
+                mensaje+=item.tarea_id_tarea.titulo_tarea
+                send_mail(asunto, mensaje, email_remitente, [email_destinatario])
+            mensaje = 'Título de tarea atrasada: '
+        messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
+        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+    else:
+        return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
 class LoginUserView(FormView):
@@ -315,7 +340,7 @@ class LoginUserView(FormView):
 
 
 class LogoutView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         logout(request)
         messages.success(request, "Has cerrado sesión correctamente")
         return HttpResponseRedirect(

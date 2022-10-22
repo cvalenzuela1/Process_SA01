@@ -18,6 +18,7 @@ urlpatterns = [
     path('tareas-list-solicitadas/<int:page>/', views.TareasSolicitadasListView.as_view(), name='tareas-list-solicitadas-page'),
     path('tareas-solicitadas-aceptar/', views.tareaAceptar, name='tareas-solicitadas-aceptar'),
     path('tareas-solicitadas-rechazar/', views.tareaRechazar, name='tareas-solicitadas-rechazar'),
+    path('tareas-alertar-atrasos/', views.alertarAtrasos, name='tareas-alertar-atrasos'),
     # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   

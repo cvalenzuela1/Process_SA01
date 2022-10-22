@@ -31,3 +31,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # LOGIN SETTINGS
 LOGIN_REDIRECT_URL = '/home'
 LOGIN_URL='/login'
+
+# EMAIL SETTINGS
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = get_secret("EMAIL")
+EMAIL_HOST_PASSWORD = get_secret("EMAIL_PASSWORD")
+EMAIL_PORT = get_secret("EMAIL_PORT")

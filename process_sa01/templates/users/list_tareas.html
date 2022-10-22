@@ -30,8 +30,32 @@
                             <small class="text-muted">Estado: Finalizada</small>
                             {% elif element.estado_id_estado.id_estado == 6 %}
                             <small class="text-muted">Estado: Rechazada</small>
+                            {% elif element.estado_id_estado.id_estado == 7 %}
+                            <small class="text-muted">Estado: Atrasada</small>
+                            {% elif element.estado_id_estado.id_estado == 8 %}
+                            <small class="text-muted">Estado: Vencida</small>
                             {% endif %}
                             {% if element.estado_id_estado.id_estado == 4 %}
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-label="Danger example" style="width: {{element.porc_cumplimiento}}%" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <hr>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="submit" class="btn btn-danger">Ver</button>&nbsp;
+                                <button type="button" class="btn btn-primary" disabled>Administrar</button>
+                            </div>
+                            {% elif element.estado_id_estado.id_estado == 7 %}
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-label="Animated striped example" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100" style="width: {{element.porc_cumplimiento}}%"></div>
+                              </div>
+                            <hr>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="submit" class="btn btn-danger">Ver</button>&nbsp;
+                                <button class="btn btn-primary" type="button" onclick="showoffcanvas();" aria-controls="offcanvasExample">
+                                    Administrar
+                                </button> 
+                            </div>
+                            {% elif element.estado_id_estado.id_estado == 8 %}
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-label="Danger example" style="width: {{element.porc_cumplimiento}}%" aria-valuenow="{{element.porc_cumplimiento}}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
@@ -72,6 +96,15 @@
                             <button class="btn btn-primary" type="submit">Actualizar progresos</button>
                         </div>
                     </form>
+                    <hr>
+                    <div class="text-dark">
+                        Alertar a responsables de tareas que tengan un día de plazo o estén atrasadas
+                        </div>
+                        <form method="POST" action="{% url 'app_users:tareas-alertar-atrasos' %}">{% csrf_token %}
+                            <div class="dropdown mt-3">
+                                <button class="btn btn-success" type="submit">Alertar atrasos</button>
+                            </div>
+                        </form>
                 </div>
             </div>
             </div>

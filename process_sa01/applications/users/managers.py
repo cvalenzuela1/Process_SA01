@@ -75,7 +75,7 @@ class TareaManager(models.Manager):
             self.filter(
                 id_tarea=tarea_id
             ).update(
-                estado_id_estado=4,
+                estado_id_estado=7,
                 porc_cumplimiento=100,
                 estado_alterado=1,
                 fecha_estado_alterado=getCurrentDate()
@@ -185,6 +185,11 @@ class TareaManager(models.Manager):
             estado_id_estado=2
         )
 
+    def get_tareas_atrasadas(self):
+        return self.all().filter(
+            estado_id_estado=7
+        )
+
 class PersonaManager(models.Manager):
 
     def get_persona(self):
@@ -228,6 +233,17 @@ class TareaPersonaManager(models.Manager):
                 tarea_id_tarea=tarea.id_tarea
             ))
         return len(lista)
+
+    def get_tareas_by_tareas_atrasadas(self, tareas_atrasadas):
+        lista = []
+        for tarea in tareas_atrasadas:
+            if self.filter(
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
+                lista.append(self.filter(
+                    tarea_id_tarea=tarea.id_tarea
+                ))
+        return lista
 
 
 class EstadoManager(models.Manager):
