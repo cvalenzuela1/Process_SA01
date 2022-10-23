@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-6">
                     {% for item in tarea %}
-                    <form id="form{{item.tarea_id_tarea.id_tarea}}" method="POST" action="{% url 'app_users:tareas-solicitadas-aceptar' %}" onsubmit="return aceptarTarea(this)">{% csrf_token %}
+                    <form method="POST">{% csrf_token %}
                         <input name="tarea_id" type="hidden" value="{{item.tarea_id_tarea.id_tarea}}">
                         <input name="titulo" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}">
                         <input name="descripcion" type="hidden" value="{{item.tarea_id_tarea.desc_tarea}}">

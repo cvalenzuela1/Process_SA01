@@ -180,9 +180,9 @@ class TareaManager(models.Manager):
             estado_id_estado=6
         )
 
-    def get_tareas_asignadas(self):
+    def get_tareas_asignadas_atrasadas(self):
         return self.all().filter(
-            estado_id_estado=2
+            Q(estado_id_estado=2) | Q(estado_id_estado=7)
         )
 
     def get_tareas_atrasadas(self):

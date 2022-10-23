@@ -311,7 +311,7 @@ class VerTareasAsignadasListView(CountTareasSolicitadas, ListView):
 
     def get_queryset(self):
         persona_id = self.request.user.persona_id_persona.id_persona
-        tareas_asignadas = Tarea.objects.get_tareas_asignadas()
+        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
         context = TareaPersona.objects.get_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
         
         return context
