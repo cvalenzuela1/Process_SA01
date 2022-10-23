@@ -188,17 +188,18 @@ def actualizarProgreso(request):
                 diff_actual = getDiffDaysTerminoCurrent(f_termino)
 
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
-                if item.porc_cumplimiento == 100:
-                    continue
-                if diff_actual.days <= 0:
-                    Tarea.objects.update_porc_cumplimiento(100, tarea_id)
-                    continue
-                elif diff_actual.days == diff.days:
-                    new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
-                if new_porc_cumplimiento < 0:
-                    Tarea.objects.update_porc_cumplimiento(0, tarea_id)
-                elif new_porc_cumplimiento > 0:
-                    Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
+                if item.estado_id_estado.id_estado == 2 or item.estado_id_estado.id_estado == 3:
+                    if item.porc_cumplimiento == 100:
+                        continue
+                    if diff_actual.days <= 0:
+                        Tarea.objects.update_porc_cumplimiento(100, tarea_id)
+                        continue
+                    elif diff_actual.days == diff.days:
+                        new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                    if new_porc_cumplimiento < 0:
+                        Tarea.objects.update_porc_cumplimiento(0, tarea_id)
+                    elif new_porc_cumplimiento > 0:
+                        Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
 
             # Ejecución de procedimientos almacenados
             executeSPUpdateEstadoAlterado()
@@ -252,6 +253,7 @@ class TareasSolicitadasListView(CountTareasSolicitadas, LoginRequiredMixin, List
         
         return context
 
+
 def tareaAceptar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
@@ -294,7 +296,8 @@ def alertarAtrasos(request):
             for item in tarea_persona:
                 email_destinatario = item.persona_id_persona.email_persona
                 mensaje+=item.tarea_id_tarea.titulo_tarea
-                send_mail(asunto, mensaje, email_remitente, email_destinatario)
+                send_mail(asunto, mensaje, email_remitente, [email_destinatario])
+            mensaje = 'Título de tarea atrasada: '
         messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
     else:

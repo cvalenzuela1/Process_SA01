@@ -38,20 +38,20 @@
                     </div>
                     <small class="text-muted">{{object.porc_cumplimiento}}%</small><br>
                         {% if diffDays > 7 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
-                        </div>
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
+                            </div>
                         {% elif diffDays <= 7 and diffDays >= 1 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
-                        </div>  
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
+                            </div>  
                         {% elif diffDays <= 0 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
-                        </div>
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
+                            </div>
                         {% endif %}
                     {% else %}
                     <div class="progress">
@@ -59,35 +59,40 @@
                     </div>
                     <small class="text-muted">0%</small><br>
                         {% if diffDays > 7 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
-                        </div>
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(4, 219, 69);" title="Queda más de una semana de plazo"></span>
+                            </div>
                         {% elif diffDays <= 7 and diffDays >= 1 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
-                        </div>
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(233, 250, 2);" title="Queda menos de una semana de plazo"></span>
+                            </div>
+                        {% elif diffDays <= 0 and object.estado_id_estado.id_estado == 8 %}
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea ha vencido"></span>
+                            </div>
                         {% elif diffDays <= 0 %}
-                        <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
-                        <div class="square">
-                            <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
-                        </div>
+                            <label class="form-label" for="estadoTarea">Semáforo: </label>&nbsp;&nbsp;
+                            <div class="square">
+                                <span class="dot" style="background-color: rgb(250, 0, 0);" title="La tarea está atrasada!"></span>
+                            </div>
                         {% endif %}
                     {% endif %}
                     <br><br>
                 </div>
                 <div class="col-12">
                     {% if object.estado_id_estado.id_estado == 1 %}
-                    <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Activa</small></label>
+                        <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Activa</small></label>
                     {% elif object.estado_id_estado.id_estado == 2 %}
-                    <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Asignada</small></label>
-                    <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
+                        <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Asignada</small></label>
+                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 3 %}
-                    <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">En ejecución</small></label>
-                    <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
+                        <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">En ejecución</small></label>
+                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 4 %}
-                    <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Finalizada</small></label>
+                        <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Finalizada</small></label>
                     {% endif %}
                     <br><br>
                 </div>
@@ -106,18 +111,25 @@
                     <input type="date" name="fTermino" id="fTermino" value="{{object.fecha_termino}}">
                 </div>
                 <hr class="my-4">
+                
+                {% if object.estado_id_estado.id_estado != 8 %}
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-success">Editar Tarea</button>
+                    </div><br>
+                {% else %}
                 <div class="col-2">
-                    <button type="submit" class="btn btn-success">Editar Tarea</button>
+                    <button type="submit" class="btn btn-success" disabled>Editar Tarea</button>
                 </div><br>
+                {% endif %}
             </form>
             <div class="col">
-                {% if object.estado_id_estado.id_estado != 4 %}
-                <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this);">{% csrf_token %}
-                    <input name="tarea_id" type="hidden" value="{{object.id_tarea}}">
-                    <button class="btn btn-danger" type="submit">Finalizar Tarea</button>
-                </form>
+                {% if object.estado_id_estado.id_estado != 4 and object.estado_id_estado.id_estado != 8 %}
+                    <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this);">{% csrf_token %}
+                        <input name="tarea_id" type="hidden" value="{{object.id_tarea}}">
+                        <button class="btn btn-danger" type="submit">Finalizar Tarea</button>
+                    </form>
                 {% else %}
-                <button class="btn btn-danger" type="button" disabled>Finalizar Tarea</button>
+                    <button class="btn btn-danger" type="button" disabled>Finalizar Tarea</button>
                 {% endif %}
             </div>
         </div>        
