@@ -220,6 +220,19 @@ class TareaPersonaManager(models.Manager):
                 tarea_id_tarea=tarea.id_tarea
             ))
         return lista
+
+    def get_tareas_asignadas_by_persona(self, persona_id, tareas_asignadas):
+        lista = []
+        for tarea in tareas_asignadas:
+            if self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
+                lista.append(self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ))
+        return lista
     
     def count_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
         lista = []

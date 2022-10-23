@@ -304,6 +304,19 @@ def alertarAtrasos(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
+class VerTareasAsignadasListView(CountTareasSolicitadas, ListView):
+    template_name = "users/list_tareas_asignadas.html"
+    model = TareaPersona
+    context_object_name = "tareas_asignadas"
+
+    def get_queryset(self):
+        persona_id = self.request.user.persona_id_persona.id_persona
+        tareas_asignadas = Tarea.objects.get_tareas_asignadas()
+        context = TareaPersona.objects.get_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
+        
+        return context
+
+
 class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
