@@ -104,19 +104,16 @@
                             {% for tarea in lista_tareas %}
                                 <tr>
                                     {% if  tarea.estado_id_estado.id_estado == 1 %}
-                                    <td>
-                                        <div>
-                                            <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
-                                        </div>
-                                    </td>
-                                    <td>{{tarea.titulo_tarea}}</td>
-                                    <td><textarea class="form-control" cols="13" rows="2">{{tarea.desc_tarea}}</textarea></td>
-                                    <td>{{tarea.fecha_inicio}}</td>
-                                    <td>{{tarea.fecha_termino}}</td>
-                                    {% else %}
-                                    
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            </div>
+                                        </td>
+                                        <td>{{tarea.titulo_tarea}}</td>
+                                        <td><textarea class="form-control" cols="13" rows="2">{{tarea.desc_tarea}}</textarea></td>
+                                        <td>{{tarea.fecha_inicio}}</td>
+                                        <td>{{tarea.fecha_termino}}</td>
                                     {% endif %}
-                                    
                                 </tr>
                             {% endfor %}
                         </tbody>

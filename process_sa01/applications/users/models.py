@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import EstadoManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
+from .managers import EstadoManager, PermisosManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -80,6 +80,8 @@ class Permisos(models.Model):
     tipo_permiso = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=500)
 
+    objects = PermisosManager()
+
     class Meta:
         managed = False
         db_table = 'permisos'
@@ -108,6 +110,7 @@ class TareaPersona(models.Model):
     id_tarea_persona = models.BigAutoField(primary_key=True)
     persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
     tarea_id_tarea = models.ForeignKey(Tarea, models.DO_NOTHING, db_column='tarea_id_tarea')
+    justificacion_rechazo = models.CharField(max_length=300, blank=True, null=True)
 
     objects = TareaPersonaManager()
 

@@ -21,6 +21,15 @@ from .functions import *
 class Test1TemplateView(TemplateView):
     template_name = "users/test1.html"
 
+class CountTareasAsignadas(object):
+    def get_context_data(self, **kwargs):
+            context = super(CountTareasAsignadas, self).get_context_data(**kwargs)
+            if self.request.user.is_authenticated:
+                persona_id = self.request.user.persona_id_persona.id_persona
+                tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
+                context["count_tareas_asignadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_asignadas)
+
+            return context
 
 class CountTareasSolicitadas(object):
     def get_context_data(self, **kwargs):
@@ -72,7 +81,7 @@ def updateTarea(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class TareaDetailView(CountTareasSolicitadas, LoginRequiredMixin, DetailView):
+class TareaDetailView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, DetailView):
     template_name = "users/detalle_tareas.html"
     model = Tarea
     # context_object_name = "object_tarea"
@@ -91,7 +100,7 @@ class TareaDetailView(CountTareasSolicitadas, LoginRequiredMixin, DetailView):
         return context
 
 
-class GestionarTareaView(CountTareasSolicitadas, FormView):
+class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView):
     template_name = "users/tareas.html"
     form_class = GestionarTareaForm
     success_url = reverse_lazy("app_users:tareas-list")
@@ -135,7 +144,7 @@ class GestionarTareaView(CountTareasSolicitadas, FormView):
         return HttpResponseRedirect(reverse("app_users:tareas"))
 
 
-class TareaListView(CountTareasSolicitadas, LoginRequiredMixin, ListView):
+class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, ListView):
     template_name = "users/list_tareas.html"
     paginate_by = 4
     model = Tarea
@@ -149,12 +158,8 @@ class TareaListView(CountTareasSolicitadas, LoginRequiredMixin, ListView):
         return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        username = self.request.user.nombre_usuario
-        password = self.request.user.password_usuario
-        rol_id = Usuario.objects.get_usuario_rol_id(username, password)[0][4]
-        rol_nombre = Rol.objects.get_rol_nombre(rol_id)[0][1]
-        self.request.session["rol_nombre"] = rol_nombre
-        context = Tarea.objects.get_tareas_new_order(rol_nombre)
+        permiso_id = self.request.user.permisos_id_permiso.id_permiso
+        context = Tarea.objects.get_tareas_new_order(permiso_id)
         
         return context
 
@@ -214,7 +219,7 @@ def actualizarProgreso(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class AsignarResponsableView(CountTareasSolicitadas, LoginRequiredMixin, TemplateView):
+class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, TemplateView):
     template_name = "users/asignar_responsable.html"
 
     def get_context_data(self, **kwargs):
@@ -240,7 +245,7 @@ class AsignarResponsableView(CountTareasSolicitadas, LoginRequiredMixin, Templat
         return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
 
 
-class TareasSolicitadasListView(CountTareasSolicitadas, LoginRequiredMixin, ListView):
+class TareasSolicitadasListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, ListView):
     template_name = "users/list_tareas_solicitadas.html"
     paginate_by = 6
     model = TareaPersona
@@ -272,10 +277,16 @@ def tareaAceptar(request):
 def tareaRechazar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
+        justificacion = request.POST.get("justificacion_id")
         if id_tarea != None:
-            Tarea.objects.update_tarea_rechazada(id_tarea)
-            messages.success(request, "Tarea rechazada correctamente")
-            return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+            if justificacion != None:
+                Tarea.objects.update_tarea_rechazada(id_tarea)
+                TareaPersona.objects.update_justificacion_rechazo(id_tarea, justificacion)
+                messages.success(request, "Tarea rechazada correctamente")
+                return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
+            else:
+                messages.warning(request, "No existe una justificación")
+                return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
         else:
             messages.warning(request, "Ha ocurrido un problema")
             return HttpResponseRedirect(reverse("app_users:tareas-list-solicitadas"))
@@ -304,6 +315,19 @@ def alertarAtrasos(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
+class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, ListView):
+    template_name = "users/list_tareas_asignadas.html"
+    model = TareaPersona
+    context_object_name = "tareas_asignadas"
+
+    def get_queryset(self):
+        persona_id = self.request.user.persona_id_persona.id_persona
+        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
+        context = TareaPersona.objects.get_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
+        
+        return context
+
+
 class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
@@ -328,8 +352,9 @@ class LoginUserView(FormView):
             user = authenticate(username=username, password=encrypted_password)
             if user is not None:
                 login(self.request, user)
+                permiso = self.request.user.permisos_id_permiso.tipo_permiso
                 for item in Rol.objects.get_rol_nombre(rol_id):
-                    messages.success(self.request, f"Has iniciado sesión como {str(item[1]).lower()}")
+                    messages.success(self.request, f"Has iniciado sesión como {str(item[1]).capitalize()} con permisos de \"{str(permiso).capitalize()}\"")
                 return super(LoginUserView, self).form_valid(form)
             else:
                 messages.warning(self.request, "Las credenciales ingresadas no son válidas")

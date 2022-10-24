@@ -14,7 +14,7 @@
             <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
         
-        {% if request.session.rol_nombre == 'Funcionario' or request.session.rol_nombre == 'Diseñador de procesos' %}
+        {% if user.permisos_id_permiso.id_permiso == 2 %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
                 {% if page_obj.number == i %}
                     <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
@@ -27,7 +27,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-        {% elif request.session.rol_nombre == 'Gerente' %}
+        {% elif user.permisos_id_permiso.id_permiso == 5 %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
                 {% if page_obj.number == i %}
                     <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
