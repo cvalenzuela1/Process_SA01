@@ -106,8 +106,8 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView)
     success_url = reverse_lazy("app_users:tareas-list")
 
     def get(self, request, *args, **kwargs):
-        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
-        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(GestionarTareaView, self).get(request, *args, **kwargs)
@@ -151,15 +151,15 @@ class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredM
     context_object_name = "lista_tareas"
 
     def get(self, request, *args, **kwargs):
-        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
-        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        permiso_id = self.request.user.permisos_id_permiso.id_permiso
-        context = Tarea.objects.get_tareas_new_order(permiso_id)
+        rol_id = self.request.user.rol_id_rol.id_rol
+        context = Tarea.objects.get_tareas_new_order(rol_id)
         
         return context
 
@@ -352,9 +352,8 @@ class LoginUserView(FormView):
             user = authenticate(username=username, password=encrypted_password)
             if user is not None:
                 login(self.request, user)
-                permiso = self.request.user.permisos_id_permiso.tipo_permiso
                 for item in Rol.objects.get_rol_nombre(rol_id):
-                    messages.success(self.request, f"Has iniciado sesión como {str(item[1]).capitalize()} con permisos de \"{str(permiso).capitalize()}\"")
+                    messages.success(self.request, f"Has iniciado sesión como \"{str(item[1]).capitalize()}\"")
                 return super(LoginUserView, self).form_valid(form)
             else:
                 messages.warning(self.request, "Las credenciales ingresadas no son válidas")

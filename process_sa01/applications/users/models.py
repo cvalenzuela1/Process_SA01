@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import EstadoManager, PermisosManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
+from .managers import EstadoManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
 
 # Create your models here.
 class Region(models.Model):
@@ -75,18 +75,6 @@ class Tarea(models.Model):
         db_table = 'tarea'
 
 
-class Permisos(models.Model):
-    id_permiso = models.BigAutoField(primary_key=True)
-    tipo_permiso = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=500)
-
-    objects = PermisosManager()
-
-    class Meta:
-        managed = False
-        db_table = 'permisos'
-
-
 class Persona(models.Model):
     id_persona = models.BigAutoField(primary_key=True)
     rut_persona = models.CharField(max_length=10)
@@ -137,7 +125,6 @@ class Usuario(models.Model):
     is_active = models.BooleanField(default=True)
     rol_id_rol = models.ForeignKey(Rol, on_delete=models.CASCADE, related_name="rol_usuario", db_column='rol_id_rol')
     persona_id_persona = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name="persona_usuario", db_column='persona_id_persona')
-    permisos_id_permiso = models.ForeignKey(Permisos, models.CASCADE, db_column='permisos_id_permiso')
     is_authenticated = True
 
     objects = UsuarioManager()

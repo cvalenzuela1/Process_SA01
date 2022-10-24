@@ -14,7 +14,7 @@
             <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
         
-        {% if user.permisos_id_permiso.id_permiso == 2 %}
+        {% if user.rol_id_rol.id_rol == 2 %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
                 {% if page_obj.number == i %}
                     <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
@@ -27,7 +27,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-        {% elif user.permisos_id_permiso.id_permiso == 5 %}
+        {% elif user.rol_id_rol.id_rol == 4 %}
             {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
                 {% if page_obj.number == i %}
                     <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only"></span></span>

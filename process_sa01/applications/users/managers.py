@@ -123,8 +123,8 @@ class TareaManager(models.Manager):
                 fecha_termino=ftermino
             )
         
-    def get_tareas_new_order(self, permiso_id):
-        if permiso_id == 2:
+    def get_tareas_new_order(self, rol_id):
+        if rol_id == 2:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1)
             ).filter(
@@ -133,7 +133,7 @@ class TareaManager(models.Manager):
                 'estado_alterado',
                 '-id_tarea'
             )
-        elif permiso_id == 5:
+        elif rol_id == 4:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
             ).filter(
@@ -289,8 +289,3 @@ class EstadoManager(models.Manager):
         return self.filter(
             id_estado=estado_id
         ).values_list()
-
-
-class PermisosManager(models.Manager):
-    def get_all_permisos(self):
-        return self.all()
