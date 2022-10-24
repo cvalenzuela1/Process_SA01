@@ -19,6 +19,7 @@ class LoginForm(forms.ModelForm):
                 'placeholder': ' Nombre de usuario',
             }),
             'password_usuario': forms.PasswordInput(attrs={
+                'id': 'password_usuario',
                 'placeholder': ' Contraseña',
                 'class': 'form-control',
             })

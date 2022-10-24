@@ -123,9 +123,8 @@ class TareaManager(models.Manager):
                 fecha_termino=ftermino
             )
         
-    def get_tareas_new_order(self, rol_nombre):
-        
-        if rol_nombre == "Funcionario" or rol_nombre == "Diseñador de procesos":
+    def get_tareas_new_order(self, permiso_id):
+        if permiso_id == 2:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1)
             ).filter(
@@ -134,7 +133,7 @@ class TareaManager(models.Manager):
                 'estado_alterado',
                 '-id_tarea'
             )
-        elif rol_nombre == "Gerente":
+        elif permiso_id == 5:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
             ).filter(
@@ -247,6 +246,19 @@ class TareaPersonaManager(models.Manager):
             ))
         return len(lista)
 
+    def count_tareas_asignadas_by_persona(self, persona_id, tareas_asignadas):
+        lista = []
+        for tarea in tareas_asignadas:
+            if self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
+                lista.append(self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ))
+        return len(lista)
+
     def get_tareas_by_tareas_atrasadas(self, tareas_atrasadas):
         lista = []
         for tarea in tareas_atrasadas:
@@ -257,6 +269,13 @@ class TareaPersonaManager(models.Manager):
                     tarea_id_tarea=tarea.id_tarea
                 ))
         return lista
+
+    def update_justificacion_rechazo(self, tarea_id, justificacion):
+        self.filter(
+            tarea_id_tarea=tarea_id
+        ).update(
+            justificacion_rechazo=justificacion
+        )
 
 
 class EstadoManager(models.Manager):
@@ -270,3 +289,8 @@ class EstadoManager(models.Manager):
         return self.filter(
             id_estado=estado_id
         ).values_list()
+
+
+class PermisosManager(models.Manager):
+    def get_all_permisos(self):
+        return self.all()

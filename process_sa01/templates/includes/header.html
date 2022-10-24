@@ -44,7 +44,7 @@
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas</a></li>
                                 {% else %}
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas</a></li>
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas<span class="badge">{{count_tareas_asignadas}}</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>

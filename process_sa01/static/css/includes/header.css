@@ -44,7 +44,7 @@ body{
 }
 
 .badge {
-    background-color: red;
+    background-color: rgb(16, 190, 0);
     color: rgb(0, 0, 0);
     font-weight: bold;
     border-radius: 50%;
