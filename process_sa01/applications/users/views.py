@@ -304,14 +304,18 @@ def alertarAtrasos(request):
         email_remitente = 'noneshater@gmail.com'
         tareas_atrasadas = Tarea.objects.get_tareas_atrasadas()
         oTareaPersona = TareaPersona.objects.get_tareas_by_tareas_atrasadas(tareas_atrasadas)
-        for tarea_persona in oTareaPersona:
-            for item in tarea_persona:
-                email_destinatario = item.persona_id_persona.email_persona
-                mensaje+=item.tarea_id_tarea.titulo_tarea
-                send_mail(asunto, mensaje, email_remitente, [email_destinatario])
-            mensaje = 'Título de tarea atrasada: '
-        messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
-        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        if len(tareas_atrasadas) > 0:
+            for tarea_persona in oTareaPersona:
+                for item in tarea_persona:
+                    email_destinatario = item.persona_id_persona.email_persona
+                    mensaje+=item.tarea_id_tarea.titulo_tarea
+                    send_mail(asunto, mensaje, email_remitente, [email_destinatario])
+                mensaje = 'Título de tarea atrasada: '
+            messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        else:
+            messages.info(request, "No se encontraron tareas atrasadas")
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
     else:
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
