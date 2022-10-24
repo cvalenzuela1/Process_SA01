@@ -27,7 +27,7 @@
                             </a>
                             <ul id="menudropdown" class="dropdown-menu">
                                 {% if user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Gestionar tareas</a></li>
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Crear tareas</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
                                     {% if user.rol_id_rol.nombre == 'Gerente' %}
