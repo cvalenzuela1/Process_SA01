@@ -10,7 +10,14 @@ function mostrarTareaAsignada(tarea_id){
                         <tr>
                             <td>Descripción: </td>
                             <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><textarea class="form-control" readonly style='resize: none'>${tarea_split[1]}</textarea></td>
+                            <td><textarea class="form-control" cols="30" rows="2" readonly style='resize: none'>${tarea_split[1]}</textarea></td>
+                        </tr>
+                        <tr style='height: 20px'>
+                        </tr>
+                        <tr>
+                        <td>Etiqueta: </td>
+                        <td></td>
+                        <td><textarea class="form-control" cols="30" rows="2" readonly style='resize: none'>${tarea_split[4]}</textarea></td>
                         </tr>
                         <tr style='height: 20px'>
                         </tr>
@@ -18,11 +25,6 @@ function mostrarTareaAsignada(tarea_id){
                             <td>Desde: ${tarea_split[2]}</td>
                             <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td>Hasta: ${tarea_split[3]}</td>
-                        </tr>
-                        <tr style='height: 20px'>
-                        </tr>
-                        <tr>
-                            <td>Etiqueta: ${tarea_split[4]} </td>
                         </tr>
                     </tbody>
                 </table>
