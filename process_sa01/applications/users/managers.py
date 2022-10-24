@@ -20,12 +20,16 @@ class UsuarioManager(models.Manager):
             password_usuario=password
         ).exists()
 
+    def get_funcionarios_cliente(self):
+        return self.all().filter(
+            rol_id_rol=3
+        )
 
 class RolManager(models.Manager):
     
     def is_rol_nombre(self, rol_id):
         return self.all().filter(
-            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") | Q(nombre="Gerente")
+            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") | Q(nombre="Gerente") | Q(nombre="Funcionario Cliente")
         ).filter(
             id_rol=rol_id
         ).exists()
@@ -193,6 +197,18 @@ class PersonaManager(models.Manager):
 
     def get_persona(self):
         return self.all()
+
+    def get_persona_funcionario_cliente(self, funcionarios_cliente):
+
+        lista = []
+        for funcionario in funcionarios_cliente:
+            if self.all().filter(
+                id_persona=funcionario.persona_id_persona.id_persona
+            ).exists():
+                lista.append(self.all().filter(
+                    id_persona=funcionario.persona_id_persona.id_persona
+                ))
+        return lista
 
 
 class TareaPersonaManager(models.Manager):

@@ -225,7 +225,8 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lista_tareas"] = Tarea.objects.get_tareas_new_order2()
-        context["lista_personas"] = Persona.objects.get_persona()
+        funcionarios_cliente = Usuario.objects.get_funcionarios_cliente()
+        context["lista_personas"] = Persona.objects.get_persona_funcionario_cliente(funcionarios_cliente)
         return context
 
     def post(self, request):

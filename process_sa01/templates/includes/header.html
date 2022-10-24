@@ -40,7 +40,6 @@
                                 {% endif %}
                                 
                                 {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
-                                    <li><hr class="dropdown-divider"></li>
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas<span class="badge">{{count_tareas_asignadas}}</span></a></li>
                                 {% endif %}
                             </ul>
