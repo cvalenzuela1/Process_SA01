@@ -63,6 +63,7 @@ class Tarea(models.Model):
     porc_cumplimiento = models.BigIntegerField()
     estado_alterado = models.IntegerField()
     fecha_estado_alterado = models.DateField(blank=True, null=True)
+    diferencia_dias_fechas = models.BigIntegerField()
     estado_id_estado = models.ForeignKey(Estado, on_delete=models.CASCADE, db_column='estado_id_estado')
 
     objects = TareaManager()

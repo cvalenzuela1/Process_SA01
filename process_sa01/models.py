@@ -204,6 +204,7 @@ class Tarea(models.Model):
     porc_cumplimiento = models.BigIntegerField()
     estado_alterado = models.BooleanField()
     fecha_estado_alterado = models.DateField(blank=True, null=True)
+    diferencia_dias_fechas = models.BigIntegerField()
     estado_id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='estado_id_estado')
 
     class Meta:

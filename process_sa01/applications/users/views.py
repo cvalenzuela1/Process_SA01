@@ -26,8 +26,8 @@ class CountTareasAsignadas(object):
             context = super(CountTareasAsignadas, self).get_context_data(**kwargs)
             if self.request.user.is_authenticated:
                 persona_id = self.request.user.persona_id_persona.id_persona
-                tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
-                context["count_tareas_asignadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_asignadas)
+                tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
+                context["count_tareas_asignadas"] = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
 
             return context
 
@@ -131,6 +131,7 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView)
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
                 estado_alterado=0,
+                diferencia_dias_fechas=getDiffDaysTerminoCurrent(form.cleaned_data['fecha_termino']).days,
                 estado_id_estado=Estado(estado_tarea))
             
             messages.success(self.request, "Tarea creada correctamente")
@@ -188,10 +189,11 @@ def actualizarProgreso(request):
                 f_inicio = item.fecha_inicio
                 f_termino = item.fecha_termino
                 tarea_id = item.id_tarea
-
+                
                 diff = getDiffDaysTerminoInicio(f_termino, f_inicio)
                 diff_actual = getDiffDaysTerminoCurrent(f_termino)
-
+                Tarea.objects.update_tarea_diferencia_dias_fechas(tarea_id, diff_actual.days)
+                
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
                 if item.estado_id_estado.id_estado == 2 or item.estado_id_estado.id_estado == 3:
                     if item.porc_cumplimiento == 100:
@@ -205,7 +207,7 @@ def actualizarProgreso(request):
                         Tarea.objects.update_porc_cumplimiento(0, tarea_id)
                     elif new_porc_cumplimiento > 0:
                         Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
-
+                    
             # Ejecución de procedimientos almacenados
             executeSPUpdateEstadoAlterado()
             executeSPUpdateEstadoTareas()
@@ -239,10 +241,13 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
         lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
         Tarea.objects.update_tarea_estado(lista_tareas)
         TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
+        oPersona = Persona.objects.get_persona_by_id(persona_id)
         if int(contador_tareas) == 1:
-            messages.success(request, f"Se ha asignado {contador_tareas} tarea a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
+            for persona in oPersona:
+                messages.success(request, f"Se ha asignado {contador_tareas} tarea a la persona con RUT \"{persona.rut_persona}\"")
         elif int(contador_tareas) > 1:
-            messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
+            for persona in oPersona:
+                messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con RUT \"{persona.rut_persona}\"")
         return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
 
 
@@ -327,7 +332,7 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
 
     def get_queryset(self):
         persona_id = self.request.user.persona_id_persona.id_persona
-        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
+        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
         context = TareaPersona.objects.get_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
         
         return context

@@ -2,7 +2,6 @@ from email.charset import QP
 from operator import mod
 from django.db import models
 from django.db.models import Q
-
 from .functions import getCurrentDate
 
 
@@ -183,15 +182,23 @@ class TareaManager(models.Manager):
             estado_id_estado=6
         )
 
-    def get_tareas_asignadas_atrasadas(self):
+    def get_tareas_asignadas_atrasadas_ejecucion(self):
         return self.all().filter(
-            Q(estado_id_estado=2) | Q(estado_id_estado=7)
+            Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=7)
         )
 
     def get_tareas_atrasadas(self):
         return self.all().filter(
             estado_id_estado=7
         )
+
+    def update_tarea_diferencia_dias_fechas(self, tarea_id, diferencia_dias):
+        return self.filter(
+            id_tarea=tarea_id
+        ).update(
+            diferencia_dias_fechas=diferencia_dias
+        )
+
 
 class PersonaManager(models.Manager):
 
@@ -209,6 +216,11 @@ class PersonaManager(models.Manager):
                     id_persona=funcionario.persona_id_persona.id_persona
                 ))
         return lista
+
+    def get_persona_by_id(self, persona_id):
+        return self.filter(
+            id_persona=persona_id
+        )
 
 
 class TareaPersonaManager(models.Manager):
@@ -229,7 +241,12 @@ class TareaPersonaManager(models.Manager):
 
     def get_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
         lista = []
+        len1 = len(tareas_solicitadas)
         for tarea in tareas_solicitadas:
+            if self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
                 lista.append(self.filter(
                 persona_id_persona=persona_id,
                 tarea_id_tarea=tarea.id_tarea
