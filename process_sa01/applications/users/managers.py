@@ -2,7 +2,6 @@ from email.charset import QP
 from operator import mod
 from django.db import models
 from django.db.models import Q
-
 from .functions import getCurrentDate
 
 
@@ -20,12 +19,16 @@ class UsuarioManager(models.Manager):
             password_usuario=password
         ).exists()
 
+    def get_funcionarios_cliente(self):
+        return self.all().filter(
+            rol_id_rol=3
+        )
 
 class RolManager(models.Manager):
     
     def is_rol_nombre(self, rol_id):
         return self.all().filter(
-            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") | Q(nombre="Gerente")
+            Q(nombre="Funcionario") | Q(nombre="Diseñador de procesos") | Q(nombre="Gerente") | Q(nombre="Funcionario Cliente")
         ).filter(
             id_rol=rol_id
         ).exists()
@@ -123,8 +126,8 @@ class TareaManager(models.Manager):
                 fecha_termino=ftermino
             )
         
-    def get_tareas_new_order(self, permiso_id):
-        if permiso_id == 2:
+    def get_tareas_new_order(self, rol_id):
+        if rol_id == 2:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1)
             ).filter(
@@ -133,7 +136,7 @@ class TareaManager(models.Manager):
                 'estado_alterado',
                 '-id_tarea'
             )
-        elif permiso_id == 5:
+        elif rol_id == 4:
             return self.all().filter(
                 Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
             ).filter(
@@ -179,9 +182,9 @@ class TareaManager(models.Manager):
             estado_id_estado=6
         )
 
-    def get_tareas_asignadas_atrasadas(self):
+    def get_tareas_asignadas_atrasadas_ejecucion(self):
         return self.all().filter(
-            Q(estado_id_estado=2) | Q(estado_id_estado=7)
+            Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=7)
         )
 
     def get_tareas_atrasadas(self):
@@ -189,10 +192,35 @@ class TareaManager(models.Manager):
             estado_id_estado=7
         )
 
+    def update_tarea_diferencia_dias_fechas(self, tarea_id, diferencia_dias):
+        return self.filter(
+            id_tarea=tarea_id
+        ).update(
+            diferencia_dias_fechas=diferencia_dias
+        )
+
+
 class PersonaManager(models.Manager):
 
     def get_persona(self):
         return self.all()
+
+    def get_persona_funcionario_cliente(self, funcionarios_cliente):
+
+        lista = []
+        for funcionario in funcionarios_cliente:
+            if self.all().filter(
+                id_persona=funcionario.persona_id_persona.id_persona
+            ).exists():
+                lista.append(self.all().filter(
+                    id_persona=funcionario.persona_id_persona.id_persona
+                ))
+        return lista
+
+    def get_persona_by_id(self, persona_id):
+        return self.filter(
+            id_persona=persona_id
+        )
 
 
 class TareaPersonaManager(models.Manager):
@@ -213,7 +241,12 @@ class TareaPersonaManager(models.Manager):
 
     def get_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
         lista = []
+        len1 = len(tareas_solicitadas)
         for tarea in tareas_solicitadas:
+            if self.filter(
+                persona_id_persona=persona_id,
+                tarea_id_tarea=tarea.id_tarea
+            ).exists():
                 lista.append(self.filter(
                 persona_id_persona=persona_id,
                 tarea_id_tarea=tarea.id_tarea
@@ -289,8 +322,3 @@ class EstadoManager(models.Manager):
         return self.filter(
             id_estado=estado_id
         ).values_list()
-
-
-class PermisosManager(models.Manager):
-    def get_all_permisos(self):
-        return self.all()

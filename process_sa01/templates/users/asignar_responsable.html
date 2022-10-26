@@ -67,16 +67,18 @@
                         </thead>
                         <tbody>
                             {% for persona in lista_personas %}
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <input class="form-check-input" type="radio" id="radioBtnNoLabelPersona" name="radioPersona" value="{{persona.rut_persona}}|{{persona.nombre_persona}}|{{persona.apellido_paterno_persona}}|{{persona.apellido_materno_persona}}|{{persona.id_persona}}" aria-label="...">&nbsp;&nbsp;{{persona.id_persona}}
-                                        </div>
-                                    </td>
-                                    <td>{{persona.rut_persona}}</td>
-                                    <td>{{persona.nombre_persona}}</td>
-                                    <td>{{persona.apellido_paterno_persona}} {{persona.apellido_materno_persona}}</td>
-                                </tr>
+                                {% for item in persona %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="radio" id="radioBtnNoLabelPersona" name="radioPersona" value="{{item.rut_persona}}|{{item.nombre_persona}}|{{item.apellido_paterno_persona}}|{{item.apellido_materno_persona}}|{{item.id_persona}}" aria-label="...">&nbsp;&nbsp;{{item.id_persona}}
+                                            </div>
+                                        </td>
+                                        <td>{{item.rut_persona}}</td>
+                                        <td>{{item.nombre_persona}}</td>
+                                        <td>{{item.apellido_paterno_persona}} {{item.apellido_materno_persona}}</td>
+                                    </tr>
+                                {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>

@@ -9,8 +9,15 @@ function aceptarTarea(form){
                     <tbody>
                         <tr>
                             <td>Descripción: </td>
-                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><textarea class="form-control" readonly style='resize: none'>${form_object["descripcion"]}</textarea></td>
+                            <td></td>
+                            <td><textarea class="form-control" cols="30" rows="2" readonly style='resize: none'>${form_object["descripcion"]}</textarea></td>
+                        </tr>
+                        <tr style='height: 20px'>
+                        </tr>
+                        <tr>
+                            <td>Etiqueta: </td>
+                            <td></td>
+                            <td><textarea class="form-control" cols="30" rows="2" readonly style='resize: none'>${form_object["etiqueta"]}</textarea></td>
                         </tr>
                         <tr style='height: 20px'>
                         </tr>
@@ -18,11 +25,6 @@ function aceptarTarea(form){
                             <td>Desde: ${form_object["finicio"]}</td>
                             <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td>Hasta: ${form_object["ftermino"]}</td>
-                        </tr>
-                        <tr style='height: 20px'>
-                        </tr>
-                        <tr>
-                            <td>Etiqueta: ${form_object["etiqueta"]}</td>
                         </tr>
                     </tbody>
                 </table>

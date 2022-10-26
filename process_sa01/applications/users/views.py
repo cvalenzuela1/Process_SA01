@@ -26,8 +26,8 @@ class CountTareasAsignadas(object):
             context = super(CountTareasAsignadas, self).get_context_data(**kwargs)
             if self.request.user.is_authenticated:
                 persona_id = self.request.user.persona_id_persona.id_persona
-                tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
-                context["count_tareas_asignadas"] = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_asignadas)
+                tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
+                context["count_tareas_asignadas"] = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
 
             return context
 
@@ -106,8 +106,8 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView)
     success_url = reverse_lazy("app_users:tareas-list")
 
     def get(self, request, *args, **kwargs):
-        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
-        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(GestionarTareaView, self).get(request, *args, **kwargs)
@@ -131,6 +131,7 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView)
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
                 estado_alterado=0,
+                diferencia_dias_fechas=getDiffDaysTerminoCurrent(form.cleaned_data['fecha_termino']).days,
                 estado_id_estado=Estado(estado_tarea))
             
             messages.success(self.request, "Tarea creada correctamente")
@@ -151,15 +152,15 @@ class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredM
     context_object_name = "lista_tareas"
 
     def get(self, request, *args, **kwargs):
-        tipo_permiso = request.user.permisos_id_permiso.tipo_permiso
-        if tipo_permiso != 'Gerente' and tipo_permiso != 'Funcionario Crear':
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        permiso_id = self.request.user.permisos_id_permiso.id_permiso
-        context = Tarea.objects.get_tareas_new_order(permiso_id)
+        rol_id = self.request.user.rol_id_rol.id_rol
+        context = Tarea.objects.get_tareas_new_order(rol_id)
         
         return context
 
@@ -188,10 +189,11 @@ def actualizarProgreso(request):
                 f_inicio = item.fecha_inicio
                 f_termino = item.fecha_termino
                 tarea_id = item.id_tarea
-
+                
                 diff = getDiffDaysTerminoInicio(f_termino, f_inicio)
                 diff_actual = getDiffDaysTerminoCurrent(f_termino)
-
+                Tarea.objects.update_tarea_diferencia_dias_fechas(tarea_id, diff_actual.days)
+                
                 new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
                 if item.estado_id_estado.id_estado == 2 or item.estado_id_estado.id_estado == 3:
                     if item.porc_cumplimiento == 100:
@@ -205,7 +207,7 @@ def actualizarProgreso(request):
                         Tarea.objects.update_porc_cumplimiento(0, tarea_id)
                     elif new_porc_cumplimiento > 0:
                         Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
-
+                    
             # Ejecución de procedimientos almacenados
             executeSPUpdateEstadoAlterado()
             executeSPUpdateEstadoTareas()
@@ -225,7 +227,8 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lista_tareas"] = Tarea.objects.get_tareas_new_order2()
-        context["lista_personas"] = Persona.objects.get_persona()
+        funcionarios_cliente = Usuario.objects.get_funcionarios_cliente()
+        context["lista_personas"] = Persona.objects.get_persona_funcionario_cliente(funcionarios_cliente)
         return context
 
     def post(self, request):
@@ -238,10 +241,13 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
         lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
         Tarea.objects.update_tarea_estado(lista_tareas)
         TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
+        oPersona = Persona.objects.get_persona_by_id(persona_id)
         if int(contador_tareas) == 1:
-            messages.success(request, f"Se ha asignado {contador_tareas} tarea a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
+            for persona in oPersona:
+                messages.success(request, f"Se ha asignado {contador_tareas} tarea a la persona con RUT \"{persona.rut_persona}\"")
         elif int(contador_tareas) > 1:
-            messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con RUT \"{request.user.persona_id_persona.rut_persona}\"")
+            for persona in oPersona:
+                messages.success(request, f"Se han asignado {contador_tareas} tareas a la persona con RUT \"{persona.rut_persona}\"")
         return HttpResponseRedirect(reverse("app_users:tareas-asignar"))
 
 
@@ -303,14 +309,18 @@ def alertarAtrasos(request):
         email_remitente = 'noneshater@gmail.com'
         tareas_atrasadas = Tarea.objects.get_tareas_atrasadas()
         oTareaPersona = TareaPersona.objects.get_tareas_by_tareas_atrasadas(tareas_atrasadas)
-        for tarea_persona in oTareaPersona:
-            for item in tarea_persona:
-                email_destinatario = item.persona_id_persona.email_persona
-                mensaje+=item.tarea_id_tarea.titulo_tarea
-                send_mail(asunto, mensaje, email_remitente, [email_destinatario])
-            mensaje = 'Título de tarea atrasada: '
-        messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
-        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        if len(tareas_atrasadas) > 0:
+            for tarea_persona in oTareaPersona:
+                for item in tarea_persona:
+                    email_destinatario = item.persona_id_persona.email_persona
+                    mensaje+=item.tarea_id_tarea.titulo_tarea
+                    send_mail(asunto, mensaje, email_remitente, [email_destinatario])
+                mensaje = 'Título de tarea atrasada: '
+            messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        else:
+            messages.info(request, "No se encontraron tareas atrasadas")
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
     else:
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
@@ -322,7 +332,7 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
 
     def get_queryset(self):
         persona_id = self.request.user.persona_id_persona.id_persona
-        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas()
+        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
         context = TareaPersona.objects.get_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
         
         return context
@@ -352,9 +362,8 @@ class LoginUserView(FormView):
             user = authenticate(username=username, password=encrypted_password)
             if user is not None:
                 login(self.request, user)
-                permiso = self.request.user.permisos_id_permiso.tipo_permiso
                 for item in Rol.objects.get_rol_nombre(rol_id):
-                    messages.success(self.request, f"Has iniciado sesión como {str(item[1]).capitalize()} con permisos de \"{str(permiso).capitalize()}\"")
+                    messages.success(self.request, f"Has iniciado sesión como \"{str(item[1]).capitalize()}\"")
                 return super(LoginUserView, self).form_valid(form)
             else:
                 messages.warning(self.request, "Las credenciales ingresadas no son válidas")
