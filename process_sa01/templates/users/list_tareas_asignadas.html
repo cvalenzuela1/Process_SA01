@@ -8,24 +8,39 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/users/list_tareas_asignadas.css' %}">
     {% include 'includes/header.html' %}
-    <div class="container-sm">
-        {% for tarea in tareas_asignadas %}
-            <div class="row">
-                <div class="col-6">
-                    {% for item in tarea %}
-                        <input name="tarea_id" id="tarea_id{{item.tarea_id_tarea.id_tarea}}" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}|{{item.tarea_id_tarea.desc_tarea}}|{{item.tarea_id_tarea.fecha_inicio}}|{{item.tarea_id_tarea.fecha_termino}}|{{item.tarea_id_tarea.etiqueta}}|{{item.tarea_id_tarea.porc_cumplimiento}}|{{item.tarea_id_tarea.estado_id_estado.id_estado}}|{{item.tarea_id_tarea.diferencia_dias_fechas}}">
-                        {% if item.tarea_id_tarea.diferencia_dias_fechas > 7 %}
-                            <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-success" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
-                        {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 7 and item.tarea_id_tarea.diferencia_dias_fechas >= 1 %}
-                            <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-warning" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
-                        {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 0 %}
-                            <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-danger" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="col-6"></div>
-            </div><br>
-        {% endfor %}
+    <div id="tareas_container" class="container-sm">
+        <div class="row">
+            {% for tarea in tareas_asignadas %}
+                {% for item in tarea %}
+                    <input name="tarea_id" id="tarea_id{{item.tarea_id_tarea.id_tarea}}" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}|{{item.tarea_id_tarea.desc_tarea}}|{{item.tarea_id_tarea.fecha_inicio}}|{{item.tarea_id_tarea.fecha_termino}}|{{item.tarea_id_tarea.etiqueta}}|{{item.tarea_id_tarea.porc_cumplimiento}}|{{item.tarea_id_tarea.estado_id_estado.id_estado}}|{{item.tarea_id_tarea.diferencia_dias_fechas}}">
+                    <div id="tareas_columnas" class="col-4">
+                        <table>
+                            <tbody>
+                                {% if item.tarea_id_tarea.diferencia_dias_fechas > 7 %}
+                                <tr>
+                                    <td>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-success" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                    </td>
+                                </tr>
+                                {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 7 and item.tarea_id_tarea.diferencia_dias_fechas >= 1 %}
+                                <tr>
+                                    <td>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-warning" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                    </td>
+                                </tr> 
+                                {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 0 %}
+                                <tr>
+                                    <td>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-danger" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                    </td>
+                                </tr>    
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}
 

@@ -328,6 +328,7 @@ def alertarAtrasos(request):
 class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, ListView):
     template_name = "users/list_tareas_asignadas.html"
     model = TareaPersona
+    paginate_by = 9
     context_object_name = "tareas_asignadas"
 
     def get_queryset(self):

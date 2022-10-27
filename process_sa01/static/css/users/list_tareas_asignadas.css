@@ -1,0 +1,10 @@
+#tareas_container{
+    padding-top: 20px;
+    border-radius: 10px;
+    width: 600px;
+    background-color: rgba(197, 197, 202, 0.788);
+}
+
+#tareas_columnas{
+    padding-bottom: 20px;
+}
