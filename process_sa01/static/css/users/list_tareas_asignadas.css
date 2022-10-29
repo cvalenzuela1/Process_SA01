@@ -1,10 +1,16 @@
 #tareas_container{
     padding-top: 20px;
     border-radius: 10px;
-    width: 600px;
+    width: 800px;
     background-color: rgba(197, 197, 202, 0.788);
 }
 
 #tareas_columnas{
     padding-bottom: 20px;
+}
+
+#titulo_vista{
+    justify-content: center;
+    text-align: center;
+    font-size: 40px;
 }

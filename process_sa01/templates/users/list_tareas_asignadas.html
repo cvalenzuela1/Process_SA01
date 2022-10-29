@@ -8,37 +8,49 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/users/list_tareas_asignadas.css' %}">
     {% include 'includes/header.html' %}
+    <h5 id="titulo_vista" class="display-6">Lista de Tareas Asignadas</h5>
     <div id="tareas_container" class="container-sm">
         <div class="row">
             {% for tarea in tareas_asignadas %}
+                <div id="tareas_columnas" class="col-4">
                 {% for item in tarea %}
                     <input name="tarea_id" id="tarea_id{{item.tarea_id_tarea.id_tarea}}" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}|{{item.tarea_id_tarea.desc_tarea}}|{{item.tarea_id_tarea.fecha_inicio}}|{{item.tarea_id_tarea.fecha_termino}}|{{item.tarea_id_tarea.etiqueta}}|{{item.tarea_id_tarea.porc_cumplimiento}}|{{item.tarea_id_tarea.estado_id_estado.id_estado}}|{{item.tarea_id_tarea.diferencia_dias_fechas}}">
-                    <div id="tareas_columnas" class="col-4">
+                    
                         <table>
                             <tbody>
                                 {% if item.tarea_id_tarea.diferencia_dias_fechas > 7 %}
                                 <tr>
                                     <td>
-                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-success" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-success" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})" title="Queda más de una semana de plazo">Título tarea
+                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                            <textarea class="form-control" id="" cols="20" rows="2" readonly>{{item.tarea_id_tarea.titulo_tarea}}</textarea>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 7 and item.tarea_id_tarea.diferencia_dias_fechas >= 1 %}
                                 <tr>
                                     <td>
-                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-warning" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-warning" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})" title="Queda menos de una semana de plazo">Título tarea
+                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                            <textarea class="form-control" id="" cols="20" rows="2" readonly>{{item.tarea_id_tarea.titulo_tarea}}</textarea>
+                                        </button>
                                     </td>
                                 </tr> 
                                 {% elif item.tarea_id_tarea.diferencia_dias_fechas <= 0 %}
                                 <tr>
                                     <td>
-                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-danger" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})">Título tarea: {{item.tarea_id_tarea.titulo_tarea}}</button>
+                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-danger" type="button" onclick="mostrarTareaAsignada({{item.tarea_id_tarea.id_tarea}})" title="La tarea está atrasada">Título tarea
+                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                            <textarea class="form-control" id="" cols="20" rows="2" readonly>{{item.tarea_id_tarea.titulo_tarea}}</textarea>
+                                        </button>
                                     </td>
                                 </tr>    
                                 {% endif %}
                             </tbody>
                         </table>
-                    </div>
+                    
                 {% endfor %}
+                </div>
             {% endfor %}
         </div>
     </div>
