@@ -8,8 +8,8 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/users/list_tareas_solicitadas.css' %}">
     {% include 'includes/header.html' %}
-    <h5 id="titulo_vista" class="display-6">Lista de Tareas Solicitadas</h5>
     {% if count_tareas_solicitadas > 0 %}
+    <h5 id="titulo_vista" class="display-6">Lista de Tareas Solicitadas</h5>
         <div id="tareas_container" class="container-sm">
             <div class="row">
                 {% for tarea in tareas_solicitadas %}
@@ -40,6 +40,7 @@
                 {% endfor %}
             </div>
         </div>
+        <div id="paginator">{% include 'includes/paginator.html' %}</div>
     {% else %}
 
     {% endif %}

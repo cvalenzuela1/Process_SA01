@@ -8,14 +8,14 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/users/list_tareas_asignadas.css' %}">
     {% include 'includes/header.html' %}
+    {% if count_tareas_asignadas > 0 %}
     <h5 id="titulo_vista" class="display-6">Lista de Tareas Asignadas</h5>
-    <div id="tareas_container" class="container-sm">
-        <div class="row">
-            {% for tarea in tareas_asignadas %}
-                <div id="tareas_columnas" class="col-4">
-                {% for item in tarea %}
-                    <input name="tarea_id" id="tarea_id{{item.tarea_id_tarea.id_tarea}}" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}|{{item.tarea_id_tarea.desc_tarea}}|{{item.tarea_id_tarea.fecha_inicio}}|{{item.tarea_id_tarea.fecha_termino}}|{{item.tarea_id_tarea.etiqueta}}|{{item.tarea_id_tarea.porc_cumplimiento}}|{{item.tarea_id_tarea.estado_id_estado.id_estado}}|{{item.tarea_id_tarea.diferencia_dias_fechas}}">
-                    
+        <div id="tareas_container" class="container-sm">
+            <div class="row">
+                {% for tarea in tareas_asignadas %}
+                    <div id="tareas_columnas" class="col-4">
+                    {% for item in tarea %}
+                        <input name="tarea_id" id="tarea_id{{item.tarea_id_tarea.id_tarea}}" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}|{{item.tarea_id_tarea.desc_tarea}}|{{item.tarea_id_tarea.fecha_inicio}}|{{item.tarea_id_tarea.fecha_termino}}|{{item.tarea_id_tarea.etiqueta}}|{{item.tarea_id_tarea.porc_cumplimiento}}|{{item.tarea_id_tarea.estado_id_estado.id_estado}}|{{item.tarea_id_tarea.diferencia_dias_fechas}}">
                         <table>
                             <tbody>
                                 {% if item.tarea_id_tarea.diferencia_dias_fechas > 7 %}
@@ -48,12 +48,15 @@
                                 {% endif %}
                             </tbody>
                         </table>
-                    
+                    {% endfor %}
+                    </div>
                 {% endfor %}
-                </div>
-            {% endfor %}
+            </div>
         </div>
-    </div>
+        <div id="paginator">{% include 'includes/paginator.html' %}</div>
+    {% else %}
+
+    {% endif %}
 {% endblock content %}
 
 {% block js %} 

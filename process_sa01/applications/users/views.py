@@ -253,7 +253,7 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
 
 class TareasSolicitadasListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, ListView):
     template_name = "users/list_tareas_solicitadas.html"
-    paginate_by = 6
+    paginate_by = 9
     model = TareaPersona
     context_object_name = "tareas_solicitadas"
 

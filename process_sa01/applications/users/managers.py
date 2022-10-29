@@ -241,7 +241,6 @@ class TareaPersonaManager(models.Manager):
 
     def get_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
         lista = []
-        len1 = len(tareas_solicitadas)
         for tarea in tareas_solicitadas:
             if self.filter(
                 persona_id_persona=persona_id,
