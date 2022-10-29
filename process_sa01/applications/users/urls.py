@@ -15,7 +15,6 @@ urlpatterns = [
     path('tareas-update/', views.updateTarea, name='tareas-update'),
     path('tareas-asignar/', views.AsignarResponsableView.as_view(), name='tareas-asignar'),
     path('tareas-list-solicitadas/', views.TareasSolicitadasListView.as_view(), name='tareas-list-solicitadas'),
-    # path('tareas-list-solicitadas/<int:page>/', views.TareasSolicitadasListView.as_view(), name='tareas-list-solicitadas-page'),
     path('tareas-solicitadas-aceptar/', views.tareaAceptar, name='tareas-solicitadas-aceptar'),
     path('tareas-solicitadas-rechazar/', views.tareaRechazar, name='tareas-solicitadas-rechazar'),
     path('tareas-alertar-atrasos/', views.alertarAtrasos, name='tareas-alertar-atrasos'),
