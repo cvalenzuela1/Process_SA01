@@ -24,6 +24,7 @@ class UsuarioManager(models.Manager):
             rol_id_rol=3
         )
 
+
 class RolManager(models.Manager):
     
     def is_rol_nombre(self, rol_id):
@@ -53,18 +54,15 @@ class TareaManager(models.Manager):
         tarea.save(using=self.db)
         return tarea
 
-    def update_tarea(self, tarea_id, current):
+    def update_tarea(self, tarea_id):
         self.filter(
             id_tarea=tarea_id
         ).update(
             estado_id_estado=4,
-            estado_alterado=1,
-            fecha_estado_alterado=current,
             porc_cumplimiento=100
         )
 
     def update_tarea_estado(self, lista_tareas):
-
         for tarea in lista_tareas:
             self.filter(
                 id_tarea=tarea
@@ -79,9 +77,7 @@ class TareaManager(models.Manager):
                 id_tarea=tarea_id
             ).update(
                 estado_id_estado=7,
-                porc_cumplimiento=100,
-                estado_alterado=1,
-                fecha_estado_alterado=getCurrentDate()
+                porc_cumplimiento=100
             )
         else:
             self.filter(
@@ -127,38 +123,25 @@ class TareaManager(models.Manager):
             )
         
     def get_tareas_new_order(self, rol_id):
-        if rol_id == 2:
+        if rol_id == 2: #Rol funcionario
             return self.all().filter(
-                Q(estado_alterado=0) | Q(estado_alterado=1)
-            ).filter(
-               ~Q(estado_id_estado=5) 
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=7)
             ).order_by(
-                'estado_alterado',
+                'estado_id_estado',
                 '-id_tarea'
             )
-        elif rol_id == 4:
+        elif rol_id == 4: #Rol gerente
             return self.all().filter(
-                Q(estado_alterado=0) | Q(estado_alterado=1) | Q(estado_alterado=2)
-            ).filter(
-               ~Q(estado_id_estado=5) 
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
             ).order_by(
-                'estado_alterado',
+                'estado_id_estado',
                 '-id_tarea'
             )
-
-    def get_tareas_new_order1(self):
-        
-        return self.all().filter(
-            Q(estado_alterado=0) | Q(estado_alterado=1)
-        ).order_by(
-            'estado_alterado',
-            '-id_tarea'
-        )
     
     def get_tareas_new_order2(self):
         
         return self.all().filter(
-            estado_alterado=0
+            estado_id_estado=1
         ).order_by(
             'id_tarea'
         )
@@ -199,6 +182,16 @@ class TareaManager(models.Manager):
             diferencia_dias_fechas=diferencia_dias
         )
 
+    def count_tareas(self, rol_id):
+        if rol_id == 2: #Rol funcionario
+            return self.all().filter(
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=7)
+            ).count()
+        elif rol_id == 4: #Rol gerente
+            return self.all().filter(
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
+            ).count()
+
 
 class PersonaManager(models.Manager):
 
@@ -225,12 +218,13 @@ class PersonaManager(models.Manager):
 
 class TareaPersonaManager(models.Manager):
 
-    def create_tarea_persona(self, persona_id, lista_tareas):
-
+    def create_tarea_persona(self, persona_id, lista_tareas, responsable_id, current_date):
         for tarea in lista_tareas:
             tarea_persona = self.model(
-                persona_id_persona= persona_id,
-                tarea_id_tarea= lista_tareas[tarea],
+                persona_id_persona=persona_id,
+                tarea_id_tarea=lista_tareas[tarea],
+                responsable_id_responsable=responsable_id,
+                fecha_asignacion_tarea=current_date
             )
             tarea_persona.save(using=self.db)
 
