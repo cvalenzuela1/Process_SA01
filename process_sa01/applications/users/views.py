@@ -264,11 +264,16 @@ class TareasSolicitadasListView(CountTareasAsignadas, CountTareasSolicitadas, Lo
     context_object_name = "tareas_solicitadas"
 
     def get(self, request, *args, **kwargs):
-        tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
-        persona_id = self.request.user.persona_id_persona.id_persona
-        contador_tareas_solicitadas = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
-        if contador_tareas_solicitadas == 0:
-            messages.info(request, "No posees tareas solicitadas")
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+            tareas_solicitadas = Tarea.objects.get_tareas_solicitadas()
+            persona_id = self.request.user.persona_id_persona.id_persona
+            contador_tareas_solicitadas = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
+            if contador_tareas_solicitadas == 0:
+                messages.info(request, "No posees tareas solicitadas")
+        else:
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
         return super(TareasSolicitadasListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -346,11 +351,16 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
     context_object_name = "tareas_asignadas"
 
     def get(self, request, *args, **kwargs):
-        tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
-        persona_id = self.request.user.persona_id_persona.id_persona
-        contador_tareas_asignadas = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
-        if contador_tareas_asignadas == 0:
-            messages.info(request, "No posees tareas asignadas")
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+            tareas_asignadas = Tarea.objects.get_tareas_asignadas_atrasadas_ejecucion()
+            persona_id = self.request.user.persona_id_persona.id_persona
+            contador_tareas_asignadas = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
+            if contador_tareas_asignadas == 0:
+                messages.info(request, "No posees tareas asignadas")
+        else:
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
         return super(VerTareasAsignadasListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
