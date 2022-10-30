@@ -1,0 +1,25 @@
+body{
+    height: 1050px ;
+}
+
+.form-label{
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.square{
+    height: 36px;
+    width: 36px;
+    display: inline-flex;
+    background-color: rgba(58, 57, 57, 0.767);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10%;
+}
+
+.dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}

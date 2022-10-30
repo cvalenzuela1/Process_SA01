@@ -1,0 +1,43 @@
+@font-face {
+    font-family: Oranienbaum;
+    src: url("../../assets/fonts/Oranienbaum-Regular.ttf");
+}
+  
+.title {
+    font-family: Oranienbaum;
+    padding-top: 50px;
+}
+
+#logincontainer{
+    background-color: rgba(222, 222, 230, 0.699);
+    margin-top: 20px;
+    width: 700px;
+    height: 430px;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.login{
+    margin-top: 70px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#labelLogin{
+    font-family: Oranienbaum;
+    font-size: 19px;
+    font-style: italic;
+}
+
+#btnSubmitLogin{
+    margin-left: 170px;
+    margin-top: 40px;
+    background-color: rgba(142, 178, 255, 0.863);
+}
+
+#showPassword{
+    width: 25px;
+    height: 25px;
+    position: relative;
+    bottom: -7px;
+}

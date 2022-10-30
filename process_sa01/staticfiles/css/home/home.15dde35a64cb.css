@@ -1,0 +1,38 @@
+body{
+    height: 1600px;
+}
+
+#bienvenido{
+    text-align: center;
+    color: rgb(47, 68, 255);
+    font-weight: bold;
+}
+
+#carouselItems{
+    position: fixed;
+    right: 235px;
+}
+
+#homecarousel{
+    position: inherit;
+    left: 160px;
+    width: 800px;
+}
+
+#aboutustitle{
+    margin-top: 50px;
+}
+
+#aboutusimg{
+    margin-left: 115px;
+    width: 450px;
+}
+
+#aboutusimg1{
+    margin-right: 115px;
+    width: 450px;
+}
+
+#loremaboutus{
+    text-align: justify;
+}
