@@ -61,8 +61,6 @@ class Tarea(models.Model):
     fecha_termino = models.DateField()
     etiqueta = models.CharField(max_length=50)
     porc_cumplimiento = models.BigIntegerField()
-    estado_alterado = models.IntegerField()
-    fecha_estado_alterado = models.DateField(blank=True, null=True)
     diferencia_dias_fechas = models.BigIntegerField()
     estado_id_estado = models.ForeignKey(Estado, on_delete=models.CASCADE, db_column='estado_id_estado')
 
@@ -95,18 +93,29 @@ class Persona(models.Model):
         db_table = 'persona'
 
 
+class Responsable(models.Model):
+    persona_id_persona = models.OneToOneField(Persona, models.CASCADE, db_column='persona_id_persona', primary_key=True)
+    fecha_generacion = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'responsable'
+
+
 class TareaPersona(models.Model):
     id_tarea_persona = models.BigAutoField(primary_key=True)
-    persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
-    tarea_id_tarea = models.ForeignKey(Tarea, models.DO_NOTHING, db_column='tarea_id_tarea')
+    persona_id_persona = models.ForeignKey(Persona, models.CASCADE, db_column='persona_id_persona')
+    tarea_id_tarea = models.ForeignKey(Tarea, models.CASCADE, db_column='tarea_id_tarea')
     justificacion_rechazo = models.CharField(max_length=300, blank=True, null=True)
+    responsable_id_responsable = models.ForeignKey(Responsable, models.CASCADE, db_column='responsable_id_responsable', blank=True, null=True)
+    fecha_asignacion_tarea = models.DateField()
 
     objects = TareaPersonaManager()
 
     class Meta:
         managed = False
         db_table = 'tarea_persona'
-        
+
 
 class Rol(models.Model):
     id_rol = models.BigAutoField(primary_key=True)

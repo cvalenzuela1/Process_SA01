@@ -185,6 +185,15 @@ class Region(models.Model):
         db_table = 'region'
 
 
+class Responsable(models.Model):
+    persona_id_persona = models.OneToOneField(Persona, models.DO_NOTHING, db_column='persona_id_persona', primary_key=True)
+    fecha_generacion = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'responsable'
+
+
 class Rol(models.Model):
     id_rol = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
@@ -202,8 +211,6 @@ class Tarea(models.Model):
     fecha_termino = models.DateField()
     etiqueta = models.CharField(max_length=50)
     porc_cumplimiento = models.BigIntegerField()
-    estado_alterado = models.BooleanField()
-    fecha_estado_alterado = models.DateField(blank=True, null=True)
     diferencia_dias_fechas = models.BigIntegerField()
     estado_id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='estado_id_estado')
 
@@ -217,6 +224,8 @@ class TareaPersona(models.Model):
     persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
     tarea_id_tarea = models.ForeignKey(Tarea, models.DO_NOTHING, db_column='tarea_id_tarea')
     justificacion_rechazo = models.CharField(max_length=300, blank=True, null=True)
+    responsable_id_responsable = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='responsable_id_responsable', blank=True, null=True)
+    fecha_asignacion_tarea = models.DateField()
 
     class Meta:
         managed = False

@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
 
-from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona
+from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona, Responsable
 from .forms import GestionarTareaForm, LoginForm
 from .functions import *
 
@@ -130,7 +130,6 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView)
                 form.cleaned_data['fecha_termino'],
                 form.cleaned_data['etiqueta'],
                 porc_cumplimiento=0,
-                estado_alterado=0,
                 diferencia_dias_fechas=getDiffDaysTerminoCurrent(form.cleaned_data['fecha_termino']).days,
                 estado_id_estado=Estado(estado_tarea))
             
@@ -156,6 +155,10 @@ class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredM
         if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
+        else:
+            count_tareas = Tarea.objects.count_tareas(request.user.rol_id_rol.id_rol)
+            if count_tareas == 0:
+                messages.info(request, "No existen tareas creadas")
         return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -169,7 +172,7 @@ def tareaTerminar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
         if id_tarea != None:
-            Tarea.objects.update_tarea(id_tarea, getCurrentDate())
+            Tarea.objects.update_tarea(id_tarea)
             messages.success(request, "Tarea finalizada correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
@@ -190,26 +193,25 @@ def actualizarProgreso(request):
                 f_termino = item.fecha_termino
                 tarea_id = item.id_tarea
                 
-                diff = getDiffDaysTerminoInicio(f_termino, f_inicio)
-                diff_actual = getDiffDaysTerminoCurrent(f_termino)
-                Tarea.objects.update_tarea_diferencia_dias_fechas(tarea_id, diff_actual.days)
+                diffTerminoInicio = getDiffDaysTerminoInicio(f_termino, f_inicio)
+                diffTerminoCurrent = getDiffDaysTerminoCurrent(f_termino)
+                Tarea.objects.update_tarea_diferencia_dias_fechas(tarea_id, diffTerminoCurrent.days)
                 
-                new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                new_porc_cumplimiento = 100-(diffTerminoCurrent.days * 100) / diffTerminoInicio.days
                 if item.estado_id_estado.id_estado == 2 or item.estado_id_estado.id_estado == 3:
                     if item.porc_cumplimiento == 100:
                         continue
-                    if diff_actual.days <= 0:
+                    if diffTerminoCurrent.days <= 0:
                         Tarea.objects.update_porc_cumplimiento(100, tarea_id)
                         continue
-                    elif diff_actual.days == diff.days:
-                        new_porc_cumplimiento = 100-(diff_actual.days * 100) / diff.days
+                    elif diffTerminoCurrent.days == diffTerminoInicio.days:
+                        new_porc_cumplimiento = 100-(diffTerminoCurrent.days * 100) / diffTerminoInicio.days
                     if new_porc_cumplimiento < 0:
                         Tarea.objects.update_porc_cumplimiento(0, tarea_id)
                     elif new_porc_cumplimiento > 0:
                         Tarea.objects.update_porc_cumplimiento(new_porc_cumplimiento, tarea_id)
                     
             # Ejecución de procedimientos almacenados
-            executeSPUpdateEstadoAlterado()
             executeSPUpdateEstadoTareas()
             # END ejecución de procedimientos almacenados
             messages.success(request, "Progresos actualizados correctamente")
@@ -240,7 +242,10 @@ class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, Login
         
         lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
         Tarea.objects.update_tarea_estado(lista_tareas)
-        TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea)
+        responsable_id = request.user.persona_id_persona.id_persona
+        # Se asigna un responsable
+        TareaPersona.objects.create_tarea_persona(Persona(persona_id), lista_objetos_tarea, Responsable(responsable_id), getCurrentDate())
+        
         oPersona = Persona.objects.get_persona_by_id(persona_id)
         if int(contador_tareas) == 1:
             for persona in oPersona:
@@ -344,7 +349,7 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
         persona_id = self.request.user.persona_id_persona.id_persona
         contador_tareas_asignadas = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
         if contador_tareas_asignadas == 0:
-            messages.info(request, "No posees tareas solicitadas")
+            messages.info(request, "No posees tareas asignadas")
         return super(VerTareasAsignadasListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
