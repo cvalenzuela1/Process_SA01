@@ -100,7 +100,7 @@ class TareaDetailView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequire
         return context
 
 
-class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, FormView):
+class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, FormView):
     template_name = "users/tareas.html"
     form_class = GestionarTareaForm
     success_url = reverse_lazy("app_users:tareas-list")
@@ -159,6 +159,7 @@ class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredM
             count_tareas = Tarea.objects.count_tareas(request.user.rol_id_rol.id_rol)
             if count_tareas == 0:
                 messages.info(request, "No existen tareas creadas")
+            request.session["count_tareas"] = count_tareas
         return super(TareaListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -338,7 +339,7 @@ def alertarAtrasos(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, ListView):
+class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, ListView):
     template_name = "users/list_tareas_asignadas.html"
     model = TareaPersona
     paginate_by = 9
