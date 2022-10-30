@@ -38,10 +38,11 @@ DJANGO_APPS = [
 LOCAL_APPS = [
     "applications.home",
     "applications.users",
+    "applications.errors",
 ]
 
 THIRD_PARTY_APPS = [
-
+    "whitenoise.runserver_nostatic",
 ]
 
 # Original Installed_apps variable
@@ -49,6 +50,7 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

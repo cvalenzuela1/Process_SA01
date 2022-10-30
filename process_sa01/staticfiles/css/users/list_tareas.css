@@ -1,0 +1,19 @@
+#imgTarea, #imgTarea1{
+    text-align: center;
+    width: 95px;
+}
+
+#cardContenido{
+    margin-top: 60px;
+}
+
+#offcanvasExample{
+    background-color: rgb(222, 225, 226);
+}
+
+#paginator{
+    position: relative;
+    justify-content: center;
+    text-align: center;
+    bottom: -20px;
+}

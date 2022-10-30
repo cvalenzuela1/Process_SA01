@@ -1,0 +1,54 @@
+body{
+    background-image: url("../../assets/images/fondo/background4.fc6bf06212bc.jpg");
+    background-size: 73%;
+    background-position-x: center;
+    background-attachment: fixed;
+}
+
+#homeItem{
+    width: 270px;
+    background-color: transparent;
+}
+
+#navbackground{
+    background-color: transparent;
+    height: 72px;
+}
+
+#letrasImagenes{
+    font-style: italic;
+    margin-right: 30px;
+}
+
+#dropdownLogin, #dropDownGestionar{
+    text-align: left;
+}
+
+#menudropdown{
+    border: transparent;
+}
+
+#tuercalogo{
+    margin-left: 10px;
+    width: 50px;
+}
+
+#userlogo{
+    margin-left: 3px;
+    margin-bottom: 2px;
+    width: 48px;
+}
+
+#navbarms{
+    margin-top: 0px;
+}
+
+.badge {
+    background-color: rgb(16, 190, 0);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 5px 10px;
+    text-align: center;
+    margin-left: 5px;
+}
