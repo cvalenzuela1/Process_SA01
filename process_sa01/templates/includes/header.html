@@ -30,13 +30,10 @@
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Crear tareas</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
-                                    {% if user.rol_id_rol.nombre == 'Gerente' %}
-                                        <li><hr class="dropdown-divider"></li>
-                                    {% endif %}
-                                {% endif %}
-                                    
-                                {% if user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-carga-trabajo' %}">Carga de trabajo</a></li>
                                 {% endif %}
                                 
                                 {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}

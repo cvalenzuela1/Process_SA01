@@ -1,0 +1,10 @@
+#maincontainer{
+    width: 80%;
+}
+
+#paginator{
+    position: relative;
+    justify-content: center;
+    text-align: center;
+    bottom: -20px;
+}

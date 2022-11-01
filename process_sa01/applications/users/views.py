@@ -80,7 +80,7 @@ def updateTarea(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class TareaDetailView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, DetailView):
+class TareaDetailView(LoginRequiredMixin, DetailView):
     template_name = "users/detalle_tareas.html"
     model = Tarea
     # context_object_name = "object_tarea"
@@ -99,7 +99,7 @@ class TareaDetailView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequire
         return context
 
 
-class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, FormView):
+class GestionarTareaView(LoginRequiredMixin, FormView):
     template_name = "users/tareas.html"
     form_class = GestionarTareaForm
     success_url = reverse_lazy("app_users:tareas-list")
@@ -143,7 +143,7 @@ class GestionarTareaView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequ
         return HttpResponseRedirect(reverse("app_users:tareas"))
 
 
-class TareaListView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, ListView):
+class TareaListView(LoginRequiredMixin, ListView):
     template_name = "users/list_tareas.html"
     paginate_by = 4
     model = Tarea
@@ -223,7 +223,7 @@ def actualizarProgreso(request):
         return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
-class AsignarResponsableView(CountTareasAsignadas, CountTareasSolicitadas, LoginRequiredMixin, TemplateView):
+class AsignarResponsableView(LoginRequiredMixin, TemplateView):
     template_name = "users/asignar_responsable.html"
 
     def get_context_data(self, **kwargs):
@@ -370,9 +370,31 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
         return context
 
 
-class CargaDeTrabajoListView(ListView):
+class CargaDeTrabajoListView(LoginRequiredMixin, ListView):
     template_name = "users/calcular_carga_trabajo.html"
     model = TareaPersona
+    context_object_name = "tareas_persona"
+    paginate_by = 7
+
+    def get(self, request, *args, **kwargs):
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        else:
+            persona_id = self.request.user.persona_id_persona.id_persona
+            count_personas_responsable = TareaPersona.objects.count_personas_responsable(persona_id)
+            if count_personas_responsable == 0:
+                messages.info(request, "No eres responsable de ninguna persona con tareas asignadas")
+            
+        return super(CargaDeTrabajoListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        persona_id = self.request.user.persona_id_persona.id_persona
+        context = TareaPersona.objects.get_personas_responsable(persona_id)
+
+        return context
+
 
 class LoginUserView(FormView):
     template_name = "users/login.html"
