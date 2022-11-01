@@ -171,16 +171,26 @@ class TareaListView(LoginRequiredMixin, ListView):
 def tareaTerminar(request):
     if request.method == "POST":
         id_tarea = request.POST.get("tarea_id")
+        rol_nombre = request.user.rol_id_rol.nombre
         if id_tarea != None:
             Tarea.objects.update_tarea(id_tarea)
             messages.success(request, "Tarea finalizada correctamente")
-            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+            if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+                return HttpResponseRedirect(reverse("app_users:tareas-list-asignadas"))
+            else:
+                return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
             messages.warning(request, "Ha ocurrido un problema")
-            return HttpResponseRedirect(reverse("app_users:tareas-list"))
+            if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+                return HttpResponseRedirect(reverse("app_users:tareas-list-asignadas"))
+            else:
+                return HttpResponseRedirect(reverse("app_users:tareas-list"))
     else:
         messages.error(request, "Ha ocurrido un error")
-        return HttpResponseRedirect(reverse("app_users:tareas-list"))
+        if rol_nombre != "Gerente" and rol_nombre != "Funcionario":
+            return HttpResponseRedirect(reverse("app_users:tareas-list-asignadas"))
+        else:
+            return HttpResponseRedirect(reverse("app_users:tareas-list"))
 
 
 def actualizarProgreso(request):
@@ -270,6 +280,7 @@ class TareasSolicitadasListView(CountTareasAsignadas, CountTareasSolicitadas, Lo
             contador_tareas_solicitadas = TareaPersona.objects.count_tareas_solicitadas_by_persona(persona_id, tareas_solicitadas)
             if contador_tareas_solicitadas == 0:
                 messages.info(request, "No posees tareas solicitadas")
+                return HttpResponseRedirect(reverse("app_home:home"))
         else:
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
@@ -355,6 +366,7 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
             contador_tareas_asignadas = TareaPersona.objects.count_tareas_asignadas_by_persona(persona_id, tareas_asignadas)
             if contador_tareas_asignadas == 0:
                 messages.info(request, "No posees tareas asignadas")
+                return HttpResponseRedirect(reverse("app_home:home"))
         else:
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))

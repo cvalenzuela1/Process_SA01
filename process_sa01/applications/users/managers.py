@@ -306,7 +306,7 @@ class TareaPersonaManager(models.Manager):
     def get_personas_responsable(self, persona_id):
         return self.filter(
             responsable_id_responsable=persona_id
-        )
+        ).order_by("-tarea_id_tarea")
     
     def count_personas_responsable(self, persona_id):
         return self.filter(
