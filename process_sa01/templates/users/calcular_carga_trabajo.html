@@ -9,7 +9,17 @@
   <br>
   <div id="maincontainer" class="container-fluid">
     <div class="table-responsive">
-      <table class="table table-striped">
+      <h5 class="display-6" id="h5Tarea">Carga de trabajo</h5>
+      <p class="text-muted" id="h5Tarea">Carga de trabajo de personas con tareas asignadas</p>
+      <div class="btn-group">
+          <input maxlength="10" type="text" id="filterInputRutPersona" onkeypress="validate(event)" onkeyup="filterRutPersona()" placeholder="Filtrar por RUT de persona...">
+          <button id="btnCleanRutPersona" class="btn btn-primary" onclick="btnCleanRutPersonaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+      </div>
+      <div class="btn-group">
+        <input maxlength="40" type="text" id="filterInputNombrePersona" onkeyup="filterNombrePersona()" placeholder="Filtrar por nombre de persona...">
+        <button id="btnCleanNombrePersona" class="btn btn-primary" onclick="btnCleanNombrePersonaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+      </div>
+      <table id="tablaTareaPersona" class="table table-striped">
         <thead>
           <tr>
             <th scope="col" style="width: 100px;">Tarea ID</th>
