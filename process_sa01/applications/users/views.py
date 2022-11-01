@@ -10,7 +10,6 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.conf import settings
 
 from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona, Responsable
 from .forms import GestionarTareaForm, LoginForm
@@ -370,6 +369,10 @@ class VerTareasAsignadasListView(CountTareasAsignadas, CountTareasSolicitadas, L
         
         return context
 
+
+class CargaDeTrabajoListView(ListView):
+    template_name = "users/calcular_carga_trabajo.html"
+    model = TareaPersona
 
 class LoginUserView(FormView):
     template_name = "users/login.html"
