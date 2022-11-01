@@ -10,37 +10,37 @@
     {% include 'includes/header.html' %}
     {% if count_tareas_solicitadas > 0 %}
     <h5 id="titulo_vista" class="display-6">Lista de Tareas Solicitadas</h5>
-        <div id="tareas_container" class="container-sm">
-            <div class="row">
-                {% for tarea in tareas_solicitadas %}
-                <div id="tareas_columnas" class="col-4">
-                    {% for item in tarea %}
-                    <form id="form{{item.tarea_id_tarea.id_tarea}}" method="POST" action="{% url 'app_users:tareas-solicitadas-aceptar' %}" onsubmit="return aceptarTarea(this)">{% csrf_token %}
-                        <input name="tarea_id" type="hidden" value="{{item.tarea_id_tarea.id_tarea}}">
-                        <input name="titulo" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}">
-                        <input name="descripcion" type="hidden" value="{{item.tarea_id_tarea.desc_tarea}}">
-                        <input name="finicio" type="hidden" value="{{item.tarea_id_tarea.fecha_inicio}}">
-                        <input name="ftermino" type="hidden" value="{{item.tarea_id_tarea.fecha_termino}}">
-                        <input name="etiqueta" type="hidden" value="{{item.tarea_id_tarea.etiqueta}}">
-                        <table> 
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-primary" type="submit">Título tarea
-                                            <span class="spinner spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                            <textarea class="form-control" id="" cols="20" rows="2" readonly>{{item.tarea_id_tarea.titulo_tarea}}</textarea>
-                                        </button>
-                                    </td> 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form> 
-                    {% endfor %}
-                </div>
+    <div id="tareas_container" class="container-sm">
+        <div class="row">
+            {% for tarea in tareas_solicitadas %}
+            <div id="tareas_columnas" class="col-4">
+                {% for item in tarea %}
+                <form id="form{{item.tarea_id_tarea.id_tarea}}" method="POST" action="{% url 'app_users:tareas-solicitadas-aceptar' %}" onsubmit="return aceptarTarea(this)">{% csrf_token %}
+                    <input name="tarea_id" type="hidden" value="{{item.tarea_id_tarea.id_tarea}}">
+                    <input name="titulo" type="hidden" value="{{item.tarea_id_tarea.titulo_tarea}}">
+                    <input name="descripcion" type="hidden" value="{{item.tarea_id_tarea.desc_tarea}}">
+                    <input name="finicio" type="hidden" value="{{item.tarea_id_tarea.fecha_inicio}}">
+                    <input name="ftermino" type="hidden" value="{{item.tarea_id_tarea.fecha_termino}}">
+                    <input name="etiqueta" type="hidden" value="{{item.tarea_id_tarea.etiqueta}}">
+                    <table> 
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button id="{{item.tarea_id_tarea.id_tarea}}" class="btn btn-primary" type="submit">Título tarea
+                                        <span class="spinner spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                        <textarea class="form-control" id="" cols="20" rows="2" readonly>{{item.tarea_id_tarea.titulo_tarea}}</textarea>
+                                    </button>
+                                </td> 
+                            </tr>
+                        </tbody>
+                    </table>
+                </form> 
                 {% endfor %}
             </div>
+            {% endfor %}
         </div>
-        <div id="paginator">{% include 'includes/paginator.html' %}</div>
+    </div>
+    <div id="paginator">{% include 'includes/paginator.html' %}</div>
     {% else %}
 
     {% endif %}

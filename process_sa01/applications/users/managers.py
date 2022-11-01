@@ -303,6 +303,16 @@ class TareaPersonaManager(models.Manager):
             justificacion_rechazo=justificacion
         )
 
+    def get_personas_responsable(self, persona_id):
+        return self.filter(
+            responsable_id_responsable=persona_id
+        )
+    
+    def count_personas_responsable(self, persona_id):
+        return self.filter(
+            responsable_id_responsable=persona_id
+        ).count()
+
 
 class EstadoManager(models.Manager):
     
