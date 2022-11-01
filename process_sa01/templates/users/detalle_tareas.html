@@ -87,10 +87,10 @@
                         <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Activa</small></label>
                     {% elif object.estado_id_estado.id_estado == 2 %}
                         <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Asignada</small></label>
-                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
+                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Asignada a: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 3 %}
                         <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">En ejecución</small></label>
-                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Responsable: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
+                        <label class="form-label" for="estadoTarea">&nbsp;&nbsp;Asignada a: <small class="text-muted">{{tareaPersona.nombre_persona}} {{tareaPersona.apellido_paterno_persona}} {{tareaPersona.apellido_materno_persona}}</small></label>
                     {% elif object.estado_id_estado.id_estado == 4 %}
                         <label class="form-label" for="estadoTarea">Estado de tarea: <small class="text-muted">Finalizada</small></label>
                     {% endif %}
