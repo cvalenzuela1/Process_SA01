@@ -322,8 +322,7 @@ def tareaRechazar(request):
 def alertarAtrasos(request):
     if request.method == "POST":
         # Enviar mail a responsables de tareas atrasadas
-        asunto = 'Alerta de atraso'
-        mensaje = 'Título de tarea atrasada: '
+        asunto = 'Alerta de atraso de tarea'
         email_remitente = 'noneshater@gmail.com'
         tareas_atrasadas = Tarea.objects.get_tareas_atrasadas()
         oTareaPersona = TareaPersona.objects.get_tareas_by_tareas_atrasadas(tareas_atrasadas)
@@ -331,9 +330,8 @@ def alertarAtrasos(request):
             for tarea_persona in oTareaPersona:
                 for item in tarea_persona:
                     email_destinatario = item.persona_id_persona.email_persona
-                    mensaje+=item.tarea_id_tarea.titulo_tarea
+                    mensaje = f"Título de tarea atrasada: {item.tarea_id_tarea.titulo_tarea}\nDescripción: {item.tarea_id_tarea.desc_tarea}\nEnviada por: {item.responsable_id_responsable.persona_id_persona.nombre_persona} {item.responsable_id_responsable.persona_id_persona.apellido_paterno_persona}\nTerminada el día \"{item.tarea_id_tarea.fecha_termino}\""
                     send_mail(asunto, mensaje, email_remitente, [email_destinatario])
-                mensaje = 'Título de tarea atrasada: '
             messages.success(request, "Alertas a tareas atrasadas enviadas correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
