@@ -44,7 +44,8 @@ class GestionarTareaForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': ' Descripción tarea',
                 'rows':3,
-                'maxlength': '500'
+                'maxlength': '500',
+                'style': 'resize: none'
             }),
             'fecha_inicio': DateInput(attrs={
                 'class': 'form-control'

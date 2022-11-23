@@ -36,8 +36,8 @@ Crear Flujo de Tareas
                         </tr>
                     </thead>
                     <tbody>
+                        {% for item in object_list %}
                         <tr>
-                            {% for item in object_list %}
                             <td><input class="checkbox" type="checkbox" id="checkboxTarea"
                                     value="{{item.id_tarea}}|{{item.titulo_tarea}}|{{item.desc_tarea}}|{{item.fecha_inicio}}|{{item.fecha_termino}}"
                                     style="width: 20px; height: 20px;" onclick="countCheckboxes()" required> &nbsp;{{item.id_tarea}}</td>
@@ -48,8 +48,8 @@ Crear Flujo de Tareas
                             <td>{{item.fecha_termino}}</td>
                             {% empty %}
                             <h6 class="display-6">¡No existen tareas!</h6>
-                            {% endfor %}
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <button class="btn btn-primary" type="submit" id="btnSubmitFlujo">Crear Flujo</button><br><br>
