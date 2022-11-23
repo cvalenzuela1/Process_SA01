@@ -10,7 +10,8 @@
     <div class="m-4">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a href="{% url 'app_home:home' %}" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"><br>
+                <a href="{% url 'app_home:home' %}"
+                    class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"><br>
                     <img id="homeItem" src="{% static 'assets/images/logo/processSA.png' %}" alt="Home">
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -19,47 +20,102 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-                        <div class="col-md-12"></div><div class="col-md-12"></div><div class="col-md-12"></div>
+                        
+                        {% if user.rol_id_rol.nombre != 'Funcionario Cliente' %}
+                        <div class="col-md-11"></div>
+                        <div class="col-md-11"></div>
                         <div class="col-md nav-item nav-link dropdown">
-                            <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" role="button">
-                                <img id="tuercalogo" src="{% static 'assets/images/header/tuerca.png' %}" alt=""><br>
-                                Gestionar
+                            <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false" role="button">
+                                <img id="tuercalogo" src="{% static 'assets/images/header/flujo.png' %}" alt=""><br>
+                                Menú flujos
                             </a>
                             <ul id="menudropdown" class="dropdown-menu">
                                 {% if user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas' %}">Crear tareas</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-carga-trabajo' %}">Carga de trabajo</a></li>
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_flujos:flujos-crear' %}">Crear
+                                        flujo</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="">Mostrar
+                                        flujos</a></li>
                                 {% endif %}
-                                
+                            </ul>
+                        </div>
+                        {% else %}
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-5"></div>
+                        {% endif %}
+                        <div class="col-md nav-item nav-link dropdown">
+                            <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false" role="button">
+                                <img id="tuercalogo" src="{% static 'assets/images/header/tuerca.png' %}" alt=""><br>
+                                Menú tareas
+                            </a>
+                            <ul id="menudropdown" class="dropdown-menu">
+                                {% if user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas' %}">Crear tareas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-list' %}">Mostrar tareas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
+                                {% endif %}
+
                                 {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
-                                    <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas<span class="badge">{{count_tareas_asignadas}}</span></a></li>
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas<span
+                                            class="badge">{{count_tareas_asignadas}}</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>
                         {%else%}
-                        <div class="col-md-12"></div><div class="col-md-12"></div><div class="col-md-12"></div>
-                        <div class="col-md-12"></div><div class="col-md-12"></div><div class="col-md-12"></div>
-                        <div class="col-md-12"></div><div class="col-md-5"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-5"></div>
                         {% endif %}
                         <div class="col-md-6 nav-item nav-link dropdown">
-                            <a id="letrasImagenes" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                            <a id="letrasImagenes" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false" role="button">
                                 <img id="userlogo" src="{% static 'assets/images/header/user.png' %}" alt=""><br>
                                 Usuario
                             </a>
                             <ul id="menudropdown" class="dropdown-menu">
                                 {% if user.is_authenticated %}
-                                    {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
-                                        <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:tareas-list-solicitadas' %}">Tareas solicitadas<span class="badge">{{count_tareas_solicitadas}}</span></a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                    {% endif %}
-                                    <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:logout' %}">Finalizar sesión</a></li>
+                                {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
+                                <li><a id="dropdownLogin" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-list-solicitadas' %}">Tareas solicitadas<span
+                                            class="badge">{{count_tareas_solicitadas}}</span></a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                {% elif user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-carga-trabajo' %}">Carga de trabajo</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                {% endif %}
+                                <li><a id="dropdownLogin" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:logout' %}">Finalizar sesión</a></li>
                                 {% else %}
-                                    <li><a id="dropdownLogin" class="dropdown-item" role="button" href="{% url 'app_users:login' %}">Iniciar sesión</a></li>
+                                <li><a id="dropdownLogin" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:login' %}">Iniciar sesión</a></li>
                                 {% endif %}
                             </ul>
                         </div>

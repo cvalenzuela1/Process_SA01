@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Crear Flujo de Tareas
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/flujos/crear_flujo.css' %}">
+{% include 'includes/header.html' %}
+<div class="container-fluid">
+    <div id="container_row" class="row">
+        <form id="formCrearFlujo" method="POST" action="{% url 'app_flujos:crear-flujo' %}" onsubmit="return asignarTareasFlujoForm(this)">{% csrf_token %}
+            <div class="coupon">
+                <h3 class="display-6">Creación de flujo</h3>
+                <label for="nombre_flujo">Nombre del flujo</label><br>
+                <input id="nombre_flujo1" name="nombre_flujo1" class="form-control" placeholder="Nombre de flujo" type="text" required>
+                <label for="">Descripción del flujo</label>
+                <textarea class="form-control" name="descripcion1" id="descripcion1" cols="30" rows="3" placeholder="Descripción de flujo" required></textarea>
+                <label for="cboxTipoFlujo">Tipo de flujo</label><br>
+                <select class="form-select" name="cboxTipoFlujo1" id="cboxTipoFlujo1" style="width: 40%;" required>
+                    <option value="" selected disabled>Escoge un tipo de flujo</option>
+                    {% for tipo in tipo_flujo %}
+                    <option value="{{tipo.id_tipo_flujo}}">{{tipo.tipo}}</option>
+                    {% endfor %}
+                </select>
+                <label for="">Tareas</label>
+                <table id="tablaTareaPersona" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 100px;">Tarea ID</th>
+                            <th scope="col" style="width: 200px;">Título</th>
+                            <th scope="col" style="width: 340px;">Descripción</th>
+                            <th scope="col" style="width: 280px;">Fecha inicio</th>
+                            <th scope="col" style="width: 280px;">Fecha término</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% for item in object_list %}
+                            <td><input class="checkbox" type="checkbox" id="checkboxTarea"
+                                    value="{{item.id_tarea}}|{{item.titulo_tarea}}|{{item.desc_tarea}}|{{item.fecha_inicio}}|{{item.fecha_termino}}"
+                                    style="width: 20px; height: 20px;" onclick="countCheckboxes()" required> &nbsp;{{item.id_tarea}}</td>
+                            <td>{{item.titulo_tarea}}</td>
+                            <td><textarea name="" class="form-control" cols="22" rows="1" maxlength="199"
+                                    style="resize: none;" readonly>{{item.desc_tarea}}</textarea></td>
+                            <td>{{item.fecha_inicio}}</td>
+                            <td>{{item.fecha_termino}}</td>
+                            {% empty %}
+                            <h6 class="display-6">¡No existen tareas!</h6>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" type="submit" id="btnSubmitFlujo">Crear Flujo</button><br><br>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/flujos/crear_flujo.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock js %}
+    

@@ -5,7 +5,6 @@ from .models import Tarea, Usuario
 class DateInput(forms.DateInput):
     input_type = 'date'
 
-
 class LoginForm(forms.ModelForm):
     class Meta:
         model = Usuario

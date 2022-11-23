@@ -39,6 +39,7 @@ LOCAL_APPS = [
     "applications.home",
     "applications.users",
     "applications.errors",
+    "applications.flujos",
 ]
 
 THIRD_PARTY_APPS = [

@@ -95,7 +95,7 @@
 function finalizarTareaAsignada(form){
     var formData = new FormData(form);
     form_object = Object.fromEntries(formData);
-    if (form_object["id_estado"] != 7) {
+    if (form_object["estado_id"] != 7) { //id_estado
         Swal.fire({
             "titleText": "Título de tarea: "+form_object["titulo"],
             "html": 
