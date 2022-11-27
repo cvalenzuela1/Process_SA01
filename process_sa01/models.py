@@ -162,6 +162,20 @@ class Estado(models.Model):
         db_table = 'estado'
 
 
+class Flujo(models.Model):
+    id_flujo = models.BigAutoField(primary_key=True)
+    nombre_flujo = models.CharField(max_length=100)
+    fecha_creacion = models.DateField()
+    fecha_primera_ejecucion = models.DateField(blank=True, null=True)
+    fecha_ultima_ejecucion = models.DateField(blank=True, null=True)
+    descripcion = models.CharField(max_length=200)
+    tipo_flujo_id_tipo_flujo = models.ForeignKey('TipoFlujo', models.DO_NOTHING, db_column='tipo_flujo_id_tipo_flujo')
+
+    class Meta:
+        managed = False
+        db_table = 'flujo'
+
+
 class Persona(models.Model):
     id_persona = models.BigAutoField(primary_key=True)
     rut_persona = models.CharField(unique=True, max_length=10)
@@ -221,15 +235,25 @@ class Tarea(models.Model):
 
 class TareaPersona(models.Model):
     id_tarea_persona = models.BigAutoField(primary_key=True)
-    persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
+    persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona', blank=True, null=True)
     tarea_id_tarea = models.ForeignKey(Tarea, models.DO_NOTHING, db_column='tarea_id_tarea')
     justificacion_rechazo = models.CharField(max_length=300, blank=True, null=True)
     responsable_id_responsable = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='responsable_id_responsable', blank=True, null=True)
-    fecha_asignacion_tarea = models.DateField()
+    fecha_asignacion_tarea = models.DateField(blank=True, null=True)
+    flujo_id_flujo = models.ForeignKey(Flujo, models.DO_NOTHING, db_column='flujo_id_flujo', blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'tarea_persona'
+
+
+class TipoFlujo(models.Model):
+    id_tipo_flujo = models.BigAutoField(primary_key=True)
+    tipo = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'tipo_flujo'
 
 
 class Usuario(models.Model):

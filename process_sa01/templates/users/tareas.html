@@ -13,28 +13,34 @@
     
     <div class="container-sm">
         <form method="POST"> {% csrf_token %} 
-            <div class="mb-3">
-                <label class="form-label">Título tarea: </label>
-                {{form.titulo_tarea}}
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                {{form.desc_tarea}}
-            </div>
-            <div class="mb-3">
-                <label  class="form-label">Fecha inicio</label>
-                {{form.fecha_inicio}}
-            </div>
-            <div class="mb-3">
-                <label  class="form-label">Fecha término</label>
-                {{form.fecha_termino}}
-            </div>
-            <div class="mb-3">
-                <label  class="form-label">Etiqueta</label>
-                {{form.etiqueta}}
-            </div>
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Crear tarea</button>
+            <div class="row">
+                <div class="col-md-10">
+                    <label class="form-label">Título tarea: </label>
+                    {{form.titulo_tarea}}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <label class="form-label">Descripción</label>
+                    {{form.desc_tarea}}
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <label  class="form-label">Fecha inicio</label>
+                    {{form.fecha_inicio}}
+                </div><div class="col-md-6"></div>
+                <div class="col-md-4">
+                    <label  class="form-label">Fecha término</label>
+                    {{form.fecha_termino}}
+                </div>
+                <div class="col-md-10">
+                    <label  class="form-label">Etiqueta</label>
+                    {{form.etiqueta}}
+                </div>
+                <div class="col-md-12">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Crear tarea</button>
+                </div>
+                
             </div>
         </form>
     </div>

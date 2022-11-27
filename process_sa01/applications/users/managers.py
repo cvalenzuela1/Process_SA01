@@ -1,5 +1,3 @@
-from email.charset import QP
-from operator import mod
 from django.db import models
 from django.db.models import Q
 from .functions import getCurrentDate
@@ -90,6 +88,11 @@ class TareaManager(models.Manager):
         items = self.all()
         return items
 
+    def get_tareas_activas(self):
+        return self.all().filter(
+            estado_id_estado = 1
+        )
+
     def get_fecha_termino(self, pk):
         return self.filter(
             id_tarea=pk
@@ -141,7 +144,7 @@ class TareaManager(models.Manager):
     def get_tareas_new_order2(self):
         
         return self.all().filter(
-            estado_id_estado=1
+            Q(estado_id_estado=1) | Q(estado_id_estado=9)
         ).order_by(
             'id_tarea'
         )
@@ -191,6 +194,20 @@ class TareaManager(models.Manager):
             return self.all().filter(
                 Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
             ).count()
+
+    def update_tarea_activa_flujo(self, tarea_id):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            estado_id_estado=9
+        )
+
+    def update_tarea_activa_flujoV2(self, tarea_id, estado_id):
+        oTarea = self.get(
+            id_tarea=tarea_id
+        )
+        oTarea.estado_id_estado = estado_id
+        oTarea.save()
 
 
 class PersonaManager(models.Manager):
@@ -313,6 +330,26 @@ class TareaPersonaManager(models.Manager):
             responsable_id_responsable=persona_id
         ).count()
 
+    def asignarFlujo(self, tareas, flujo_id):
+        for tarea in tareas:
+            self.filter(
+                tarea_id_tarea=tarea
+            ).update(
+                flujo_id_flujo=flujo_id
+            )
+
+    def crearFlujoTareaPersona(self, tarea_id, flujo_id):
+            tarea_persona = self.model(
+                flujo_id_flujo=flujo_id,
+                tarea_id_tarea=tarea_id
+            )
+            tarea_persona.save(using=self.db)
+
+    def get_flujo_tarea_notnull(self):
+        return self.exclude(
+            flujo_id_flujo__isnull = True
+        ).order_by('-flujo_id_flujo')
+
 
 class EstadoManager(models.Manager):
     
@@ -325,3 +362,8 @@ class EstadoManager(models.Manager):
         return self.filter(
             id_estado=estado_id
         ).values_list()
+
+    def get_estado_object(self, estado_id):
+        return self.filter(
+            id_estado=estado_id
+        ).values_list()[0][0]

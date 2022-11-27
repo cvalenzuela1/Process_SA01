@@ -1,5 +1,6 @@
 from django.db import models
 from .managers import EstadoManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
+from applications.flujos.models import Flujo
 
 # Create your models here.
 class Region(models.Model):
@@ -104,11 +105,12 @@ class Responsable(models.Model):
 
 class TareaPersona(models.Model):
     id_tarea_persona = models.BigAutoField(primary_key=True)
-    persona_id_persona = models.ForeignKey(Persona, models.CASCADE, db_column='persona_id_persona')
+    persona_id_persona = models.ForeignKey(Persona, models.CASCADE, db_column='persona_id_persona', blank=True, null=True)
     tarea_id_tarea = models.ForeignKey(Tarea, models.CASCADE, db_column='tarea_id_tarea')
     justificacion_rechazo = models.CharField(max_length=300, blank=True, null=True)
     responsable_id_responsable = models.ForeignKey(Responsable, models.CASCADE, db_column='responsable_id_responsable', blank=True, null=True)
-    fecha_asignacion_tarea = models.DateField()
+    fecha_asignacion_tarea = models.DateField(blank=True, null=True)
+    flujo_id_flujo = models.ForeignKey(Flujo, models.CASCADE, db_column='flujo_id_flujo', blank=True, null=True)
 
     objects = TareaPersonaManager()
 
