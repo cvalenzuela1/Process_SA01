@@ -345,6 +345,12 @@ class TareaPersonaManager(models.Manager):
             )
             tarea_persona.save(using=self.db)
 
+    def get_flujo_tarea_notnull(self):
+        return self.exclude(
+            flujo_id_flujo__isnull = True
+        ).order_by('-flujo_id_flujo')
+
+
 class EstadoManager(models.Manager):
     
     def get_estado(self, estado_nombre):

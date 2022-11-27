@@ -57,3 +57,22 @@ def crearFlujoTarea(request):
         else:
             messages.error(request, "Error al crear el flujo")
         return HttpResponseRedirect(reverse("app_home:home"))
+
+
+
+class VerFlujosListView(LoginRequiredMixin, ListView):
+    model = TareaPersona
+    template_name = "flujos/list_flujos.html"
+    paginate_by = 3
+
+    def get(self, request, *args, **kwargs):
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(VerFlujosListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = TareaPersona.objects.get_flujo_tarea_notnull()
+        return queryset
+        
