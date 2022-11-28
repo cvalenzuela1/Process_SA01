@@ -20,6 +20,7 @@ urlpatterns = [
     path('tareas-alertar-atrasos/', views.alertarAtrasos, name='tareas-alertar-atrasos'),
     path('tareas-list-asignadas/', views.VerTareasAsignadasListView.as_view(), name='tareas-list-asignadas'),
     path('tareas-carga-trabajo/', views.CargaDeTrabajoListView.as_view(), name='tareas-carga-trabajo'),
+    path('tareas-reasignar/', views.ReasignarResponsableView.as_view(), name="tareas-reasignar"),
     # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   

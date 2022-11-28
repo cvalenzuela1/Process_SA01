@@ -68,6 +68,9 @@
                                 </li>
                                 <li><a id="dropDownGestionar" class="dropdown-item" role="button"
                                         href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
+                                    <hr class="dropdown-divider">
+                                <li><a id="dropDownGestionar" class="dropdown-item" role="button"
+                                        href="{% url 'app_users:tareas-reasignar' %}">Reasignar tareas</a></li>
                                 {% endif %}
 
                                 {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}

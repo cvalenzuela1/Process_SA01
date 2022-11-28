@@ -406,6 +406,12 @@ class CargaDeTrabajoListView(LoginRequiredMixin, ListView):
         return context
 
 
+
+class ReasignarResponsableView(TemplateView):
+    template_name = "users/reasignar_responsable.html"
+
+
+
 class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
