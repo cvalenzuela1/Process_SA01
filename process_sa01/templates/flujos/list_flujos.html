@@ -34,31 +34,30 @@ Ver flujos
                         <tr>
                             <td>{{flujo.tarea_id_tarea.id_tarea}}</td>
                             <td>{{flujo.tarea_id_tarea.titulo_tarea}}</td>
-                            <td><button class="btn btn-primary">Ver tarea</button></td>
+                            <input name="tarea_id" id="tarea_id{{flujo.tarea_id_tarea.id_tarea}}" type="hidden" value="{{flujo.tarea_id_tarea.titulo_tarea}}|{{flujo.tarea_id_tarea.desc_tarea}}|{{flujo.tarea_id_tarea.fecha_inicio}}|{{flujo.tarea_id_tarea.fecha_termino}}|{{flujo.tarea_id_tarea.etiqueta}}|{{flujo.tarea_id_tarea.porc_cumplimiento}}|{{flujo.tarea_id_tarea.estado_id_estado.id_estado}}|{{flujo.tarea_id_tarea.diferencia_dias_fechas}}">
+                            <td><button class="btn btn-primary" onclick="detalleTarea({{flujo.tarea_id_tarea.id_tarea}})">Ver</button></td>
                         </tr>
                         
                     </tbody>
                 </table>
             </p>
             <p style="height: 0px; margin:0px;">Creación: {{flujo.flujo_id_flujo.fecha_creacion}}</p>
-            <div class="control">
-                <button class="btn btn-success">Get now</button>
-            </div>
         </div>
         <div class="product-image">
-            <img src="https://images.unsplash.com/photo-1606830733744-0ad778449672?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mzl8fGNocmlzdG1hcyUyMHRyZWV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            <img id="flujoimg" src="{% static 'assets/images/flujo/flow.png' %}"
                 alt="">
             <div class="info">
-                <h2> Description</h2>
-                <ul>
-                    <li><strong>Height : </strong>5 Ft </li>
-                    <li><strong>Shade : </strong>Olive green</li>
-                    <li><strong>Decoration: </strong>balls and bells</li>
-                    <li><strong>Material: </strong>Eco-Friendly</li>
-                </ul>
+                <h2>Descripción del flujo</h2>
+                <textarea id="textarea" class="form-control" cols="10" rows="10" readonly>{{flujo.flujo_id_flujo.descripcion}}
+                </textarea>
             </div>
         </div>
     </div>
     {% endfor %}
     <div id="paginator">{% include 'includes/paginator.html' %}</div>
 {% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/flujos/list_flujos.js' %}"></script>
+{% endblock js %}
+    

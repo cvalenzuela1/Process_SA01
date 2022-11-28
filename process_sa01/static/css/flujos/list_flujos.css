@@ -100,11 +100,6 @@ font-family: 'EB Garamond', serif;
 	padding-right: 15px;
 } */
 
-
-
-
-
-
 .product-image {
 	transition: all 0.3s ease-out;
 	display: inline-block;
@@ -149,4 +144,11 @@ font-family: 'EB Garamond', serif;
     justify-content: center;
     text-align: center;
     bottom: -20px;
+}
+
+#textarea{
+	background-color: transparent;
+	border: none;
+	color: white;
+	resize: none;
 }
