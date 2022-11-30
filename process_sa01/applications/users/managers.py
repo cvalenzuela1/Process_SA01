@@ -52,6 +52,15 @@ class TareaManager(models.Manager):
         tarea.save(using=self.db)
         return tarea
 
+    def update_tarea_reasignar(self, lista_tareas, fecha_inicio, fecha_termino):
+        for tarea in lista_tareas:
+            self.filter(
+                id_tarea=tarea
+            ).update(
+                fecha_inicio=fecha_inicio,
+                porc_cumplimiento=0
+            )
+
     def update_tarea(self, tarea_id):
         self.filter(
             id_tarea=tarea_id
@@ -66,6 +75,14 @@ class TareaManager(models.Manager):
                 id_tarea=tarea
             ).update(
                 estado_id_estado=5
+            )
+
+    def update_tarea_estado_reasignar(self, lista_tareas):
+        for tarea in lista_tareas:
+            self.filter(
+                id_tarea=tarea
+            ).update(
+                estado_id_estado=2
             )
 
     def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
@@ -97,6 +114,7 @@ class TareaManager(models.Manager):
         return self.filter(
             id_tarea=pk
         ).values_list()[0][4]
+    
 
     def update_tarea_fields(self, tarea_id, titulo, desc, etiqueta, ftermino):
 
@@ -142,7 +160,6 @@ class TareaManager(models.Manager):
             )
     
     def get_tareas_new_order2(self):
-        
         return self.all().filter(
             Q(estado_id_estado=1) | Q(estado_id_estado=9)
         ).order_by(
@@ -209,6 +226,12 @@ class TareaManager(models.Manager):
         oTarea.estado_id_estado = estado_id
         oTarea.save()
 
+    def get_tareas_reasignar(self):
+        return self.all().filter(
+            Q(estado_id_estado=4) | Q(estado_id_estado=6) | Q(estado_id_estado=8)
+        ).order_by(
+            'id_tarea'
+        )
 
 class PersonaManager(models.Manager):
 
@@ -245,10 +268,19 @@ class TareaPersonaManager(models.Manager):
             )
             tarea_persona.save(using=self.db)
 
+    def update_tarea_persona_reasignar(self, persona_id, lista_tareas, responsable_id):
+        for tarea in lista_tareas:
+            self.filter(
+                tarea_id_tarea=lista_tareas[tarea]
+            ).update(
+                responsable_id_responsable=responsable_id,
+                persona_id_persona=persona_id
+            )
+
     def get_tarea_by_id(self, tarea_id):
         return self.filter(
             tarea_id_tarea=tarea_id
-            )
+        )
 
     def get_tareas_solicitadas_by_persona(self, persona_id, tareas_solicitadas):
         lista = []

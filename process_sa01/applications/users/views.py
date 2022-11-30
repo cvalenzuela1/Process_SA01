@@ -10,6 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.core import serializers
 
 from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona, Responsable
 from .forms import GestionarTareaForm, LoginForm
@@ -410,7 +411,47 @@ class CargaDeTrabajoListView(LoginRequiredMixin, ListView):
 class ReasignarResponsableView(TemplateView):
     template_name = "users/reasignar_responsable.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lista_tareas"] = Tarea.objects.get_tareas_reasignar()
+        funcionarios_cliente = Usuario.objects.get_funcionarios_cliente()
+        qs = Persona.objects.get_persona_funcionario_cliente(funcionarios_cliente)
+        context["lista_personas"] = qs
+        for i in range(0, len(qs)):
+            if i == 0:
+                context["lista_personas"] = serializers.serialize("json", qs[0])
+            else:
+                context["lista_personas"] += serializers.serialize("json", qs[i])
+        return context
 
+def reasignarTareas(request):
+    if request.method == "POST":
+        persona_id = request.POST.get("idPersona")
+        contador_tareas = request.POST.get("tareaContador")
+        ftermino_new = request.POST.get("fecha_termino_new")
+
+        lista_tareas = []
+        for i in range(1, int(contador_tareas)+1):
+            lista_tareas.append(request.POST.get(f"tarea{i}"))
+        
+        lista_objetos_tarea = {tarea_id: Tarea(tarea_id) for tarea_id in lista_tareas}
+        Tarea.objects.update_tarea_estado_reasignar(lista_tareas)
+        responsable_id = request.user.persona_id_persona.id_persona
+        # Se asigna un responsable
+        TareaPersona.objects.update_tarea_persona_reasignar(Persona(persona_id), lista_objetos_tarea, Responsable(responsable_id))
+        Tarea.objects.update_tarea_reasignar(lista_tareas, getCurrentDate(), None)
+        
+        oPersona = Persona.objects.get_persona_by_id(persona_id)
+        if int(contador_tareas) == 1:
+            for persona in oPersona:
+                messages.success(request, f"Se ha reasignado {contador_tareas} tarea a la persona con RUT \"{persona.rut_persona}\"")
+        elif int(contador_tareas) > 1:
+            for persona in oPersona:
+                messages.success(request, f"Se han reasignado {contador_tareas} tareas a la persona con RUT \"{persona.rut_persona}\"")
+        return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
+    else:
+        messages.error(request, "Error al tratar de procesar los datos")
+        return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
 
 class LoginUserView(FormView):
     template_name = "users/login.html"

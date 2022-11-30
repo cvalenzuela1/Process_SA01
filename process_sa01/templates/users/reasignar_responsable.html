@@ -1,14 +1,90 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Reasignar Responsable
+    Asignar responsable
 {% endblock title %}
 
 {% block content %}
     {% load static %}
+    <!-- links -->
+    <link rel="stylesheet" href="{% static 'css/users/reasignar_responsable.css' %}">
+    <!-- end links -->
     {% include 'includes/header.html' %}
     <div class="container-fluid">
-        <h1>Reasignar responsable</h1>
+        <div class="row">
+            <div id="colcontainer" class="col">
+                <h5 class="display-6" id="h5Tarea">Reasignar tareas</h5>
+                <p class="text-muted" id="h5Tarea">Selecciona alguna tarea para reasignar</p>
+                <div class="btn-group">
+                    <input maxlength="45" type="text" id="filterInputTarea" onkeyup="filterTarea()" placeholder="Buscar por título de tarea...">
+                    <button id="btnCleanTarea" class="btn btn-primary" onclick="btnCleanTareaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+                    <form id="formReasignarTareas" method="POST" action="{% url 'app_users:tareas-reasignarTarea' %}" onsubmit="return reasignarTareasForm(this)">{% csrf_token %}
+                        <input id="inputListaPersonas" type="hidden" value="{{lista_personas}}">
+                        <button id="btnReasignarTareas" class="btn btn-primary btn-lg" type="submit">Reasignar tareas</button>
+                    </form>
+                </div>
+                <div id="tablecontainer">
+                    <table id="tablaTarea" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th id="columnas" scope="col">ID</th>
+                                <th id="columnas" scope="col">Título tarea</th>
+                                <th id="columnas" scope="col">Descripción</th>
+                                <th id="columnas" scope="col">Fecha inicio</th>
+                                <th id="columnas" scope="col">Fecha término</th>
+                                <th id="columnas" scope="col">Nueva fecha término</th>
+                                <th id="columnas" scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarea in lista_tareas %}
+                                <tr>
+                                    {% if tarea.estado_id_estado.id_estado == 4 %}
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            </div>
+                                        </td>
+                                        <td>{{tarea.titulo_tarea}}</td>
+                                        <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                                        <td>{{tarea.fecha_inicio}}</td>
+                                        <td>{{tarea.fecha_termino}}</td>
+                                        <td><input id="fechatermino_new" class="form-control" type="date" required></td>
+                                        <td>{{tarea.estado_id_estado.estado}}</td>
+                                    {% elif tarea.estado_id_estado.id_estado == 6 %}
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            </div>
+                                        </td>
+                                        <td>{{tarea.titulo_tarea}}</td>
+                                        <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                                        <td>{{tarea.fecha_inicio}}</td>
+                                        <td><input id="fechatermino_new" class="form-control" type="date" required></td>
+                                        <td>{{tarea.fecha_termino}}</td>
+                                    {% elif tarea.estado_id_estado.id_estado == 8 %}
+                                        <td>
+                                            <div>
+                                                <input class="form-check-input" type="checkbox" id="checkboxNoLabelTarea" value="{{tarea.id_tarea}}|{{tarea.titulo_tarea}}|{{tarea.desc_tarea}}|{{tarea.fecha_inicio}}|{{tarea.fecha_termino}}" aria-label="..." onclick="countCheckboxes()">&nbsp;&nbsp;{{tarea.id_tarea}}
+                                            </div>
+                                        </td>
+                                        <td>{{tarea.titulo_tarea}}</td>
+                                        <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                                        <td>{{tarea.fecha_inicio}}</td>
+                                        <td><input id="fechatermino_new" class="form-control" type="date" required></td>
+                                        <td>{{tarea.fecha_termino}}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
-    
+
+{% block js %}
+    <script src="{% static 'js/users/reasignar_responsable.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock js %}
