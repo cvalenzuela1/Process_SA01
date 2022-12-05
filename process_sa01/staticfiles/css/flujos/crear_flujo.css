@@ -1,0 +1,41 @@
+body{
+    height: 700px;
+}
+
+#container_row{
+    position: relative;
+    width: inherit;
+    background-color: rgba(197, 196, 196, 0.432);
+    width: 80%;
+    height: inherit;
+    margin-left: 130px;
+    border-radius: 50px;
+}
+
+label{
+    font-size: 20px;
+}
+
+.coupon {
+    padding-top: 20px;
+    width: 80%;
+    border-radius: 15px; /* Rounded border */
+    margin: 0px auto;
+    max-width: 800px;
+}
+
+.expire {
+    color: red;
+}
+
+#flujo_img {
+    width: 200px;
+}
+
+tr{
+    background-color: white;
+}
+
+#descripcion {
+    resize: none;
+}

@@ -19,7 +19,7 @@
     <input type="hidden" id="tflujo_semanal" value="{{tflujo_semanal}}">
     <input type="hidden" id="tflujo_diario" value="{{tflujo_diario}}">
     <div class="row">
-        <div class="row">
+        <div class="row" style="max-width: inherit;">
             <div class="col-6">
                 <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje según Estado tareas</h6>
                 <div id="chartdiv"></div>
@@ -38,6 +38,5 @@
     <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
     <script src="//cdn.amcharts.com/lib/4/themes/kelly.js"></script>
     <script src="{% static 'js/graficos/graficos_tablero_global.js' %}"></script>
-    
 {% endblock js %}
     
