@@ -39,6 +39,14 @@ body{
     width: 48px;
 }
 
+
+#chartLogo{
+    margin-left: -7px;
+    /* padding-right: 5px; */
+    margin-top: -5px;
+    width: 55.5px;
+}
+
 #navbarms{
     margin-top: 0px;
 }

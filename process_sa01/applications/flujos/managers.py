@@ -16,6 +16,26 @@ class FlujoTareaManager(models.Manager):
     def get_last_flujo(self):
         return self.all().order_by("-id_flujo").first()
 
+    def get_count_anual(self):
+        return self.all().filter(
+            tipo_flujo_id_tipo_flujo=1
+        ).count()
+
+    def get_count_mensual(self):
+        return self.all().filter(
+            tipo_flujo_id_tipo_flujo=2
+        ).count()
+
+    def get_count_semanal(self):
+        return self.all().filter(
+            tipo_flujo_id_tipo_flujo=3
+        ).count()
+
+    def get_count_diario(self):
+        return self.all().filter(
+            tipo_flujo_id_tipo_flujo=4
+        ).count()
+
 class TipoFlujoManager(models.Manager):
     def get_tipos_flujos(self):
         return self.all()

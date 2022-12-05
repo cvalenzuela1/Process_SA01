@@ -53,6 +53,8 @@ Ver flujos
             </div>
         </div>
     </div>
+    {% empty %}
+    <h6 id="empty" class="display-6">¡No existen flujos creados!</h6>
     {% endfor %}
     <div id="paginator">{% include 'includes/paginator.html' %}</div>
 {% endblock content %}

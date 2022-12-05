@@ -123,7 +123,7 @@
                 {% endif %}
             </form>
             <div class="col">
-                {% if object.estado_id_estado.id_estado != 4 and object.estado_id_estado.id_estado != 8 %}
+                {% if object.estado_id_estado.id_estado != 4 and object.estado_id_estado.id_estado != 8 and object.estado_id_estado.id_estado != 1 %}
                     <form method="POST" action="{% url 'app_users:tareas-terminar' %}" onsubmit="return finalizarTarea(this);">{% csrf_token %}
                         <input name="tarea_id" type="hidden" value="{{object.id_tarea}}">
                         <button class="btn btn-danger" type="submit">Finalizar Tarea</button>

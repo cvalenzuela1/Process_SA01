@@ -21,9 +21,17 @@
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
                         
+                        {% if user.rol_id_rol.nombre == 'Gerente' %}
+                        <div class="col-md-5"></div>
+                        <div class="col-md-9"></div>
+                        <div class="col-md nav-item nav-link dropdown">
+                            <a id="letrasImagenes" href="{% url 'app_users:graficos-tablero-global' %}" class="text-dark" role="button">
+                                <img id="chartLogo" src="{% static 'assets/images/header/chart.png' %}" alt="">Tablero<br>
+                                
+                            </a>
+                        </div>
+                        {% endif %}
                         {% if user.rol_id_rol.nombre != 'Funcionario Cliente' %}
-                        <div class="col-md-11"></div>
-                        <div class="col-md-11"></div>
                         <div class="col-md nav-item nav-link dropdown">
                             <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false" role="button">
@@ -70,9 +78,8 @@
                                         href="{% url 'app_users:tareas-asignar' %}">Asignar tareas</a></li>
                                     <hr class="dropdown-divider">
                                 <li><a id="dropDownGestionar" class="dropdown-item" role="button"
-                                        href="{% url 'app_users:tareas-reasignar' %}">Reasignar tareas</a></li>
+                                        href="{% url 'app_users:tareas-reasignarV2' %}">Reasignar tareas</a></li>
                                 {% endif %}
-
                                 {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
                                 <li><a id="dropDownGestionar" class="dropdown-item" role="button"
                                         href="{% url 'app_users:tareas-list-asignadas' %}">Tareas asignadas<span

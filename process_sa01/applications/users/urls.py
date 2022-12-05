@@ -22,6 +22,10 @@ urlpatterns = [
     path('tareas-carga-trabajo/', views.CargaDeTrabajoListView.as_view(), name='tareas-carga-trabajo'),
     path('tareas-reasignar/', views.ReasignarResponsableView.as_view(), name="tareas-reasignar"),
     path('tareas-reasignarTarea/', views.reasignarTareas, name="tareas-reasignarTarea"),
+    path('tareas-reasignarV2/', views.ReasignarResponsableV2View.as_view(), name="tareas-reasignarV2"),
+    path('tareas-reasignarTareaV2/', views.reasignarTareaV2, name="tareas-reasignarTareaV2"),
+    path('tareas-reasignar-detalle/<pk>/', views.ReasignarResponsableDetailView.as_view(), name="tareas-reasignar-detalle"),
+    path('graficos-tablero-global/', views.GraficosTableroGlobalView.as_view(), name="graficos-tablero-global"),
     # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Gráficos
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+{% include 'includes/header.html' %}
+    <link rel="stylesheet" href="{% static 'css/graficos/graficos_tablero_global.css' %}">
+    <input type="hidden" id="t_activas" value="{{t_activas}}">
+    <input type="hidden" id="t_asignadas" value="{{t_asignadas}}">
+    <input type="hidden" id="t_ejecucion" value="{{t_ejecucion}}">
+    <input type="hidden" id="t_finalizadas" value="{{t_finalizadas}}">
+    <input type="hidden" id="t_atrasadas" value="{{t_atrasadas}}">
+    <input type="hidden" id="tflujo_anual" value="{{tflujo_anual}}">
+    <input type="hidden" id="tflujo_mensual" value="{{tflujo_mensual}}">
+    <input type="hidden" id="tflujo_semanal" value="{{tflujo_semanal}}">
+    <input type="hidden" id="tflujo_diario" value="{{tflujo_diario}}">
+    <div class="row">
+        <div class="row">
+            <div class="col-6">
+                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje según Estado tareas</h6>
+                <div id="chartdiv"></div>
+            </div>
+            <div class="col-6">
+                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje según Tipo flujo</h6>
+                <div id="chartdivPIE2"></div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+    <script src="{% static 'js/graficos/graficos_tablero_global.js' %}"></script>
+    
+{% endblock js %}
+    

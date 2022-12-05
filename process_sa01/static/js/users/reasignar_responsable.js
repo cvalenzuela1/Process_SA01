@@ -33,54 +33,42 @@ function btnCleanTareaClick(){
     filterTarea();
 }
 
-function getValues1(){
-    let checkboxes1 = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
-    let values1 = [];
-    checkboxes1.forEach((checkbox) => {
-        values1.push(checkbox.value);
-    });
+// CHECKBOX LISTENER
 
-    return values1;
+var contador = 0;
+function requiredToggle() {
+    var x = document.querySelectorAll('input[id="checkboxNoLabelTarea"]');
+    var x2 = document.querySelectorAll('input[id="fechatermino_new"]');
+    // CHECKBOX
+    for (let i = 0; i < x.length; i++) {
+        // FECHA TERMINO
+        do {
+            if (x[i].checked) {
+                // alert("CHECKED");
+                x2[contador].setAttribute('required', '');
+                contador=contador+1;
+                break;
+            }
+            else if (!x[i].checked) {
+                x2[contador].removeAttribute('required');
+                contador=contador+1;
+                break;
+            }
+            
+        } while (true);
+    }
+    contador = 0;
+    // alert("ENTRA2");
 }
 
-// CHECKBOX LISTENER
-document.querySelector('#btnReasignarTareas').disabled = true;
 
-function countCheckboxes(){
-    var x = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
-    if (x.length == 0) {
-        document.querySelector('#btnReasignarTareas').disabled = true;
-        return false
-    }
-    else if (x.length > 4){
-        document.querySelector('#btnReasignarTareas').disabled = true;
-        return false
-    }
-    else{
-        document.querySelector('#btnReasignarTareas').disabled = false;
-        return true
-    }
+document.querySelector('#btnReasignarTareas').disabled = false;
+function countCheckboxes() {
+
+    // alert("ENTRA1");
+    requiredToggle();
 }
 // END CHECKBOX LISTENER
-
-// Obtener datos tareas
-function reasignarTareas() {
-    const listPersonaTarea = document.getElementById("formReasignarTareas");
-    let valuesTarea = getValues1();
-
-    let valuesSplitTarea = [];
-    for (const key in valuesTarea) {
-        valuesSplitTarea.push(String(valuesTarea[key]).split("|"));
-    }
-    
-    let contador = 0;
-    for (const key in valuesSplitTarea) {
-        contador+=1;
-        listPersonaTarea.innerHTML += `<input type="hidden" id="tarea${contador}" name="tarea${contador}" value=${valuesSplitTarea[key][0]}>`;
-    }
-    listPersonaTarea.innerHTML += `<input type="hidden" id="tareaContador" name="tareaContador" value=${contador}>`;
-}
-// END Obtener datos tareas
 
 // LISTA PERSONAS
 function getListaPersonas() {
@@ -119,14 +107,68 @@ function getValues(){
     let radiobtn = document.querySelectorAll('input[name="radioPersona"]:checked');
     let values = [];
     radiobtn.forEach((radio) => {
+        alert("radio -> "+radio.value);
         values.push(radio.value);
     });
-
+    alert("RADIO");
     const listPersonaTarea = document.getElementById("formReasignarTareas");
     for (const key in values) {
+        alert("ENTRA AL FOR");
         listPersonaTarea.innerHTML +=`<input type="hidden" id="idPersona" name="idPersona" value=${values[key]}>`;
     }
 }
+function getValues1() {
+    
+    let values1 = [];
+    checkboxessave.forEach((checkbox) => {
+        alert(checkbox.value);
+        values1.push(checkbox.value);
+        // checkbox.prop("checked", !checkbox.prop("checked"));
+    });
+
+    let valuesSplitTarea = [];
+    alert("?");
+    for (const key in values1) {
+        alert("ENTRA: "+String(values1[key]).split("|"));
+        valuesSplitTarea.push(String(values1[key]).split("|"));
+    }
+    // alert(valuesSplitTarea.length);
+    const listPersonaTarea = document.querySelector("#formReasignarTareas");
+    let contador1 = 0;
+    for (const key in valuesSplitTarea) {
+        contador1+=1;
+        let contador2 = 0;
+        do {
+            alert("AJAAJAJAJA: "+fterminosave[contador2].value);
+            listPersonaTarea.innerHTML += `<input type="hidden" id="tarea${contador1}" name="tarea${contador1}" value=${valuesSplitTarea[key][0]}|${fterminosave[contador2].value}>`;
+            contador2+=1;
+            break;
+        } while (true);  
+    }
+    listPersonaTarea.innerHTML += `<input type="hidden" id="tareaContador" name="tareaContador" value=${contador1}>`;
+    
+}
+
+let checkboxessave;
+let fterminosave = [];
+function guardarCheckboxes() {
+    checkboxessave = document.querySelectorAll('input[id="checkboxNoLabelTarea"]:checked');
+    checkboxessave.forEach(element => {
+        alert("VALOR: "+element.value);
+        fterminosave.push(document.querySelector(`input[name="fechatermino_new${element.value}"]`));
+        let valuex = document.querySelector(`input[name="fechatermino_new${element.value}"]`);
+        alert("DATO FTERMINO: "+valuex.value);
+    });
+}
+
+
+// Obtener datos tareas
+// function reasignarTareas() {
+//     let valuesTarea = getValues1();
+//     // alert("LEN: "+valuesTarea.length);
+    
+// }
+// END Obtener datos tareas
 
 // Asignar tarea FORM
 function reasignarTareasForm(form) {
@@ -141,33 +183,43 @@ function reasignarTareasForm(form) {
                     <tbody>
                 
                 `;
+    alert("ENTRAF0");
     for (let i = 0; i < valuesPersona.length; i++) {
         // alert("LENGTH: "+valuesPersona.length);
         // alert("VALOR TEST: "+JSON.parse(valuesPersona[i])[0].fields.nombre_persona);
+        alert("ENTRAF1");
         if (i == 0) {
+            alert("ENTRAF1.1");
+            alert("PERSONA: "+valuesPersona[i][0].pk);
+            // alert(JSON.parse(valuesPersona[i])[0].pk);
             html += `<tr>
-                        <td>${JSON.parse(valuesPersona[i])[0].pk}</td>
-                        <td>${JSON.parse(valuesPersona[i])[0].fields.rut_persona}</td>
-                        <td>${JSON.parse(valuesPersona[i])[0].fields.nombre_persona} ${JSON.parse(valuesPersona[i])[0].fields.apellido_paterno_persona} ${JSON.parse(valuesPersona[i])[0].fields.apellido_materno_persona}</td>
-                        <td><input class="form-check" type="radio" style="margin: 1 auto" name="radioPersona" value="${JSON.parse(valuesPersona[i])[0].pk}" checked></td>
+                        <td>${(valuesPersona[i])[0].pk}</td>
+                        <td>${(valuesPersona[i])[0].fields.rut_persona}</td>
+                        <td>${(valuesPersona[i])[0].fields.nombre_persona} ${(valuesPersona[i])[0].fields.apellido_paterno_persona} ${(valuesPersona[i])[0].fields.apellido_materno_persona}</td>
+                        <td><input class="form-check" type="radio" style="margin: 1 auto" name="radioPersona" value="${(valuesPersona[i])[0].pk}" checked></td>
                     </tr>
                     `
+            alert("ENTRAF1.2");
         }
         else if (i > 0){
+            alert("ENTRAF1.3");
             html += `<tr>
-                        <td>${JSON.parse(valuesPersona[i])[0].pk}</td>
-                        <td>${JSON.parse(valuesPersona[i])[0].fields.rut_persona}</td>
-                        <td>${JSON.parse(valuesPersona[i])[0].fields.nombre_persona} ${JSON.parse(valuesPersona[i])[0].fields.apellido_paterno_persona} ${JSON.parse(valuesPersona[i])[0].fields.apellido_materno_persona}</td>
-                        <td><input class="form-check" type="radio" style="margin: 1 auto" name="radioPersona" value="${JSON.parse(valuesPersona[i])[0].pk}"></td>
+                        <td>${(valuesPersona[i])[0].pk}</td>
+                        <td>${(valuesPersona[i])[0].fields.rut_persona}</td>
+                        <td>${(valuesPersona[i])[0].fields.nombre_persona} ${(valuesPersona[i])[0].fields.apellido_paterno_persona} ${(valuesPersona[i])[0].fields.apellido_materno_persona}</td>
+                        <td><input class="form-check" type="radio" style="margin: 1 auto" name="radioPersona" value="${(valuesPersona[i])[0].pk}"></td>
                     </tr>
                     `
+            alert("ENTRAF1.4");
         }
         if (i == valuesPersona.length - 1) {
             html += `   </tbody>
                     </table>
                     <br>
                     `
+            alert("ENTRAF1.5");
         }
+        alert("ENTRAF2");
     }
     Swal.fire({
         "titleText": "Reasignar tareas",
@@ -185,66 +237,8 @@ function reasignarTareasForm(form) {
     .then(function(result){
         if(result.isConfirmed){
             getValues();
-            reasignarTareas();
+            getValues1();
             form.submit();
-            // Swal.fire({
-            //     "titleText": "Indique una fecha de término nueva",
-            //     "html": `<div class='row' style="width: 463px">
-            //                 <div class='col-4'>
-            //                     Descripción:
-            //                 </div>
-            //                 <div class='col-8'>
-            //                     <input id="ftermino" class='form-control' type="date" required>
-            //                 </div>
-            //             </div>
-            //             `,
-            //     "icon": "info",
-            //     "showCancelButton": true,
-            //     "cancelButtonText": "Cancelar",
-            //     "confirmButtonText": "Reasignar",
-            //     "cancelButtonColor": "secondary",
-            //     "confirmButtonColor": "blue",
-            //     "reverseButtons": true,
-            //     "focusConfirm": true
-            // })
-            //     .then(function(result){
-            //         if(result.isConfirmed) {
-            //             var ftermino = document.getElementById("ftermino");
-            //             var val_ftermino = ftermino.value;
-            //             var ftermino_date = ftermino.valueAsDate;
-            //             ftermino_date = ftermino_date.toLocaleDateString('en-us', { year:"numeric", month:"numeric", day:"numeric"});
-            //             var underscore_ftermino = val_ftermino.split(' ').join('_');
-            //             if(val_ftermino.length > 0){
-            //                 let currentDate = new Date();
-            //                 currentDate = currentDate.getFullYear()+"-"+currentDate.getMonth()+"-"+currentDate.getDate();
-            //                 // alert("current: "+currentDate);
-            //                 // alert(Date.parse(ftermino_date)-Date.parse(currentDate));
-            //                 if (Date.parse(ftermino_date)-Date.parse(currentDate) > 0) {
-            //                     var frm = document.getElementById("formReasignarTareas");
-            //                     frm.innerHTML += `<input id='fecha_termino_new' name='fecha_termino_new' value=${underscore_ftermino} type='hidden'></input>`;
-            //                     window.history.pushState({}, "http://127.0.0.1:8000","/");
-            //                     frm.action = "tareas-reasignarTarea/";
-            //                     frm.submit();
-            //                 }
-            //                 else {
-            //                     Swal.fire({
-            //                         "title": "Debe añadir una fecha de término mayor a la actual",
-            //                         "text": "¡Ha habido un problema!",
-            //                         "icon": "warning"
-            //                     })
-            //                 }
-                            
-            //             }
-            //             else{
-            //                 Swal.fire({
-            //                     "title": "Debe añadir una fecha de término nueva",
-            //                     "text": "¡Ha habido un problema!",
-            //                     "icon": "warning"
-            //                 })
-            //             }
-            //         } 
-            //     })
-            // }
         }
     })
     return false;

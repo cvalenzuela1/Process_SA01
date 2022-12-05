@@ -152,3 +152,9 @@ font-family: 'EB Garamond', serif;
 	color: white;
 	resize: none;
 }
+
+#empty{
+    position: relative;
+    justify-content: center;
+    text-align: center;
+}

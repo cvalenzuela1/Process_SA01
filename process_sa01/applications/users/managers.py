@@ -52,14 +52,14 @@ class TareaManager(models.Manager):
         tarea.save(using=self.db)
         return tarea
 
-    def update_tarea_reasignar(self, lista_tareas, fecha_inicio, fecha_termino):
-        for tarea in lista_tareas:
-            self.filter(
-                id_tarea=tarea
-            ).update(
-                fecha_inicio=fecha_inicio,
-                porc_cumplimiento=0
-            )
+    def update_tarea_reasignar(self, tarea_id, fecha_inicio, fecha_termino_nueva):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            fecha_inicio=fecha_inicio,
+            porc_cumplimiento=0,
+            fecha_termino=fecha_termino_nueva
+        )
 
     def update_tarea(self, tarea_id):
         self.filter(
@@ -77,16 +77,14 @@ class TareaManager(models.Manager):
                 estado_id_estado=5
             )
 
-    def update_tarea_estado_reasignar(self, lista_tareas):
-        for tarea in lista_tareas:
-            self.filter(
-                id_tarea=tarea
-            ).update(
-                estado_id_estado=2
-            )
+    def update_tarea_estado_reasignar(self, tarea_id):
+        self.filter(
+            id_tarea=tarea_id
+        ).update(
+            estado_id_estado=2
+        )
 
     def update_porc_cumplimiento(self, porc_actualizado, tarea_id):
-        
         if porc_actualizado >= 100:
             self.filter(
                 id_tarea=tarea_id
@@ -232,6 +230,33 @@ class TareaManager(models.Manager):
         ).order_by(
             'id_tarea'
         )
+    
+    # DATOS GRAFICOS
+    def get_count_activas(self):
+        return self.all().filter(
+            estado_id_estado=1
+        ).count()
+    
+    def get_count_asignadas(self):
+        return self.all().filter(
+            estado_id_estado=2
+        ).count()
+
+    def get_count_ejecucion(self):
+        return self.all().filter(
+            estado_id_estado=3
+        ).count()
+
+    def get_count_finalizadas(self):
+        return self.all().filter(
+            estado_id_estado=4
+        ).count()
+
+    def get_count_atrasadas(self):
+        return self.all().filter(
+            estado_id_estado=7
+        ).count()
+
 
 class PersonaManager(models.Manager):
 
@@ -268,14 +293,13 @@ class TareaPersonaManager(models.Manager):
             )
             tarea_persona.save(using=self.db)
 
-    def update_tarea_persona_reasignar(self, persona_id, lista_tareas, responsable_id):
-        for tarea in lista_tareas:
-            self.filter(
-                tarea_id_tarea=lista_tareas[tarea]
-            ).update(
-                responsable_id_responsable=responsable_id,
-                persona_id_persona=persona_id
-            )
+    def update_tarea_persona_reasignar(self, tarea_id, persona_id, responsable_id):
+        self.filter(
+            tarea_id_tarea=tarea_id
+        ).update(
+            responsable_id_responsable=responsable_id,
+            persona_id_persona=persona_id
+        )
 
     def get_tarea_by_id(self, tarea_id):
         return self.filter(

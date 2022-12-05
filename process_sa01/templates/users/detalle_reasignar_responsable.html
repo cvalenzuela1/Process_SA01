@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Tarea N°{{object.id_tarea}}
+{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/users/detalle_reasignar_responsable.css' %}">
+    {% include 'includes/header.html' %}
+    <div class="container-sm">
+        <div class="row align-items-start">
+            <form method="POST" action="{% url 'app_users:tareas-reasignarTareaV2' %}">{% csrf_token %}
+                <input name="idTarea" type="hidden" value="{{object.id_tarea}}">
+                <div class="col-6">
+                    <label class="form-label" for="tituloTarea">Título tarea: </label>
+                    <input class="form-control" type="text" name="tituloTarea" id="tituloTarea" value="{{object.titulo_tarea}}" maxlength="35" disabled>
+                    <br>
+                </div>
+                <div class="col-6"></div>
+                <div class="col-3">
+                    <label class="form-label" for="fInicio">Fecha inicio: </label><br>
+                    <small class="text-muted">Se modificará y se añadirá la fecha actual</small>
+                    <input class="form-control" type="text" name="fInicio" id="fInicio" value="{{object.fecha_inicio|date:'d-m-Y'}}" disabled>
+                    <br>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="fTermino">Fecha término: </label><br>
+                    <small class="text-muted">Actual: </small>
+                    <input class="form-control" type="text" value="{{object.fecha_termino|date:'d-m-Y'}}" disabled>
+                    <br>
+                </div>
+                <div class="col-3">
+                    <small class="text-muted">Nueva: </small>
+                    <input class="form-control" type="date" name="fTerminoNueva" id="fTerminoNueva" required>
+                    <br>
+                </div>
+                <div class="col-4">
+                    <select class="form-select" name="cboxPersona" id="cboxPersona" style="width: 278px" required>
+                        <option value="" selected disabled>Seleccione una persona</option>
+                        {% for persona in lista_personas %}
+                            {% for item in persona %}
+                            <option value="{{item.id_persona}}">{{item.id_persona}} - {{item.nombre_persona}} {{item.apellido_paterno_persona}} {{item.apellido_materno_persona}}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <hr class="my-4">
+                <div class="col-2">
+                    <button class="btn btn-primary" type="submit">Reasignar Tarea</button>
+                </div>
+            </form>
+        </div>        
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/users/detalle_reasignar_responsable.js' %}"></script>
+{% endblock js %}
