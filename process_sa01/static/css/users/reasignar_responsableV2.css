@@ -1,0 +1,128 @@
+body{
+    height: 750px;
+}
+
+.container-sm{
+    margin-top: 50px;
+}
+
+#columnas{
+    font-style: italic;
+}
+
+#tablaTarea, #tablaPersona, #tablaDetalle{
+    background-color: rgba(196, 214, 224, 0.596);
+    border-radius: 20px;
+    width: 100%;
+    max-height: 300px;
+    border-style: none;
+    justify-content: left;
+    text-align: left;
+}
+
+#tablecontainer{
+    margin-left: 30px;
+    height: 350px;
+    width: 900px;
+    overflow: auto;
+}
+
+#h5Tarea{
+    margin-left: 40px;
+}
+
+#columnasDetalle{
+    padding-left: 190px;
+    
+}
+
+#filterInputTarea {
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 700px; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 40px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    border-radius: 10px;
+    margin-bottom: 12px; /* Add some space below the input */
+    margin-left: 30px;
+}
+
+
+#iconClean{
+    width: 30px;
+    filter: invert();
+}
+
+#btnCleanTarea, #btnCleanPersona{
+    margin-left: -58px;
+    margin-top: 1.6px;
+    height: 46.8px;
+    border-end-end-radius: 10px;
+}
+
+/* ACCORDION */
+/* Style the buttons that are used to open and close the accordion panel */
+.acordeonJS {
+    background-color: rgba(219, 219, 219, 0.863);
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .acordeonJS:hover {
+    background-color: #ccc;
+}
+
+.acordeonJS:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+  
+.active:after {
+    content: "\2212";
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+#tablaDetalle {
+    /* padding-bottom: 500px; */
+    margin-top: 20px;
+    background-color: transparent;
+}
+
+#detallePersona{
+    /* \r\n */
+    white-space: pre;
+}
+
+#tablaDetalleTareasContainer{
+    overflow-y:scroll;
+    height:100px;
+    display:block;
+}
+
+#textarea{
+    resize: none;
+}
+
+#formReasignarTareas{
+    margin-left: 20px;
+}
+

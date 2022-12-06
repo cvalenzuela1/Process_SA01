@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Asignar responsable
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+<!-- links -->
+<link rel="stylesheet" href="{% static 'css/users/reasignar_responsableV2.css' %}">
+<!-- end links -->
+{% include 'includes/header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="colcontainer" class="col">
+            <h5 class="display-6" id="h5Tarea">Reasignar tareas</h5>
+            <p class="text-muted" id="h5Tarea">Selecciona alguna tarea para reasignar</p>
+            <div class="btn-group">
+                <input maxlength="45" type="text" id="filterInputTarea" onkeyup="filterTarea()"
+                    placeholder="Buscar por título de tarea...">
+                <button id="btnCleanTarea" class="btn btn-primary" onclick="btnCleanTareaClick()"><img id="iconClean" src="{% static 'assets/images/iconos/clean.png' %}" alt="..."></button>
+            </div>
+            <div id="tablecontainer">
+                <table id="tablaTarea" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th id="columnas" scope="col">ID</th>
+                            <th id="columnas" scope="col">Título tarea</th>
+                            <th id="columnas" scope="col">Descripción</th>
+                            <th id="columnas" scope="col">Fecha inicio</th>
+                            <th id="columnas" scope="col">Fecha término</th>
+                            <th id="columnas" scope="col">Estado</th>
+                            <th id="columnas" scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarea in lista_tareas %}
+                        <form id="formReasignarTareas" action="{% url 'app_users:tareas-reasignar-detalle' tarea.id_tarea %}">{% csrf_token %}
+                        <tr>
+                            {% if tarea.estado_id_estado.id_estado == 4 %}
+                            <td>{{tarea.id_tarea}}</td>
+                            <td>{{tarea.titulo_tarea}}</td>
+                            <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                            <td>{{tarea.fecha_inicio}}</td>
+                            <td>{{tarea.fecha_termino}}</td>
+                            <td>{{tarea.estado_id_estado.estado}}</td>
+                            <td><button class="btn btn-primary" type="submit">Reasignar</button></td>
+                            {% elif tarea.estado_id_estado.id_estado == 6 %}
+                            <td>{{tarea.id_tarea}}</td>
+                            <td>{{tarea.titulo_tarea}}</td>
+                            <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                            <td>{{tarea.fecha_inicio}}</td>
+                            <td>{{tarea.fecha_termino}}</td>
+                            <td>{{tarea.estado_id_estado.estado}}</td>
+                            <td><button class="btn btn-primary" type="submit">Reasignar</button></td>
+                            {% elif tarea.estado_id_estado.id_estado == 8 %}
+                            <td>{{tarea.id_tarea}}</td>
+                            <td>{{tarea.titulo_tarea}}</td>
+                            <td><textarea id="textarea" class="form-control" cols="7" rows="2" readonly>{{tarea.desc_tarea}}</textarea></td>
+                            <td>{{tarea.fecha_inicio}}</td>
+                            <td>{{tarea.fecha_termino}}</td>
+                            <td>{{tarea.estado_id_estado.estado}}</td>
+                            <td><button class="btn btn-primary" type="submit">Reasignar</button></td>
+                            {% endif %}
+                        </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/users/reasignar_responsableV2.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock js %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gráficos resumen
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/graficos/graficos_mostrar_resumen.css' %}">
+{% include 'includes/header.html' %}
+    <input type="hidden" id="tareaPersona_asignadas" value="{{tareaPersona_asignadas}}">
+    <input type="hidden" id="tareaPersona_ejecucion" value="{{tareaPersona_ejecucion}}">
+    <input type="hidden" id="tareaPersona_finalizadas" value="{{tareaPersona_finalizadas}}">
+    <input type="hidden" id="tareaPersona_atrasadas" value="{{tareaPersona_atrasadas}}">
+    <input type="hidden" id="finicio_current" value="{{finicio_current}}">
+    <input type="hidden" id="ftermino_current" value="{{ftermino_current}}">
+    <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Tareas de las que eres responsable según estado</h6>
+    <div id="chartdiv"></div>
+    <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Cantidad de tareas asignadas por ti que comienzan/finalizan este mes</h6>
+    <div id="chartdiv2"></div>
+{% endblock content %}
+
+{% block js %}
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+    <script src="{% static 'js/graficos/graficos_mostrar_resumen.js' %}"></script>
+{% endblock js %}
+    

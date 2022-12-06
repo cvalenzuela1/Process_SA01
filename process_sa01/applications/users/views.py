@@ -10,8 +10,10 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.core import serializers
 
 from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona, Responsable
+from applications.flujos.models import Flujo
 from .forms import GestionarTareaForm, LoginForm
 from .functions import *
 
@@ -406,6 +408,120 @@ class CargaDeTrabajoListView(LoginRequiredMixin, ListView):
         return context
 
 
+
+class ReasignarResponsableView(TemplateView):
+    template_name = "users/reasignar_responsable.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lista_tareas"] = Tarea.objects.get_tareas_reasignar()
+        funcionarios_cliente = Usuario.objects.get_funcionarios_cliente()
+        qs = Persona.objects.get_persona_funcionario_cliente(funcionarios_cliente)
+        context["lista_personas"] = qs
+        for i in range(0, len(qs)):
+            if i == 0:
+                context["lista_personas"] = serializers.serialize("json", qs[0])
+            else:
+                context["lista_personas"] += serializers.serialize("json", qs[i])
+        return context
+
+def reasignarTareas(request):
+    if request.method == "POST":
+        persona_id = request.POST.get("idPersona")
+        contador_tareas = request.POST.get("tareaContador")
+
+        lista_tareas = []
+        # lista_ftermino = []
+        for i in range(1, int(contador_tareas)+1):
+            tarea_id = request.POST.get(f"tarea{i}")
+            lista_tareas.append(tarea_id)
+            # lista_ftermino.append(tarea_id[1])
+
+        lista_objetos_tarea = {"tarea_id": Tarea(tarea_id) for tarea_id in lista_tareas}
+        Tarea.objects.update_tarea_estado_reasignar(lista_tareas)
+        responsable_id = request.user.persona_id_persona.id_persona
+        # Se asigna un responsable
+        TareaPersona.objects.update_tarea_persona_reasignar(Persona(persona_id), lista_objetos_tarea, Responsable(responsable_id))
+        Tarea.objects.update_tarea_reasignar(lista_tareas, getCurrentDate())
+        
+        oPersona = Persona.objects.get_persona_by_id(persona_id)
+        if int(contador_tareas) == 1:
+            for persona in oPersona:
+                messages.success(request, f"Se ha reasignado {contador_tareas} tarea a la persona con RUT \"{persona.rut_persona}\"")
+                return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
+        elif int(contador_tareas) > 1:
+            for persona in oPersona:
+                messages.success(request, f"Se han reasignado {contador_tareas} tareas a la persona con RUT \"{persona.rut_persona}\"")
+                return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
+        else:
+            messages.error(request, "Error al reasignar una tarea")
+            return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
+    else:
+        messages.error(request, "Error al tratar de procesar los datos")
+        return HttpResponseRedirect(reverse("app_users:tareas-reasignar"))
+
+
+class ReasignarResponsableV2View(TemplateView):
+    template_name = "users/reasignar_responsableV2.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lista_tareas"] = Tarea.objects.get_tareas_reasignar()
+        return context
+
+
+class ReasignarResponsableDetailView(DetailView):
+    template_name = "users/detalle_reasignar_responsable.html"
+    model = Tarea
+    success_url = reverse_lazy("app_users:tareas-reasignarV2")
+
+    def get_context_data(self, **kwargs):
+        context = super(ReasignarResponsableDetailView, self).get_context_data(**kwargs)
+        funcionarios_cliente = Usuario.objects.get_funcionarios_cliente()
+        context["lista_personas"] = Persona.objects.get_persona_funcionario_cliente(funcionarios_cliente)
+        return context
+
+
+def reasignarTareaV2(request):
+    if request.method == "POST":
+        tarea_id = request.POST.get("idTarea")
+        persona_id = request.POST.get("cboxPersona")
+        ftermino_nueva = request.POST.get("fTerminoNueva")
+
+        Tarea.objects.update_tarea_estado_reasignar(tarea_id)
+        responsable_id = request.user.persona_id_persona.id_persona
+        # Se asigna un responsable
+        TareaPersona.objects.update_tarea_persona_reasignar(Tarea(persona_id), tarea_id, Responsable(responsable_id))
+        ftermino_nueva = pd.to_datetime(ftermino_nueva, infer_datetime_format=True)
+        current_date = getCurrentDate()
+        diff_dates = ftermino_nueva.date() - current_date
+        diffdays = diff_dates.days
+        if diffdays > 0:
+            Tarea.objects.update_tarea_reasignar(tarea_id, getCurrentDate(), ftermino_nueva)
+            oPersona = Persona.objects.get_persona_by_id(persona_id)
+            for persona in oPersona:
+                messages.success(request, f"Se ha reasignado 1 tarea a la persona con RUT \"{persona.rut_persona}\"")
+                return HttpResponseRedirect(reverse("app_users:tareas-reasignarV2"))
+        elif diffdays < 0:
+            messages.warning(request, "Debes asignar una fecha de término mayor a la fecha actual")
+            return HttpResponseRedirect(reverse(
+                            "app_users:tareas-reasignar-detalle", 
+                            kwargs={'pk': tarea_id}
+                        ))
+        else:
+            messages.warning(request, "Fecha de término ingresada no es válida")
+            return HttpResponseRedirect(reverse(
+                            "app_users:tareas-reasignar-detalle", 
+                            kwargs={'pk': tarea_id}
+                        ))
+    else:
+        messages.error(request, "Error al tratar de procesar los datos")
+        return HttpResponseRedirect(reverse(
+                            "app_users:tareas-reasignar-detalle", 
+                            kwargs={'pk': tarea_id}
+                        ))
+
+
 class LoginUserView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
@@ -450,3 +566,44 @@ class LogoutView(View):
                 'app_users:login'
             )
         )
+    
+class GraficosTableroGlobalView(TemplateView):
+    template_name = "graficos/graficos_tablero_global.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super(GraficosTableroGlobalView, self).get_context_data(**kwargs)
+        # TAREAS
+        context["t_activas"] = Tarea.objects.get_count_activas()
+        context["t_asignadas"] = Tarea.objects.get_count_asignadas()
+        context["t_ejecucion"] = Tarea.objects.get_count_ejecucion()
+        context["t_finalizadas"] = Tarea.objects.get_count_finalizadas()
+        context["t_atrasadas"] = Tarea.objects.get_count_atrasadas()
+        # TIPOS FLUJOS
+        context["tflujo_anual"] = Flujo.objects.get_count_anual()
+        context["tflujo_mensual"] = Flujo.objects.get_count_mensual()
+        context["tflujo_semanal"] = Flujo.objects.get_count_semanal()
+        context["tflujo_diario"] = Flujo.objects.get_count_diario()
+        # ROLES
+        context["urol_gerente"] = Usuario.objects.get_count_gerente()
+        context["urol_funcionario"] = Usuario.objects.get_count_funcionario()
+        context["urol_cliente"] = Usuario.objects.get_count_cliente()
+        context["urol_disenador"] = Usuario.objects.get_count_disenador()
+        
+        return context
+
+class GraficosMostrarResumenView(TemplateView):
+    template_name = "graficos/graficos_mostrar_resumen.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super(GraficosMostrarResumenView, self).get_context_data(**kwargs)
+        persona_id = self.request.user.persona_id_persona.id_persona
+        # context["tareaPersona_activas"] = TareaPersona.objects.get_count_activasPersona(persona_id)
+        context["tareaPersona_asignadas"] = TareaPersona.objects.get_count_asignadasPersona(persona_id)
+        context["tareaPersona_ejecucion"] = TareaPersona.objects.get_count_ejecucionPersona(persona_id)
+        context["tareaPersona_finalizadas"] = TareaPersona.objects.get_count_finalizadasPersona(persona_id)
+        context["tareaPersona_atrasadas"] = TareaPersona.objects.get_count_atrasadasPersona(persona_id)
+        # COMIENZAN - FINALIZAN
+        context["finicio_current"] = getCountFInicioCurrentMonth()[0]
+        context["ftermino_current"] = getCountFTerminoCurrentMonth()[0]
+        return context
+    

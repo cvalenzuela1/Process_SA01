@@ -3,6 +3,7 @@ body{
     background-size: 73%;
     background-position-x: center;
     background-attachment: fixed;
+    max-width: 99%;
 }
 
 #homeItem{
@@ -36,7 +37,20 @@ body{
 #userlogo{
     margin-left: 3px;
     margin-bottom: 2px;
-    width: 48px;
+    width: 49px;
+}
+
+
+#chartLogo{
+    margin-left: -7px;
+    margin-top: -6px;
+    width: 55.5px;
+}
+
+#resumeLogo{
+    margin-left: -7px;
+    margin-top: -3.5px;
+    width: 52.5px;
 }
 
 #navbarms{
@@ -51,4 +65,21 @@ body{
     padding: 5px 10px;
     text-align: center;
     margin-left: 5px;
+}
+
+/* #navbarcontainer{
+    max-width: 100%;
+    margin-right: 0px;
+}
+
+#dropdownusuario {
+    width: 10px;
+} */
+
+#separatorUsuario {
+    padding-left: 750px;
+}
+
+#separatorGerente {
+    padding-left: 190px;
 }
