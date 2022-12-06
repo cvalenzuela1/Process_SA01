@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
-    Gráficos
+    Gráficos tablero global
 {% endblock title %}
 
 {% block content %}
@@ -18,16 +17,25 @@
     <input type="hidden" id="tflujo_mensual" value="{{tflujo_mensual}}">
     <input type="hidden" id="tflujo_semanal" value="{{tflujo_semanal}}">
     <input type="hidden" id="tflujo_diario" value="{{tflujo_diario}}">
+    <input type="hidden" id="urol_gerente" value="{{urol_gerente}}">
+    <input type="hidden" id="urol_funcionario" value="{{urol_funcionario}}">
+    <input type="hidden" id="urol_cliente" value="{{urol_cliente}}">
+    <input type="hidden" id="urol_disenador" value="{{urol_disenador}}">
     <div class="row">
         <div class="row" style="max-width: inherit;">
             <div class="col-6">
-                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje según Estado tareas</h6>
+                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje total según Estado tareas</h6>
                 <div id="chartdiv"></div>
             </div>
             <div class="col-6">
-                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje según Tipo flujo</h6>
+                <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Porcentaje total según Tipo flujo</h6>
                 <div id="chartdivPIE2"></div>
             </div>
+            
+        </div>
+        <div class="row" style="margin-top: 50px;">
+            <h6 class="display-6" style="font-size: 35px; text-align: center; font-style: italic;">Cantidad de Usuarios según Rol</h6>
+            <div id="chartdivXY"></div>
         </div>
     </div>
 {% endblock content %}

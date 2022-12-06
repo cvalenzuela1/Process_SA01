@@ -55,3 +55,25 @@ def executeSPUpdateEstadoTareas():
         print("ERROR: ", e, "\nSentencia: ", sentencia)
     finally:
         cursor.close()
+
+def getCountFInicioCurrentMonth():
+    cursor = connection.cursor()
+    try:
+        sentencia = "SELECT COUNT(fecha_inicio) FROM Tarea WHERE to_char(fecha_inicio, 'MONTH') = to_char(CURRENT_DATE, 'MONTH')"
+        cursor.execute(sentencia)
+    except Exception as e:
+        print("ERROR: ", e, "\nSentencia: ", sentencia)
+    finally:
+        row = cursor.fetchone()
+        return row
+
+def getCountFTerminoCurrentMonth():
+    cursor = connection.cursor()
+    try:
+        sentencia = "SELECT COUNT(fecha_termino) FROM Tarea WHERE to_char(fecha_termino, 'MONTH') = to_char(CURRENT_DATE, 'MONTH')"
+        cursor.execute(sentencia)
+    except Exception as e:
+        print("ERROR: ", e, "\nSentencia: ", sentencia)
+    finally:
+        row = cursor.fetchone()
+        return row

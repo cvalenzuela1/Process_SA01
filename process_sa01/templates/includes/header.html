@@ -22,12 +22,15 @@
                         {% if user.is_authenticated %}
                         
                             {% if user.rol_id_rol.nombre == 'Gerente' %}
-                            <div class="col-md-2"></div>
-                            <div class="col-md-7"></div>
+                            <div id="separatorGerente" class="col-md-8"></div>
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="{% url 'app_users:graficos-tablero-global' %}" class="text-dark" role="button">
-                                    <img id="chartLogo" src="{% static 'assets/images/header/chart.png' %}" alt="" style="width: 55px; margin-top: -6px">Tablero<br>
-                                    
+                                    <img id="chartLogo" src="{% static 'assets/images/header/chart.png' %}" alt="">Tablero<br>
+                                </a>
+                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div class="col-md nav-item nav-link dropdown">
+                                <a id="letrasImagenes" href="{% url 'app_users:graficos-mostrar-resumen' %}" class="text-dark" role="button">
+                                    <img id="resumeLogo" src="{% static 'assets/images/header/resume.png' %}" alt="">Resumen<br>
                                 </a>
                             </div>
                             {% endif %}
@@ -92,7 +95,7 @@
                                 </ul>
                             </div>
                         {%else%}
-                        <div id="separator" class="col-md-12" style="padding-left: 718px;"></div>
+                        <div id="separatorUsuario" class="col-md-12"></div>
                         {% endif %}
                         <div id="dropdownusuario" class="col-md-6 nav-item nav-link dropdown" style="width: 1px;">
                             <a id="letrasImagenes" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"

@@ -142,3 +142,5 @@ pieSeries.slices.template.strokeOpacity = 1;
 
 // Add a legend
 chart.legend = new am4charts.Legend();
+
+am4core.useTheme(am4themes_animated);

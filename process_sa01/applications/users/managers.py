@@ -22,6 +22,27 @@ class UsuarioManager(models.Manager):
             rol_id_rol=3
         )
 
+    # DATOS GRÁFICO TABLERO GLOBAL
+    def get_count_gerente(self):
+        return self.all().filter(
+            rol_id_rol=4
+        ).count()
+
+    def get_count_funcionario(self):
+        return self.all().filter(
+            rol_id_rol=2
+        ).count()
+
+    def get_count_cliente(self):
+        return self.all().filter(
+            rol_id_rol=3
+        ).count()
+
+    def get_count_disenador(self):
+        return self.all().filter(
+            rol_id_rol=5
+        ).count()
+
 
 class RolManager(models.Manager):
     
@@ -257,6 +278,17 @@ class TareaManager(models.Manager):
             estado_id_estado=7
         ).count()
 
+    #CONTAR FECHAS INICIO - TERMINO ESTE MES
+    def get_count_finicio(self):
+        return self.all().filter(
+            estado_id_estado=4
+        ).count()
+
+    def get_count_ftermino(self):
+        return self.all().filter(
+            estado_id_estado=7
+        ).count()
+
 
 class PersonaManager(models.Manager):
 
@@ -405,6 +437,31 @@ class TareaPersonaManager(models.Manager):
         return self.exclude(
             flujo_id_flujo__isnull = True
         ).order_by('-flujo_id_flujo')
+
+    # DATOS GRAFICOS
+    def get_count_asignadasPersona(self, responsable_id):
+        return self.all().filter(
+            tarea_id_tarea__estado_id_estado__id_estado=2,
+            responsable_id_responsable=responsable_id
+        ).count()
+
+    def get_count_ejecucionPersona(self, responsable_id):
+        return self.all().filter(
+            tarea_id_tarea__estado_id_estado__id_estado=3,
+            responsable_id_responsable=responsable_id
+        ).count()
+
+    def get_count_finalizadasPersona(self, responsable_id):
+        return self.all().filter(
+            tarea_id_tarea__estado_id_estado__id_estado=4,
+            responsable_id_responsable=responsable_id
+        ).count()
+
+    def get_count_atrasadasPersona(self, responsable_id):
+        return self.all().filter(
+            tarea_id_tarea__estado_id_estado__id_estado=7,
+            responsable_id_responsable=responsable_id
+        ).count()
 
 
 class EstadoManager(models.Manager):

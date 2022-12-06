@@ -583,5 +583,27 @@ class GraficosTableroGlobalView(TemplateView):
         context["tflujo_mensual"] = Flujo.objects.get_count_mensual()
         context["tflujo_semanal"] = Flujo.objects.get_count_semanal()
         context["tflujo_diario"] = Flujo.objects.get_count_diario()
+        # ROLES
+        context["urol_gerente"] = Usuario.objects.get_count_gerente()
+        context["urol_funcionario"] = Usuario.objects.get_count_funcionario()
+        context["urol_cliente"] = Usuario.objects.get_count_cliente()
+        context["urol_disenador"] = Usuario.objects.get_count_disenador()
+        
+        return context
+
+class GraficosMostrarResumenView(TemplateView):
+    template_name = "graficos/graficos_mostrar_resumen.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super(GraficosMostrarResumenView, self).get_context_data(**kwargs)
+        persona_id = self.request.user.persona_id_persona.id_persona
+        # context["tareaPersona_activas"] = TareaPersona.objects.get_count_activasPersona(persona_id)
+        context["tareaPersona_asignadas"] = TareaPersona.objects.get_count_asignadasPersona(persona_id)
+        context["tareaPersona_ejecucion"] = TareaPersona.objects.get_count_ejecucionPersona(persona_id)
+        context["tareaPersona_finalizadas"] = TareaPersona.objects.get_count_finalizadasPersona(persona_id)
+        context["tareaPersona_atrasadas"] = TareaPersona.objects.get_count_atrasadasPersona(persona_id)
+        # COMIENZAN - FINALIZAN
+        context["finicio_current"] = getCountFInicioCurrentMonth()[0]
+        context["ftermino_current"] = getCountFTerminoCurrentMonth()[0]
         return context
     

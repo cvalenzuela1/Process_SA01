@@ -142,3 +142,51 @@ pieSeries.slices.template.strokeOpacity = 1;
 
 // Add a legend
 chart.legend = new am4charts.Legend();
+
+am4core.useTheme(am4themes_animated);
+
+// Apply chart themes
+am4core.useTheme(am4themes_kelly);
+
+// Create chart instance
+var chartxy = am4core.create("chartdivXY", am4charts.XYChart3D);
+
+// Add data
+chartxy.data = [ {
+  "rol": "Gerente",
+  "cantidad": document.getElementById("urol_gerente").value,
+  "color": am4core.color("#eb0909")
+}, {
+  "rol": "Funcionario",
+  "cantidad": document.getElementById("urol_funcionario").value,
+  "color": am4core.color("#4634eb")
+}, {
+  "rol": "Cliente",
+  "cantidad": document.getElementById("urol_cliente").value,
+  "color": am4core.color("#0acc47")
+}, {
+  "rol": "Diseñador de procesos",
+  "cantidad": document.getElementById("urol_disenador").value,
+  "color": am4core.color("#f6ff00")
+}];
+
+
+
+
+// Create axes
+var categoryAxis = chartxy.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "rol";
+categoryAxis.title.text = "Rol";
+
+var  valueAxis = chartxy.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Cantidad de Usuarios";
+
+// Create series
+var series = chartxy.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "cantidad";
+series.dataFields.categoryX = "rol";
+series.name = "Cantidad de Usuarios";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+series.columns.template.propertyFields.fill = "color"
+
+chartxy.cursor = new am4charts.XYCursor();
