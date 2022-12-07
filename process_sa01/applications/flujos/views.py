@@ -33,29 +33,34 @@ def crearFlujoTarea(request):
         nombre = request.POST.get("nombre_flujo")
         descripcion = request.POST.get("descripcion")
         tipo_flujo_id = request.POST.get("cboxTipoFlujo")
+        # proxima_ejecucion = calcularProximaEjecucionFlujo(tipo_flujo_id)
         lista_tareas = []
         for i in range(1, int(contador_tareas)+1):
             lista_tareas.append(int(request.POST.get(f"tarea{i}")))
         
         lista_objetos_tarea = {Tarea(tarea_id): Tarea(tarea_id) for tarea_id in lista_tareas}
-        flujo = Flujo.objects.create_flujo_tarea(nombre, descripcion, TipoFlujo(tipo_flujo_id))
-        if flujo:
-            last_id_flujo = Flujo.objects.get_last_flujo()
-            for tarea in lista_objetos_tarea:
-                TareaPersona.objects.crearFlujoTareaPersona(tarea, Flujo(last_id_flujo.id_flujo))
-            
-            oEstadoId = Estado.objects.get_estado_object(9)
-            for tarea_id in lista_tareas:
-                Tarea.objects.update_tarea_activa_flujoV2(tarea_id, Estado(oEstadoId))
+        estadoflujo_activo = EstadoFlujo.objects.get_estadoflujo_activo()
+        for item in estadoflujo_activo:
+            estado_flujo = item.id_estado_flujo
+            flujo = Flujo.objects.create_flujo_tarea(nombre, descripcion, TipoFlujo(tipo_flujo_id), EstadoFlujo(estado_flujo))
+            if flujo:
+                last_id_flujo = Flujo.objects.get_last_flujo()
+                for tarea in lista_objetos_tarea:
+                    TareaPersona.objects.crearFlujoTareaPersona(tarea, Flujo(last_id_flujo.id_flujo))
+                
+                oEstadoId = Estado.objects.get_estado_object(9)
+                for tarea_id in lista_tareas:
+                    Tarea.objects.update_tarea_activa_flujoV2(tarea_id, Estado(oEstadoId))
 
-            if int(contador_tareas) == 1:
-                messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tarea enlazada")
-            elif int(contador_tareas) > 1:
-                messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tareas enlazadas")
+                if int(contador_tareas) == 1:
+                    messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tarea enlazada")
+                elif int(contador_tareas) > 1:
+                    messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tareas enlazadas")
+                else:
+                    messages.error(request, "Ocurrió un error inesperado")
+                break
             else:
-                messages.error(request, "Ocurrió un error inesperado")
-        else:
-            messages.error(request, "Error al crear el flujo")
+                messages.error(request, "Error al crear el flujo")
         return HttpResponseRedirect(reverse("app_home:home"))
 
 
@@ -76,3 +81,16 @@ class VerFlujosListView(LoginRequiredMixin, ListView):
         queryset = TareaPersona.objects.get_flujo_tarea_notnull()
         return queryset
         
+
+def ejecutarFlujoTarea(request):
+    if request.method == "POST":
+        flujo_id = request.POST.get("txtIdFlujo")
+        tipo_flujo = request.POST.get("txtIdTipoFlujo")
+        proxima_ejecucion = calcularProximaEjecucionFlujo(tipo_flujo)
+        actualizar_flujo = Flujo.objects.actualizar_estado_flujo(flujo_id, proxima_ejecucion)
+        if actualizar_flujo:
+            messages.success(request, "Se ha ejecutado el flujo correctamente!")
+            return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
+        else:
+            messages.error(request, "No se ha podido ejecutar el flujo")
+            return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))

@@ -115,30 +115,35 @@ var chart = am4core.create("chartdivPIE2", am4charts.PieChart);
 // Add data
 chart.data = [{
     "tipo": "Anual",
-    "cantidad": document.getElementById("tflujo_anual").value
+    "cantidad": document.getElementById("tflujo_anual").value,
+    "color": am4core.color("#03dffc")
 }, {
     "tipo": "Mensual",
-    "cantidad": document.getElementById("tflujo_mensual").value
+    "cantidad": document.getElementById("tflujo_mensual").value,
+    "color": am4core.color("#02fa0f")
 }, {
     "tipo": "Semanal",
-    "cantidad": document.getElementById("tflujo_semanal").value
+    "cantidad": document.getElementById("tflujo_semanal").value,
+    "color": am4core.color("#ffa600")
 }, {
     "tipo": "Diario",
-    "cantidad": document.getElementById("tflujo_diario").value
+    "cantidad": document.getElementById("tflujo_diario").value,
+    "color": am4core.color("#f3f702")
 }]
 
 // Add and configure Series
-var pieSeries = chart.series.push(new am4charts.PieSeries());
-pieSeries.dataFields.value = "cantidad";
-pieSeries.dataFields.category = "tipo";
+var pieSeries1 = chart.series.push(new am4charts.PieSeries());
+pieSeries1.dataFields.value = "cantidad";
+pieSeries1.dataFields.category = "tipo";
 
 // Let's cut a hole in our Pie chart the size of 40% the radius
 chart.innerRadius = am4core.percent(40);
 
 // Put a thick white border around each Slice
-pieSeries.slices.template.stroke = am4core.color("#4a2abb");
-pieSeries.slices.template.strokeWidth = 2;
-pieSeries.slices.template.strokeOpacity = 1;
+pieSeries1.slices.template.stroke = am4core.color("#4a2abb");
+pieSeries1.slices.template.strokeWidth = 2;
+pieSeries1.slices.template.strokeOpacity = 1;
+pieSeries1.slices.template.propertyFields.fill = "color";
 
 // Add a legend
 chart.legend = new am4charts.Legend();
