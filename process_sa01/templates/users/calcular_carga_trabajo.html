@@ -26,17 +26,19 @@
             <th scope="col" style="width: 200px;">Rut</th>
             <th scope="col" style="width: 340px;">Nombre completo</th>
             <th scope="col" style="width: 280px;">Email</th>
+            <th scope="col" style="width: 220px;">Departamento</th>
             <th scope="col" style="width: 120px;">Acción</th>
           </tr>
         </thead>
         <tbody>
           {% for persona in tareas_persona %}
             <tr>
-              <th scope="row">{{persona.tarea_id_tarea.id_tarea}}</th>
+              <td scope="row">{{persona.tarea_id_tarea.id_tarea}}</td>
               <td>{{persona.persona_id_persona.rut_persona}}</td>
               <td>{{persona.persona_id_persona.nombre_persona}} {{persona.persona_id_persona.apellido_paterno_persona}} {{persona.persona_id_persona.apellido_materno_persona}}</td>
               <td>{{persona.persona_id_persona.email_persona}}</td>
               <input name="tarea_id" id="tarea_id{{persona.tarea_id_tarea.id_tarea}}" type="hidden" value="{{persona.tarea_id_tarea.titulo_tarea}}|{{persona.tarea_id_tarea.desc_tarea}}|{{persona.tarea_id_tarea.fecha_inicio}}|{{persona.tarea_id_tarea.fecha_termino}}|{{persona.tarea_id_tarea.etiqueta}}|{{persona.tarea_id_tarea.porc_cumplimiento}}|{{persona.tarea_id_tarea.estado_id_estado.id_estado}}|{{persona.tarea_id_tarea.diferencia_dias_fechas}}">
+              <td>{{persona.persona_id_persona.departamento_id_departamento.departamento}}</td>
               <td><button class="btn btn-primary" onclick="detalleTarea({{persona.tarea_id_tarea.id_tarea}})">Ver tarea</button></td>
             </tr>
           {% endfor %}

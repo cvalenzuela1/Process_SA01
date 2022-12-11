@@ -77,3 +77,14 @@ def getCountFTerminoCurrentMonth():
     finally:
         row = cursor.fetchone()
         return row
+
+def getCountDepartamentoUsuario():
+    cursor = connection.cursor()
+    try:
+        sentencia = "SELECT T1.DEPARTAMENTO, COUNT(T0.RUT_PERSONA) FROM PERSONA T0 INNER JOIN DEPARTAMENTO T1 ON T0.DEPARTAMENTO_ID_DEPARTAMENTO = T1.ID_DEPARTAMENTO WHERE DEPARTAMENTO_ID_DEPARTAMENTO IS NOT NULL GROUP BY T1.DEPARTAMENTO;"
+        cursor.execute(sentencia)
+    except Exception as e:
+        print("ERROR: ", e, "\nSentencia: ", sentencia)
+    finally:
+        row = cursor.fetchall()
+        return row

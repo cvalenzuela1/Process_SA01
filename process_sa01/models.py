@@ -97,6 +97,15 @@ class Comuna(models.Model):
         db_table = 'comuna'
 
 
+class Departamento(models.Model):
+    id_departamento = models.BigAutoField(primary_key=True)
+    departamento = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'departamento'
+
+
 class Direccion(models.Model):
     id_direccion = models.BigAutoField(primary_key=True)
     nombre_calle = models.CharField(max_length=250)
@@ -187,6 +196,16 @@ class Flujo(models.Model):
         db_table = 'flujo'
 
 
+class Gerencia(models.Model):
+    id_gerencia = models.BigAutoField(primary_key=True)
+    gerencia = models.CharField(max_length=150)
+    departamento_id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='departamento_id_departamento', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'gerencia'
+
+
 class Persona(models.Model):
     id_persona = models.BigAutoField(primary_key=True)
     rut_persona = models.CharField(unique=True, max_length=10)
@@ -195,6 +214,7 @@ class Persona(models.Model):
     apellido_materno_persona = models.CharField(max_length=30)
     email_persona = models.CharField(max_length=50)
     direccion_id_direccion = models.ForeignKey(Direccion, models.DO_NOTHING, db_column='direccion_id_direccion')
+    departamento_id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='departamento_id_departamento', blank=True, null=True)
 
     class Meta:
         managed = False

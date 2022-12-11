@@ -19,9 +19,25 @@ chart.data = [{
     "cantidad": document.getElementById("t_finalizadas").value,
     "color": am4core.color("#eb0909")
 }, {
+    "estado": "Solicitada",
+    "cantidad": document.getElementById("t_solicitadas").value,
+    "color": am4core.color("#eb0909")
+}, {
+    "estado": "Rechazada",
+    "cantidad": document.getElementById("t_rechazadas").value,
+    "color": am4core.color("#eb0909")
+}, {
     "estado": "Atrasada",
     "cantidad": document.getElementById("t_atrasadas").value,
+    "color": am4core.color("#eb0909")
+}, {
+    "estado": "Vencida",
+    "cantidad": document.getElementById("t_vencidas").value,
     "color": am4core.color("#ff6a00")
+}, {
+    "estado": "Activa en flujo",
+    "cantidad": document.getElementById("t_activasflujo").value,
+    "color": am4core.color("#eb0909")
 }
 ];
 
@@ -32,80 +48,6 @@ pieSeries.dataFields.category = "estado";
 pieSeries.slices.template.propertyFields.fill = "color";
 
 chart.legend = new am4charts.Legend();
-
-
-// CHART XY 
-
-// // Apply chart themes
-// am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_kelly);
-
-// // Create chart instance
-// var chart = am4core.create("chartdivXY", am4charts.XYChart3D);
-
-// // Add data
-// chart.data = [{
-//   "country": "Lithuania",
-//   "litres": 501.9,
-//   "units": 250
-// }, {
-//   "country": "Czech Republic",
-//   "litres": 301.9,
-//   "units": 222
-// }, {
-//   "country": "Ireland",
-//   "litres": 201.1,
-//   "units": 170
-// }, {
-//   "country": "Germany",
-//   "litres": 165.8,
-//   "units": 122
-// }, {
-//   "country": "Australia",
-//   "litres": 139.9,
-//   "units": 99
-// }, {
-//   "country": "Austria",
-//   "litres": 128.3,
-//   "units": 85
-// }, {
-//   "country": "UK",
-//   "litres": 99,
-//   "units": 93
-// }, {
-//   "country": "Belgium",
-//   "litres": 60,
-//   "units": 50
-// }, {
-//   "country": "The Netherlands",
-//   "litres": 50,
-//   "units": 42
-// }];
-
-// // Create axes
-// var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-// categoryAxis.dataFields.category = "country";
-// categoryAxis.title.text = "Countries";
-
-// var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-// valueAxis.title.text = "Litres sold (M)";
-
-// // Create series
-// var series = chart.series.push(new am4charts.ColumnSeries3D());
-// series.dataFields.valueY = "litres";
-// series.dataFields.categoryX = "country";
-// series.name = "Sales";
-// series.tooltipText = "{name}: [bold]{valueY}[/]";
-
-// var series2 = chart.series.push(new am4charts.ColumnSeries3D());
-// series2.dataFields.valueY = "units";
-// series2.dataFields.categoryX = "country";
-// series2.name = "Units";
-// series2.tooltipText = "{name}: [bold]{valueY}[/]";
-
-// // Add cursor
-// chart.cursor = new am4charts.XYCursor();
-
 
 
 // CHART PIE 2
@@ -176,8 +118,6 @@ chartxy.data = [ {
 }];
 
 
-
-
 // Create axes
 var categoryAxis = chartxy.xAxes.push(new am4charts.CategoryAxis());
 categoryAxis.dataFields.category = "rol";
@@ -195,3 +135,48 @@ series.tooltipText = "{name}: [bold]{valueY}[/]";
 series.columns.template.propertyFields.fill = "color"
 
 chartxy.cursor = new am4charts.XYCursor();
+
+
+// Create chart instance
+var chartxy2 = am4core.create("chartdivXY2", am4charts.XYChart3D);
+
+let count_departamentos = document.getElementById("count_departamentos").value;
+count_departamentos = JSON.parse(count_departamentos);
+
+let valuesDepto = [];
+for (const key in count_departamentos) {
+    if (Object.hasOwnProperty.call(count_departamentos, key)) {
+        const element = count_departamentos[key];
+        // alert(Object.values(element));
+        valuesDepto.push(element);
+    }
+}
+
+let colorSet = new am4core.ColorSet();
+for (let i = 0; i < valuesDepto.length; i++) {
+    var jsonData = {
+        "departamento": valuesDepto[i].departamento,
+        "cantidad": valuesDepto[i].cantidad,
+        "color": colorSet.next()
+    }
+    // alert(valuesDepto[i].departamento);
+    chartxy2.data.push(jsonData);
+}
+
+// Create axes
+var categoryAxis = chartxy2.xAxes.push(new am4charts.CategoryAxis());   
+categoryAxis.dataFields.category = "departamento";
+categoryAxis.title.text = "Departamento";
+
+var  valueAxis = chartxy2.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Cantidad de Usuarios";
+
+// Create series
+var series = chartxy2.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "cantidad";
+series.dataFields.categoryX = "departamento";
+series.name = "Cantidad de Usuarios";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+series.columns.template.propertyFields.fill = "color"
+
+chartxy2.cursor = new am4charts.XYCursor();

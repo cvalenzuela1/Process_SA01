@@ -1,5 +1,6 @@
 import datetime
 import pandas as pd
+import json
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
@@ -12,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core import serializers
 
-from .models import Estado, Usuario, Rol, Tarea, Persona, TareaPersona, Responsable
+from .models import *
 from applications.flujos.models import Flujo
 from .forms import GestionarTareaForm, LoginForm
 from .functions import *
@@ -408,7 +409,6 @@ class CargaDeTrabajoListView(LoginRequiredMixin, ListView):
         return context
 
 
-
 class ReasignarResponsableView(TemplateView):
     template_name = "users/reasignar_responsable.html"
 
@@ -577,7 +577,11 @@ class GraficosTableroGlobalView(TemplateView):
         context["t_asignadas"] = Tarea.objects.get_count_asignadas()
         context["t_ejecucion"] = Tarea.objects.get_count_ejecucion()
         context["t_finalizadas"] = Tarea.objects.get_count_finalizadas()
+        context["t_solicitadas"] = Tarea.objects.get_count_solicitadas()
+        context["t_rechazadas"] = Tarea.objects.get_count_rechazadas()
         context["t_atrasadas"] = Tarea.objects.get_count_atrasadas()
+        context["t_vencidas"] = Tarea.objects.get_count_vencidas()
+        context["t_activasflujo"] = Tarea.objects.get_count_activasflujo()
         # TIPOS FLUJOS
         context["tflujo_anual"] = Flujo.objects.get_count_anual()
         context["tflujo_mensual"] = Flujo.objects.get_count_mensual()
@@ -588,8 +592,17 @@ class GraficosTableroGlobalView(TemplateView):
         context["urol_funcionario"] = Usuario.objects.get_count_funcionario()
         context["urol_cliente"] = Usuario.objects.get_count_cliente()
         context["urol_disenador"] = Usuario.objects.get_count_disenador()
-        
+        # DEPARTAMENTO
+        qs = getCountDepartamentoUsuario()
+        keys = ('departamento','cantidad',)
+        result = []
+        for row in qs:
+            result.append(dict(zip(keys,row)))
+        json_data = json.dumps(result)
+        context["count_departamentos"] = json_data
+
         return context
+
 
 class GraficosMostrarResumenView(TemplateView):
     template_name = "graficos/graficos_mostrar_resumen.html"
