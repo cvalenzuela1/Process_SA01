@@ -172,7 +172,7 @@ class TareaManager(models.Manager):
             )
         elif rol_id == 4: #Rol gerente
             return self.all().filter(
-                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=5) | Q(estado_id_estado=6) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
             ).order_by(
                 'estado_id_estado',
                 '-id_tarea'
@@ -228,7 +228,7 @@ class TareaManager(models.Manager):
             ).count()
         elif rol_id == 4: #Rol gerente
             return self.all().filter(
-                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
+                Q(estado_id_estado=1) | Q(estado_id_estado=2) | Q(estado_id_estado=3) | Q(estado_id_estado=4) | Q(estado_id_estado=5) | Q(estado_id_estado=6) | Q(estado_id_estado=7) | Q(estado_id_estado=8)
             ).count()
 
     def update_tarea_activa_flujo(self, tarea_id):
@@ -273,9 +273,29 @@ class TareaManager(models.Manager):
             estado_id_estado=4
         ).count()
 
+    def get_count_solicitadas(self):
+        return self.all().filter(
+            estado_id_estado=5
+        ).count()
+
+    def get_count_rechazadas(self):
+        return self.all().filter(
+            estado_id_estado=6
+        ).count()
+
     def get_count_atrasadas(self):
         return self.all().filter(
             estado_id_estado=7
+        ).count()
+
+    def get_count_vencidas(self):
+        return self.all().filter(
+            estado_id_estado=8
+        ).count()
+
+    def get_count_activasflujo(self):
+        return self.all().filter(
+            estado_id_estado=9
         ).count()
 
     #CONTAR FECHAS INICIO - TERMINO ESTE MES
@@ -480,3 +500,7 @@ class EstadoManager(models.Manager):
         return self.filter(
             id_estado=estado_id
         ).values_list()[0][0]
+
+class DepartamentoManager(models.Manager):
+    def get_count_all(self):
+        return self.all()

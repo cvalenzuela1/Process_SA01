@@ -11,7 +11,7 @@ Ver flujos
     {% for flujo in object_list %}
     <div id="container">
         <div class="product-details">
-            <h1> {{flujo.flujo_id_flujo.id_flujo}} - {{flujo.flujo_id_flujo.nombre_flujo}}</h1>
+            <h1> ID: {{flujo.flujo_id_flujo.id_flujo}} - {{flujo.flujo_id_flujo.nombre_flujo}}</h1>
             <span class="hint-star star">
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
@@ -41,7 +41,14 @@ Ver flujos
                     </tbody>
                 </table>
             </p>
+            <p>Flujo {{flujo.flujo_id_flujo.estado_flujo_flujo.estado_flujo}} - {{flujo.flujo_id_flujo.tipo_flujo_id_tipo_flujo.tipo}}</p>
+            <form method="POST" action="{% url 'app_flujos:ejecutar-flujo' %}">{% csrf_token %}
+                <input id="txtIdFlujo" name="txtIdFlujo" type="hidden" value="{{flujo.flujo_id_flujo.id_flujo}}">
+                <input id="txtIdTipoFlujo" name="txtIdTipoFlujo" type="hidden" value="{{flujo.flujo_id_flujo.tipo_flujo_id_tipo_flujo.id_tipo_flujo}}">
+                <button id="ejecutarBtn" class="btn btn-success" type="submit">Ejecutar</button><br>
+            </form>
             <p style="height: 0px; margin:0px;">Creación: {{flujo.flujo_id_flujo.fecha_creacion}}</p>
+            
         </div>
         <div class="product-image">
             <img id="flujoimg" src="{% static 'assets/images/flujo/flow.png' %}"

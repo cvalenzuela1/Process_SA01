@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import EstadoManager, PersonaManager, RolManager, TareaManager, TareaPersonaManager, UsuarioManager
+from .managers import * 
 from applications.flujos.models import Flujo
 
 # Create your models here.
@@ -75,6 +75,36 @@ class Tarea(models.Model):
         db_table = 'tarea'
 
 
+class Subgerencia(models.Model):
+    id_subgerencia = models.BigAutoField(primary_key=True)
+    subgerencia = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'subgerencia'
+
+
+class Departamento(models.Model):
+    id_departamento = models.BigAutoField(primary_key=True)
+    departamento = models.CharField(max_length=150)
+
+    objects = DepartamentoManager()
+
+    class Meta:
+        managed = False
+        db_table = 'departamento'
+
+
+class Gerencia(models.Model):
+    id_gerencia = models.BigAutoField(primary_key=True)
+    gerencia = models.CharField(max_length=150)
+    departamento_id_departamento = models.ForeignKey(Departamento, models.CASCADE, db_column='departamento_id_departamento', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'gerencia'
+
+
 class Persona(models.Model):
     id_persona = models.BigAutoField(primary_key=True)
     rut_persona = models.CharField(max_length=10)
@@ -83,6 +113,7 @@ class Persona(models.Model):
     apellido_materno_persona = models.CharField(max_length=30)
     email_persona = models.CharField(max_length=50)
     direccion_id_direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE, db_column='direccion_id_direccion')
+    departamento_id_departamento = models.ForeignKey(Departamento, models.CASCADE, db_column='departamento_id_departamento')
 
     objects = PersonaManager()
 

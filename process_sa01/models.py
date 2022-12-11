@@ -97,6 +97,15 @@ class Comuna(models.Model):
         db_table = 'comuna'
 
 
+class Departamento(models.Model):
+    id_departamento = models.BigAutoField(primary_key=True)
+    departamento = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'departamento'
+
+
 class Direccion(models.Model):
     id_direccion = models.BigAutoField(primary_key=True)
     nombre_calle = models.CharField(max_length=250)
@@ -162,18 +171,39 @@ class Estado(models.Model):
         db_table = 'estado'
 
 
+class EstadoFlujo(models.Model):
+    id_estado_flujo = models.BigAutoField(primary_key=True)
+    estado_flujo = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'estado_flujo'
+
+
 class Flujo(models.Model):
     id_flujo = models.BigAutoField(primary_key=True)
     nombre_flujo = models.CharField(max_length=100)
     fecha_creacion = models.DateField()
     fecha_primera_ejecucion = models.DateField(blank=True, null=True)
     fecha_ultima_ejecucion = models.DateField(blank=True, null=True)
+    fecha_proxima_ejecucion = models.DateField(blank=True, null=True)
     descripcion = models.CharField(max_length=200)
     tipo_flujo_id_tipo_flujo = models.ForeignKey('TipoFlujo', models.DO_NOTHING, db_column='tipo_flujo_id_tipo_flujo')
+    estado_flujo_flujo = models.ForeignKey(EstadoFlujo, models.DO_NOTHING, db_column='estado_flujo_flujo')
 
     class Meta:
         managed = False
         db_table = 'flujo'
+
+
+class Gerencia(models.Model):
+    id_gerencia = models.BigAutoField(primary_key=True)
+    gerencia = models.CharField(max_length=150)
+    departamento_id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='departamento_id_departamento', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'gerencia'
 
 
 class Persona(models.Model):
@@ -184,6 +214,7 @@ class Persona(models.Model):
     apellido_materno_persona = models.CharField(max_length=30)
     email_persona = models.CharField(max_length=50)
     direccion_id_direccion = models.ForeignKey(Direccion, models.DO_NOTHING, db_column='direccion_id_direccion')
+    departamento_id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='departamento_id_departamento', blank=True, null=True)
 
     class Meta:
         managed = False
