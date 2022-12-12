@@ -20,13 +20,14 @@ urlpatterns = [
     path('tareas-alertar-atrasos/', views.alertarAtrasos, name='tareas-alertar-atrasos'),
     path('tareas-list-asignadas/', views.VerTareasAsignadasListView.as_view(), name='tareas-list-asignadas'),
     path('tareas-carga-trabajo/', views.CargaDeTrabajoListView.as_view(), name='tareas-carga-trabajo'),
-    path('tareas-reasignar/', views.ReasignarResponsableView.as_view(), name="tareas-reasignar"),
-    path('tareas-reasignarTarea/', views.reasignarTareas, name="tareas-reasignarTarea"),
+    # path('tareas-reasignar/', views.ReasignarResponsableView.as_view(), name="tareas-reasignar"),
+    # path('tareas-reasignarTarea/', views.reasignarTareas, name="tareas-reasignarTarea"),
     path('tareas-reasignarV2/', views.ReasignarResponsableV2View.as_view(), name="tareas-reasignarV2"),
     path('tareas-reasignarTareaV2/', views.reasignarTareaV2, name="tareas-reasignarTareaV2"),
     path('tareas-reasignar-detalle/<pk>/', views.ReasignarResponsableDetailView.as_view(), name="tareas-reasignar-detalle"),
     path('graficos-tablero-global/', views.GraficosTableroGlobalView.as_view(), name="graficos-tablero-global"),
     path('graficos-mostrar-resumen/', views.GraficosMostrarResumenView.as_view(), name="graficos-mostrar-resumen"),
+    path('tareas-reportar-problema/', views.ReportarProblemaView.as_view(), name="tareas-reportar-problema"),
     # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   

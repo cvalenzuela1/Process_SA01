@@ -22,19 +22,36 @@
                         {% if user.is_authenticated %}
                         
                             {% if user.rol_id_rol.nombre == 'Gerente' %}
+                            <div class="col-md-7"></div>
                             <div id="separatorGerente" class="col-md-8"></div>
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="{% url 'app_users:graficos-tablero-global' %}" class="text-dark" role="button">
                                     <img id="chartLogo" src="{% static 'assets/images/header/chart.png' %}" alt="">Tablero<br>
                                 </a>
-                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div class="col-md nav-item nav-link dropdown">
-                                <a id="letrasImagenes" href="{% url 'app_users:graficos-mostrar-resumen' %}" class="text-dark" role="button">
-                                    <img id="resumeLogo" src="{% static 'assets/images/header/resume.png' %}" alt="">Resumen<br>
-                                </a>
                             </div>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             {% endif %}
-                            {% if user.rol_id_rol.nombre != 'Funcionario Cliente' %}
+                           
+                            {% if user.rol_id_rol.nombre == 'Funcionario' or user.rol_id_rol.nombre == 'Gerente' %}
+                                {% if user.rol_id_rol.nombre == 'Funcionario' %}
+                                <div class="col-md-12"></div>
+                                <div class="col-md-12"></div>
+                                <div class="col-md-2"></div>
+                                <div class="col-md nav-item nav-link dropdown">
+                                    <a id="letrasImagenes" href="{% url 'app_users:graficos-mostrar-resumen' %}" class="text-dark" role="button">
+                                        <img id="resumeLogo" src="{% static 'assets/images/header/resume.png' %}" alt="">Resumen<br>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if user.rol_id_rol.nombre == 'Diseñador de procesos' %}
+                            <div class="col-md-12"></div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-10"></div>
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false" role="button">
@@ -42,7 +59,7 @@
                                     Menú flujos
                                 </a>
                                 <ul id="menudropdown" class="dropdown-menu">
-                                    {% if user.rol_id_rol.nombre == 'Gerente' or user.rol_id_rol.nombre == 'Funcionario' %}
+                                    {% if user.rol_id_rol.nombre == 'Diseñador de procesos' %}
                                     <li><a id="dropDownGestionar" class="dropdown-item" role="button" href="{% url 'app_flujos:flujos-crear' %}">Crear
                                             flujo</a></li>
                                     <li>
@@ -53,16 +70,22 @@
                                     {% endif %}
                                 </ul>
                             </div>
-                            {% else %}
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12"></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
                             {% endif %}
+                            
+                            {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
+                            <div class="col-md-7"></div>
+                            <div class="col-md-5"></div>
+                            <div class="col-md-5"></div>
+                            <div class="col-md-5"></div>
+                            <div class="col-md nav-item nav-link">
+                                <a id="letrasImagenes" href="{% url 'app_users:tareas-reportar-problema' %}" class="text-dark dropdown-toggle" role="button">
+                                    <img id="problemalogo" src="{% static 'assets/images/header/problem.png' %}" alt=""><br>
+                                    Reportar problema
+                                </a>
+                            </div>
+                            {% endif %}
+                            
+                            {% if user.rol_id_rol.nombre == 'Funcionario' or user.rol_id_rol.nombre == 'Gerente' %}
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false" role="button">
@@ -94,6 +117,7 @@
                                     {% endif %}
                                 </ul>
                             </div>
+                            {% endif %}
                         {%else%}
                         <div id="separatorUsuario" class="col-md-12"></div>
                         {% endif %}

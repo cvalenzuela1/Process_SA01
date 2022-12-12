@@ -483,6 +483,11 @@ class TareaPersonaManager(models.Manager):
             responsable_id_responsable=responsable_id
         ).count()
 
+    def get_tareas_persona_id(self, persona_id):
+        return self.filter(
+            persona_id_persona=persona_id
+        ).order_by("-tarea_id_tarea")
+
 
 class EstadoManager(models.Manager):
     

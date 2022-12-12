@@ -15,7 +15,7 @@ class CrearFlujoView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         rol_nombre = request.user.rol_id_rol.nombre
-        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
+        if rol_nombre != 'Diseñador de procesos':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(CrearFlujoView, self).get(request, *args, **kwargs)
@@ -72,7 +72,7 @@ class VerFlujosListView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         rol_nombre = request.user.rol_id_rol.nombre
-        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
+        if rol_nombre != 'Diseñador de procesos':
             messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
             return HttpResponseRedirect(reverse("app_home:home"))
         return super(VerFlujosListView, self).get(request, *args, **kwargs)

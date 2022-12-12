@@ -567,8 +567,15 @@ class LogoutView(View):
             )
         )
     
-class GraficosTableroGlobalView(TemplateView):
+class GraficosTableroGlobalView(LoginRequiredMixin, TemplateView):
     template_name = "graficos/graficos_tablero_global.html"
+
+    def get(self, request, *args, **kwargs):
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(GraficosTableroGlobalView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(GraficosTableroGlobalView, self).get_context_data(**kwargs)
@@ -604,8 +611,15 @@ class GraficosTableroGlobalView(TemplateView):
         return context
 
 
-class GraficosMostrarResumenView(TemplateView):
+class GraficosMostrarResumenView(LoginRequiredMixin, TemplateView):
     template_name = "graficos/graficos_mostrar_resumen.html"
+
+    def get(self, request, *args, **kwargs):
+        rol_nombre = request.user.rol_id_rol.nombre
+        if rol_nombre != 'Gerente' and rol_nombre != 'Funcionario':
+            messages.warning(request, "No posees los permisos necesarios para ingresar a la url")
+            return HttpResponseRedirect(reverse("app_home:home"))
+        return super(GraficosMostrarResumenView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(GraficosMostrarResumenView, self).get_context_data(**kwargs)
@@ -618,5 +632,16 @@ class GraficosMostrarResumenView(TemplateView):
         # COMIENZAN - FINALIZAN
         context["finicio_current"] = getCountFInicioCurrentMonth()[0]
         context["ftermino_current"] = getCountFTerminoCurrentMonth()[0]
+        return context
+
+
+class ReportarProblemaView(TemplateView):
+    template_name = "users/reportar_problema.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportarProblemaView, self).get_context_data(**kwargs)
+        persona_id = self.request.user.persona_id_persona.id_persona
+        context["tareas_enlazadas"] = TareaPersona.objects.get_tareas_persona_id(persona_id)
+
         return context
     
