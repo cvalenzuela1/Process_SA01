@@ -644,4 +644,3 @@ class ReportarProblemaView(LoginRequiredMixin, CountTareasAsignadas, CountTareas
         context["tareas_enlazadas"] = TareaPersona.objects.get_tareas_persona_id(persona_id)
 
         return context
-    
