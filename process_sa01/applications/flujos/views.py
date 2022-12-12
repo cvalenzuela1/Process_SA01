@@ -54,8 +54,10 @@ def crearFlujoTarea(request):
 
                 if int(contador_tareas) == 1:
                     messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tarea enlazada")
+                    return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
                 elif int(contador_tareas) > 1:
                     messages.success(request, f"Se ha creado el flujo \"{nombre}\", con {contador_tareas} tareas enlazadas")
+                    return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
                 else:
                     messages.error(request, "Ocurrió un error inesperado")
                 break
@@ -88,9 +90,15 @@ def ejecutarFlujoTarea(request):
         tipo_flujo = request.POST.get("txtIdTipoFlujo")
         proxima_ejecucion = calcularProximaEjecucionFlujo(tipo_flujo)
         actualizar_flujo = Flujo.objects.actualizar_estado_flujo(flujo_id, proxima_ejecucion)
-        if actualizar_flujo:
+        if actualizar_flujo == 1 or actualizar_flujo == 2:
             messages.success(request, "Se ha ejecutado el flujo correctamente!")
             return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
+        elif actualizar_flujo == 3:
+            messages.warning(request, "Aún no ha pasado el tiempo necesario para volver a ejecutar el flujo")
+            return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
+        elif actualizar_flujo == 0:
+            messages.success(request, "No se ha podido ejecutar el flujo")
+            return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))
         else:
-            messages.error(request, "No se ha podido ejecutar el flujo")
+            messages.error(request, "Ha ocurrido un error inesperado al ejecutar el flujo")
             return HttpResponseRedirect(reverse("app_flujos:flujos-ver"))

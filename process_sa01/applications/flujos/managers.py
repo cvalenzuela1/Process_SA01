@@ -28,8 +28,8 @@ class FlujoTareaManager(models.Manager):
                 fecha_ultima_ejecucion=getCurrentDate(),
                 fecha_proxima_ejecucion=proxima_ejecucion
             )
-            return True
-        else:
+            return 1
+        elif self.filter(id_flujo=flujo_id).filter(fecha_primera_ejecucion__isnull=False):
             if self.filter(id_flujo=flujo_id).filter(fecha_proxima_ejecucion=getCurrentDate()):
                 self.filter(
                     id_flujo=flujo_id
@@ -38,8 +38,18 @@ class FlujoTareaManager(models.Manager):
                     fecha_ultima_ejecucion=getCurrentDate(),
                     fecha_proxima_ejecucion=proxima_ejecucion
                 )
-                return True
-            return False
+                return 2
+            else:
+                return 3
+        else:
+            return 0
+
+    def finalizar_flujos(self):
+        return self.all().filter(
+            fecha_proxima_ejecucion=getCurrentDate()
+        ).update(
+            estado_flujo_flujo=3
+        )
 
     # GRAFICOS
     def get_count_anual(self):
