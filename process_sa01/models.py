@@ -230,6 +230,18 @@ class Region(models.Model):
         db_table = 'region'
 
 
+class ReportarProblema(models.Model):
+    id_reporte = models.BigAutoField(primary_key=True)
+    descripcion_reporte = models.CharField(max_length=250)
+    fecha_generacion = models.DateField()
+    persona_id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_id_persona')
+    tarea_id_tarea = models.ForeignKey('Tarea', models.DO_NOTHING, db_column='tarea_id_tarea')
+
+    class Meta:
+        managed = False
+        db_table = 'reportar_problema'
+
+
 class Responsable(models.Model):
     persona_id_persona = models.OneToOneField(Persona, models.DO_NOTHING, db_column='persona_id_persona', primary_key=True)
     fecha_generacion = models.DateField()

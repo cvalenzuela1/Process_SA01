@@ -644,3 +644,26 @@ class ReportarProblemaView(LoginRequiredMixin, CountTareasAsignadas, CountTareas
         context["tareas_enlazadas"] = TareaPersona.objects.get_tareas_persona_id(persona_id)
 
         return context
+
+def reportarProblemaTarea(request):
+    if request.method == "POST":
+        persona_id = request.user.persona_id_persona.id_persona
+        tarea_id = request.POST.get("cboxTarea")
+        descripcion_problema = request.POST.get("descripcionProblema")
+        # Crear reporte de problema
+        ReportarProblema.objects.create_reporte_problema(Tarea(tarea_id), descripcion_problema, Persona(persona_id), getCurrentDate())
+        # Enviar mail a responsables de tareas atrasadas
+        tareaPersonaObject = TareaPersona.objects.get_persona_byidPersonaTarea(persona_id, tarea_id)
+        asunto = 'Reporte de problema de tarea'
+        email_remitente = 'noneshater@gmail.com'
+        for item in tareaPersonaObject:
+            email_destinatario = item.responsable_id_responsable.persona_id_persona.email_persona
+            break
+        mensaje = f"ID Tarea: {tarea_id}\nDescripción del problema: {descripcion_problema}\nEnviada por: {request.user.persona_id_persona.nombre_persona} {request.user.persona_id_persona.apellido_paterno_persona}\nEnviado el día: \"{getCurrentDate()}\""
+        send_mail(asunto, mensaje, email_remitente, [email_destinatario])
+        messages.success(request, f"Reporte de problema para la tarea con ID \"{tarea_id}\" fue enviado correctamente")
+        return HttpResponseRedirect(reverse("app_users:tareas-reportar-problema"))
+    else:
+        messages.error(request, "Ocurrió un error inesperado al reportar el problema")
+        return HttpResponseRedirect(reverse("app_users:tareas-reportar-problema"))
+

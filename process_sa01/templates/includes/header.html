@@ -22,7 +22,7 @@
                         {% if user.is_authenticated %}
                         
                             {% if user.rol_id_rol.nombre == 'Gerente' %}
-                            <div class="col-md-7"></div>
+                            <div class="col-md-4"></div>
                             <div id="separatorGerente" class="col-md-8"></div>
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="{% url 'app_users:graficos-tablero-global' %}" class="text-dark" role="button">
@@ -37,6 +37,12 @@
                                 <div class="col-md-12"></div>
                                 <div class="col-md-12"></div>
                                 <div class="col-md-2"></div>
+                                <div class="col-md nav-item nav-link dropdown">
+                                    <a id="letrasImagenes" href="{% url 'app_users:graficos-mostrar-resumen' %}" class="text-dark" role="button">
+                                        <img id="resumeLogo" src="{% static 'assets/images/header/resume.png' %}" alt="">Resumen<br>
+                                    </a>
+                                </div>
+                                {% elif user.rol_id_rol.nombre == 'Gerente' %}
                                 <div class="col-md nav-item nav-link dropdown">
                                     <a id="letrasImagenes" href="{% url 'app_users:graficos-mostrar-resumen' %}" class="text-dark" role="button">
                                         <img id="resumeLogo" src="{% static 'assets/images/header/resume.png' %}" alt="">Resumen<br>

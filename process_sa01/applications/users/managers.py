@@ -485,7 +485,15 @@ class TareaPersonaManager(models.Manager):
 
     def get_tareas_persona_id(self, persona_id):
         return self.filter(
-            persona_id_persona=persona_id
+            persona_id_persona=persona_id,
+        ).filter(
+            Q(tarea_id_tarea__estado_id_estado__id_estado=2) | Q(tarea_id_tarea__estado_id_estado__id_estado=5)
+        ).order_by("-tarea_id_tarea")
+
+    def get_persona_byidPersonaTarea(self, persona_id, tarea_id):
+        return self.filter(
+            persona_id_persona=persona_id,
+            tarea_id_tarea=tarea_id
         ).order_by("-tarea_id_tarea")
 
 
@@ -509,3 +517,14 @@ class EstadoManager(models.Manager):
 class DepartamentoManager(models.Manager):
     def get_count_all(self):
         return self.all()
+
+
+class ReportarProblemaManager(models.Manager):
+    def create_reporte_problema(self, tarea_id, descripcion_problema, persona_id, current_date):
+        reporte_problema = self.model(
+            descripcion_reporte=descripcion_problema,
+            fecha_generacion=current_date,
+            persona_id_persona=persona_id,
+            tarea_id_tarea=tarea_id
+        )
+        reporte_problema.save(using=self.db)
