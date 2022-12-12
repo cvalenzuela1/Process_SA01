@@ -635,7 +635,7 @@ class GraficosMostrarResumenView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ReportarProblemaView(TemplateView):
+class ReportarProblemaView(LoginRequiredMixin, CountTareasAsignadas, CountTareasSolicitadas, TemplateView):
     template_name = "users/reportar_problema.html"
 
     def get_context_data(self, **kwargs):
@@ -644,4 +644,3 @@ class ReportarProblemaView(TemplateView):
         context["tareas_enlazadas"] = TareaPersona.objects.get_tareas_persona_id(persona_id)
 
         return context
-    
