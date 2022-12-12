@@ -37,14 +37,26 @@ body{
 #userlogo{
     margin-left: 3px;
     margin-bottom: 2px;
-    width: 25px;
+    width: 49px;
 }
 
 
 #chartLogo{
     margin-left: -7px;
-    margin-top: -5px;
-    width: 25px;
+    margin-top: -6px;
+    width: 55.5px;
+}
+
+#problemalogo {
+    margin-left: 27px;
+    margin-top: -3.5px;
+    width: 52px;
+}
+
+#resumeLogo{
+    margin-left: -7px;
+    margin-top: -3.5px;
+    width: 52.5px;
 }
 
 #navbarms{
@@ -70,6 +82,10 @@ body{
     width: 10px;
 } */
 
-#separator {
-    padding-left: 500px;
+#separatorUsuario {
+    padding-left: 750px;
+}
+
+#separatorGerente {
+    padding-left: 190px;
 }

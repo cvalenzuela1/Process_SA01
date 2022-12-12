@@ -227,6 +227,11 @@ def actualizarProgreso(request):
             # Ejecución de procedimientos almacenados
             executeSPUpdateEstadoTareas()
             # END ejecución de procedimientos almacenados
+
+            # FINALIZAR FLUJOS
+            Flujo.objects.finalizar_flujos()
+            # END FINALIZAR FLUJOS
+            
             messages.success(request, "Progresos actualizados correctamente")
             return HttpResponseRedirect(reverse("app_users:tareas-list"))
         else:
