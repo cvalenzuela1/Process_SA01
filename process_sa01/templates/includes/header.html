@@ -54,14 +54,19 @@
                                 </ul>
                             </div>
                             {% else %}
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12"></div>
+                            <div class="col-md-7"></div>
                             <div class="col-md-5"></div>
                             <div class="col-md-5"></div>
                             <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5"></div>
+                            {% endif %}
+                            
+                            {% if user.rol_id_rol.nombre == 'Funcionario Cliente' %}
+                            <div class="col-md nav-item nav-link">
+                                <a id="letrasImagenes" href="{% url 'app_users:tareas-reportar-problema' %}" class="text-dark dropdown-toggle" role="button">
+                                    <img id="problemalogo" src="{% static 'assets/images/header/problem.png' %}" alt=""><br>
+                                    Reportar problema
+                                </a>
+                            </div>
                             {% endif %}
                             <div class="col-md nav-item nav-link dropdown">
                                 <a id="letrasImagenes" href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown"

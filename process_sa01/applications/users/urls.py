@@ -27,6 +27,7 @@ urlpatterns = [
     path('tareas-reasignar-detalle/<pk>/', views.ReasignarResponsableDetailView.as_view(), name="tareas-reasignar-detalle"),
     path('graficos-tablero-global/', views.GraficosTableroGlobalView.as_view(), name="graficos-tablero-global"),
     path('graficos-mostrar-resumen/', views.GraficosMostrarResumenView.as_view(), name="graficos-mostrar-resumen"),
+    path('tareas-reportar-problema/', views.ReportarProblemaView.as_view(), name="tareas-reportar-problema"),
     # TEST
     path('test1/', views.Test1TemplateView.as_view(), name='test1')
 ]   

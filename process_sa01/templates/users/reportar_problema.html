@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reportar problema
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/users/reportar_problema.css' %}">
+{% include 'includes/header.html' %}
+    <div class="container-sm">
+        <form method="POST" action="">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" for="">Reportar problema en tarea</label><br>
+                    <select class="form-select" name="" id="" required>
+                        <option value="" selected disabled>Selecciona una tarea</option>
+                        {% for tarea in tareas_enlazadas %}
+                        <option value="{{tarea.tarea_id_tarea.id_tarea}}">{{tarea.tarea_id_tarea.id_tarea}} - {{tarea.tarea_id_tarea.titulo_tarea}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" for="">Descripción del problema</label>
+                    <textarea class="form-control" type="text" cols="10" rows="7" style="resize: none;" required></textarea>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="submit">Notificar problema</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+    
