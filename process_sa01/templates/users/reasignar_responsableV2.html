@@ -64,6 +64,8 @@ Asignar responsable
                             {% endif %}
                         </tr>
                         </form>
+                        {% empty %}
+                            <h6 class="display-6">No hay tareas por reasignar!</h6>
                         {% endfor %}
                     </tbody>
                 </table>
