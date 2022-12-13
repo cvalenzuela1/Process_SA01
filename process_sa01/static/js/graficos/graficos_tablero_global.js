@@ -13,15 +13,15 @@ chart.data = [{
 }, {
     "estado": "En ejecución",
     "cantidad": document.getElementById("t_ejecucion").value,
-    "color": am4core.color("#4634eb")
+    "color": am4core.color("#002aff")
 }, {
     "estado": "Finalizada",
     "cantidad": document.getElementById("t_finalizadas").value,
-    "color": am4core.color("#eb0909")
+    "color": am4core.color("#8a8a8a")
 }, {
     "estado": "Solicitada",
     "cantidad": document.getElementById("t_solicitadas").value,
-    "color": am4core.color("#eb0909")
+    "color": am4core.color("#fff700")
 }, {
     "estado": "Rechazada",
     "cantidad": document.getElementById("t_rechazadas").value,
@@ -29,15 +29,15 @@ chart.data = [{
 }, {
     "estado": "Atrasada",
     "cantidad": document.getElementById("t_atrasadas").value,
-    "color": am4core.color("#eb0909")
+    "color": am4core.color("#ff6a00")
 }, {
     "estado": "Vencida",
     "cantidad": document.getElementById("t_vencidas").value,
-    "color": am4core.color("#ff6a00")
+    "color": am4core.color("#080707")
 }, {
     "estado": "Activa en flujo",
     "cantidad": document.getElementById("t_activasflujo").value,
-    "color": am4core.color("#eb0909")
+    "color": am4core.color("#8400ff")
 }
 ];
 
